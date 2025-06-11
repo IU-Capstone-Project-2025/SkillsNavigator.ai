@@ -11,7 +11,7 @@ export default [
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
-        project: './tsconfig.json',
+        project: './tsconfig.app.json',
         ecmaVersion: 2020,
         sourceType: 'module',
       },
