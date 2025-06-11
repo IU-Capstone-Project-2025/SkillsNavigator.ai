@@ -13,6 +13,15 @@ services:
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
 
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
   qdrant:
     image: qdrant/qdrant
     container_name: qdrant
