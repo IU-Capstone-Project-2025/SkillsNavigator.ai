@@ -1,6 +1,13 @@
-import threading
+from fastapi import Depends, FastAPI
 
-if __name__ == '__main__':
-    print("Hello from backend!", flush=True)
-    stop_event = threading.Event()
-    stop_event.wait()
+from app.routers import users
+
+app = FastAPI()
+
+
+app.include_router(users.router)
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello Universe!"}
