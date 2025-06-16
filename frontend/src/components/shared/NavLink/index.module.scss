@@ -1,0 +1,21 @@
+@use '../../../styles/_vars' as *;
+@use '../../../styles/_mixins' as *;
+
+.link {
+  @include link;
+}
+
+.activeLink {
+  @include link;
+  font-weight: 700;
+}
+
+.disabled {
+  @include link;
+  cursor: default;
+  color: $grey;
+
+  &:hover {
+    color: $grey;
+  }
+}

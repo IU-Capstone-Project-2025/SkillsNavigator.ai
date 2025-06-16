@@ -1,0 +1,65 @@
+@use './_vars' as *;
+@use './_mixins' as *;
+
+html {
+  font-size: 62.5%; // 1rem = 10px
+}
+
+body {
+  font-family: $defaultFont, sans-serif;
+  font-size: 1.6rem; // 16px
+  line-height: calc(1em + 0.6rem);
+}
+
+@mixin fluid-type($min-rem, $max-rem, $min-vw: 320px, $max-vw: 1280px) {
+  font-size: clamp(
+    #{$min-rem}rem,
+    calc(#{$min-rem}rem + (#{$max-rem} - #{$min-rem}) * ((100vw - #{$min-vw}) / (#{$max-vw} - #{$min-vw}))),
+    #{$max-rem}rem
+  );
+  line-height: calc(1em + 0.5rem);
+}
+
+h1 {
+  font-size: 5rem;
+  line-height: 6.5rem;
+}
+
+h2 {
+  font-family: $defaultFont, sans-serif;
+  font-size: 3.5rem;
+  font-weight: bold;
+}
+
+h3 {
+  font-family: $additionalFont, serif;
+  font-size: 2.7rem;
+  font-weight: bold;
+}
+
+h4 {
+  font-size: 2rem;
+}
+
+p {
+  font-size: 2.2rem;
+  line-height: 3.7rem;
+  font-weight: 300;
+  letter-spacing: 0.4px;
+}
+
+.lead {
+  @include fluid-type(1.8, 2.4);
+  font-weight: 400;
+  line-height: calc(1em + 0.6rem);
+}
+
+small {
+  @include fluid-type(1.2, 1.4);
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+strong {
+  font-weight: 600;
+}

@@ -1,0 +1,69 @@
+@use 'sass:map';
+@use './_vars' as *;
+@use '../../node_modules/include-media/dist/_include-media';
+
+$breakpoints: (
+  'small': 450px,
+  'medium': 770px,
+  'large': 1024px,
+  'xlarge': 1280px,
+) !default;
+
+@mixin breakpoint($size) {
+  $width: map.get($breakpoints, $size);
+  @if $width {
+    @media (max-width: $width) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint '#{$size}' не найден!";
+  }
+}
+
+.element {
+  background-color: blue;
+
+  @include breakpoint('medium') {
+    background-color: red;
+  }
+
+  @include breakpoint('large') {
+    background-color: green;
+  }
+}
+
+@mixin page {
+  padding: 0 157px;
+}
+
+@mixin link {
+  color: $darkBlue;
+  transition: $smoothColor;
+  font-family: $defaultFont, sans-serif;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    color: $normalGreen;
+  }
+}
+
+@mixin shadow(
+  $innerColor: $white,
+  $innerOpacity: 0.1,
+  $dropColor: $darkBlue,
+  $dropOpacity: 0.2,
+  $dropBlur: 5px,
+  $innerBlur: 5px
+) {
+  $innerRGBA: rgba($innerColor, $innerOpacity);
+  $dropRGBA: rgba($dropColor, $dropOpacity);
+
+  box-shadow:
+    3px 3px $dropBlur 0 $dropRGBA,
+    4px 4px $innerBlur 0 $innerRGBA inset;
+}
