@@ -1,0 +1,86 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.wrapper {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.userWrapper {
+  @extend .wrapper;
+  justify-content: flex-end;
+}
+
+.friendWrapper {
+  @extend .wrapper;
+  justify-content: flex-start;
+}
+
+.bubble {
+  width: fit-content;
+  padding: 8px 18px;
+  border-radius: 12px;
+  position: relative;
+  font-size: 1.6rem;
+}
+
+.userBubble {
+  @extend .bubble;
+  background: $blue;
+  color: white;
+  border-bottom-right-radius: 0;
+  box-shadow:
+    -4px -4px 5px rgba(#abd1f3, 0.6) inset,
+    3px 3px 10px rgba(#abd1f3, 0.6) inset;
+}
+
+.friendBubble {
+  @extend .bubble;
+  background: rgb($white, 0.4);
+  border-bottom-left-radius: 4px;
+  box-shadow:
+    -4px -4px 5px rgba(#abd1f3, 0.6) inset,
+    3px 3px 10px rgba(#abd1f3, 0.6) inset;
+}
+
+.tail {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  bottom: 0;
+}
+
+.userTail {
+  @extend .tail;
+  right: -10px;
+  background: $blue;
+  clip-path: polygon(100% 100%, 0 0, 0 100%);
+  box-shadow:
+    -4px -4px 5px rgba(#abd1f3, 0.6) inset,
+    3px 3px 10px rgba(#abd1f3, 0.6) inset;
+}
+
+.friendTail {
+  @extend .tail;
+  left: -10px;
+  background: rgb($white, 0.4);
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  box-shadow:
+    -4px -4px 5px rgba(#abd1f3, 0.6) inset,
+    3px 3px 3px rgba(#abd1f3, 0.3) inset;
+}
+
+.animate {
+  animation: flyInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes flyInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

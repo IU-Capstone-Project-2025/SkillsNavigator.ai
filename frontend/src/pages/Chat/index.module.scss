@@ -1,0 +1,40 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.root {
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url('/assets/chatBgGradient.png');
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 100px 300px 30px 300px;
+}
+
+.chat {
+  padding: 0 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.courses {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.placeholderCard {
+  visibility: hidden;
+  height: 100%;
+}

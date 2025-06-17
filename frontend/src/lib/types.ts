@@ -16,3 +16,8 @@ export type CardType = {
   rating: 0 | 1 | 2 | 3 | 4 | 5
   url: string
 }
+
+export type MessageType = {
+  text: string
+  isUser?: boolean
+}

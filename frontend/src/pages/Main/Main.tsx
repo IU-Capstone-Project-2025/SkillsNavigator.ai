@@ -15,7 +15,7 @@ const Main = () => {
         <h1 className={css.additionalTitle}>
           со <span className={css.title}>SkillsNavigator</span>
         </h1>
-        <Input />
+        <Input value="" onChange={() => {}} />
         <MoreButton onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })} />
       </div>
 

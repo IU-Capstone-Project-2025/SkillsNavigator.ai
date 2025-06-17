@@ -26,7 +26,12 @@ const Card: React.FC<CardType> = ({
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div className={css.card} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+    <div
+      className={css.card}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
+    >
       <div>
         <div className={css.topSection}>
           <img src={cover_url} alt="" className={css.image} />

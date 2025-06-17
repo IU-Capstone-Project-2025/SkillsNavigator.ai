@@ -55,6 +55,7 @@
   display: flex;
   align-items: center;
   gap: 60px;
+  margin-bottom: 20px;
 }
 
 .roadmapMockup {
@@ -80,7 +81,7 @@
   width: 75%;
   height: 1px;
   background-color: $darkBlue;
-  margin: 60px 0;
+  margin: 70px 0;
 }
 
 .additionalText {
@@ -111,7 +112,7 @@
   background-image: url('/assets/gradientBackground.png');
   @include page;
   height: 80vh;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
