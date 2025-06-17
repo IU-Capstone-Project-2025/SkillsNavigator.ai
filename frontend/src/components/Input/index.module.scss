@@ -1,0 +1,72 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.root {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  padding: 12px 20px;
+  width: 60%;
+  box-shadow: 0px 0px 25px 0 rgba(255, 255, 255, 0.9) inset;
+  transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
+
+  &:hover, &:focus-within {
+    background-color: rgba(255, 255, 255, 0.4);
+    box-shadow:
+      0px 0px 25px 0 rgba(255, 255, 255, 0.9) inset,
+      0 0 8px 0 rgba($darkBlue, 0.2);
+  }
+}
+
+.input {
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  font-size: 1.8rem;
+  color: $darkBlue;
+  outline: none;
+}
+
+.input::placeholder {
+  color: $grey;
+}
+
+.button {
+  background-color: #1c2b45;
+  border-radius: 15px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 12px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px 0 rgba(255, 255, 255, 0.4) inset;
+  transition:
+    box-shadow 0.3s ease-out,
+    opacity 0.3s ease-out;
+
+  &:hover {
+    box-shadow:
+      2px 2px 5px 0 rgba(255, 255, 255, 0.4) inset,
+      0 0 10px 0 rgba($darkBlue, 0.6);
+  }
+
+  &:active {
+    opacity: 0.4;
+    box-shadow: none;
+  }
+}
+
+.icon {
+  color: white;
+  font-size: 24px;
+}

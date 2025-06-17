@@ -2,7 +2,7 @@ import './styles/global.scss'
 import './styles/typography.scss'
 import { MantineProvider } from '@mantine/core'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Header } from './components'
+import { Footer, Header } from './components'
 import ScrollResetProvider from './lib/ScrollResetProvider'
 import TextFormatProvider from './lib/TextFormatProvider'
 import * as routes from './lib/routes'
@@ -18,6 +18,7 @@ const Layout = () => {
           <Route path={routes.getMainRoute()} element={<Main />} />
         </Routes>
       </ScrollResetProvider>
+      <Footer />
     </>
   )
 }

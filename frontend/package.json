@@ -15,12 +15,15 @@
   },
   "dependencies": {
     "@mantine/core": "^8.1.0",
+    "@mantine/hooks": "^8.1.0",
+    "framer-motion": "^12.18.1",
     "include-media": "^2.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "reset-css": "^5.0.2",
     "sass": "^1.89.2",
+    "@tabler/icons-react": "^3.34.0",
     "typograf": "^7.4.4"
   },
   "devDependencies": {

@@ -9,6 +9,7 @@ body {
   font-family: $defaultFont, sans-serif;
   font-size: 1.6rem; // 16px
   line-height: calc(1em + 0.6rem);
+  letter-spacing: 0.3px;
 }
 
 @mixin fluid-type($min-rem, $max-rem, $min-vw: 320px, $max-vw: 1280px) {

@@ -1,0 +1,121 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow:
+    4px 4px 10px 0 rgb($darkBlue, 0.25),
+    0 4px 10px 0 rgb($darkBlue, 0.1) inset;
+  border-radius: 15px;
+  padding: 25px 30px;
+  transition: box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    box-shadow:
+      4px 4px 15px 0 rgb($blue, 0.3),
+      0 4px 10px 0 rgb($blue, 0.1) inset;
+    .difficulty {
+      box-shadow: 2px 2px 10px 0 rgb($blue, 0.3);
+    }
+    .image {
+      box-shadow: 4px 4px 8px 0 rgb($blue, 0.4);
+    }
+  }
+}
+
+.topSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 20px;
+}
+
+.image {
+  width: 110px;
+  box-shadow: 4px 4px 8px 0 rgb($darkBlue, 0.25);
+  border-radius: 10px;
+}
+
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.durationAndPupils {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.difficulty {
+  border-radius: 5px;
+  width: fit-content;
+  box-shadow: 2px 2px 10px 0 rgb($darkBlue, 0.25);
+  padding: 4px 16px;
+  letter-spacing: 0.5px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+}
+
+.icon {
+  width: 20px;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.authors {
+  font-size: 1.4rem;
+}
+
+.bottomSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.price {
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.gotoButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 8px;
+  color: $white;
+  font-size: 1.5rem;
+  background-color: $darkBlue;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  box-shadow:
+    4px 4px 4px 0 rgb($darkBlue, 0.25),
+    4px 4px 4px 0 rgb($white, 0.3) inset;
+  transition: background-color 0.3s ease-out;
+
+  &:hover {
+    background-color: $blue;
+  }
+
+  &:active {
+    background-color: #0060b2;
+  }
+}
+
+.gotoIcon {
+  width: 18px;
+}
