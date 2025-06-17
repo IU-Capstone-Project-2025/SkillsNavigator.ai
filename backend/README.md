@@ -1,6 +1,6 @@
 # API Documentation
 
-### Search Courses by Criteria
+#### Search Courses by Criteria
 
 **Method:** `POST`
 **Endpoint:** `/courses/search`
@@ -59,10 +59,12 @@ A JSON array of matching courses (may be empty).
 | Field        | Type      | Description                                                                  |
 | ------------ | --------- | ---------------------------------------------------------------------------- |
 | `id`         | integer   | Unique identifier of the course.                                             |
+| `cover_url`  | string    | URL to the course cover image.                                               |
 | `title`      | string    | Course title.                                                                |
 | `duration`   | integer   | Course duration in hours.                                                    |
 | `difficulty` | string    | Difficulty level: `"easy"`, `"medium"`, or `"hard"`.                         |
 | `price`      | integer   | Price of the course in the specified currency.                               |
+| `pupils_num` | integer   | Number of enrolled pupils.                                                   |
 | `authors`    | string\[] | List of author names. May be empty if author details are fetched separately. |
 | `rating`     | integer   | Course rating on a scale of 0–5.                                             |
 | `url`        | string    | URL to the course page.                                                      |
@@ -74,20 +76,24 @@ A JSON array of matching courses (may be empty).
 [
   {
     "id": 1,
+    "cover_url": "https://example.com/images/course1.jpg",
     "title": "FastAPI for Beginners",
     "duration": 5,
     "difficulty": "easy",
     "price": 0,
+    "pupils_num": 120,
     "authors": ["Ivan Ivanov"],
     "rating": 5,
     "url": "https://example.com/course/1"
   },
   {
     "id": 2,
+    "cover_url": "https://example.com/images/course2.jpg",
     "title": "Complete Python Course",
     "duration": 40,
     "difficulty": "medium",
     "price": 12000,
+    "pupils_num": 850,
     "authors": ["Maria Petrova", "Sergey Sidorov"],
     "rating": 4,
     "url": "https://example.com/course/2"
