@@ -62,48 +62,61 @@ const Chat = () => {
     }
   }
 
-  // Показываем курсы по одному с задержкой после завершения вопросов
-  useEffect(() => {
-    if (step === questions.length - 1 && answers.desired_skills) {
-      setShownCourses(0)
-      let i = 0
-      const interval = setInterval(() => {
-        i++
-        setShownCourses(i)
-        if (i >= courses.length) {
-          clearInterval(interval)
-        }
-      }, 500)
-      return () => clearInterval(interval)
-    }
-  }, [step, answers.desired_skills])
+  const [coursesInsertIndex, setCoursesInsertIndex] = useState<number | null>(null)
 
-  // Прокрутка вниз при каждом рендере
+  useEffect(() => {
+  if (
+    step === questions.length - 1 &&
+    answers.desired_skills &&
+    coursesInsertIndex === null
+  ) {
+    setCoursesInsertIndex(messages.length)
+    setShownCourses(0)
+    let i = 0
+    const interval = setInterval(() => {
+      i++
+      setShownCourses(i)
+      if (i >= courses.length) {
+        clearInterval(interval)
+      }
+    }, 500)
+    return () => clearInterval(interval)
+  }
+}, [step, answers.desired_skills])
+
   useEffect(() => {
     scrollToBottom()
-    // eslint-disable-next-line
   }, [messages, shownCourses])
+
+  const messagesBeforeCourses =
+  coursesInsertIndex !== null ? messages.slice(0, coursesInsertIndex) : messages
+const messagesAfterCourses =
+  coursesInsertIndex !== null ? messages.slice(coursesInsertIndex) : []
 
   return (
     <div className={css.root}>
       <div className={css.chat}>
-        {messages.map((msg, idx) => (
+        {messagesBeforeCourses.map((msg, idx) => (
           <Message key={idx} text={msg.text} isUser={msg.isUser} animate={idx === messages.length - 1} />
         ))}
 
         <div className={css.courses}>
-  {step === questions.length - 1 && answers.desired_skills && (
-    <>
-      {courses.slice(0, shownCourses).map((course) => (
-        <CardInChat {...course} key={course.id} />
-      ))}
-      {/* Добавляем невидимые плейсхолдеры, если курсов меньше 3 */}
-      {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, idx) => (
-        <div className={css.placeholderCard} key={`placeholder-${idx}`} />
-      ))}
-    </>
-  )}
-</div>
+          {step === questions.length - 1 && answers.desired_skills && (
+            <>
+              {courses.slice(0, shownCourses).map((course, idx) => (
+                <CardInChat {...course} key={course.id} index={idx} />
+              ))}
+              {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, idx) => (
+                <div className={css.placeholderCard} key={`placeholder-${idx}`} />
+              ))}
+            </>
+          )}
+        </div>
+
+        {messagesAfterCourses.map((msg, idx) => (
+          <Message key={`after-${idx}`} text={msg.text} isUser={msg.isUser} animate={false} />
+        ))}
+
         <div ref={chatEndRef} />
       </div>
       {step < questions.length && (

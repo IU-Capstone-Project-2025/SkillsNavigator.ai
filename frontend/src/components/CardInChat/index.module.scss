@@ -2,6 +2,7 @@
 @use '../../styles/_mixins' as *;
 
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -35,6 +36,19 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.bgIndex {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13rem;
+  font-weight: 700;
+  color: rgba($darkBlue, 0.10); // полупрозрачный тёмно-синий
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
 }
 
 .topSection {

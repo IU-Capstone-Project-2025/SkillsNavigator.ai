@@ -12,7 +12,9 @@ const level = {
   hard: 'Сложный',
 }
 
-const CardInChat: React.FC<CardType> = ({
+type Props = CardType & { index?: number }
+
+const CardInChat: React.FC<Props> = ({
   title,
   cover_url,
   duration,
@@ -22,6 +24,7 @@ const CardInChat: React.FC<CardType> = ({
   pupils_num,
   rating,
   url,
+  index, // индекс карточки (начиная с 0)
 }) => {
   const [hovered, setHovered] = useState(false)
 
@@ -32,6 +35,10 @@ const CardInChat: React.FC<CardType> = ({
       onMouseLeave={() => setHovered(false)}
       onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
     >
+      {/* Индекс на фоне */}
+      {typeof index === 'number' && (
+        <span className={css.bgIndex}>{index + 1}</span>
+      )}
       <div>
         <div className={css.topSection}>
           <img src={cover_url} alt="" className={css.image} />
