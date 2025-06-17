@@ -8,18 +8,25 @@ type Props = {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   onSend?: () => void
   placeholder?: string
+  className?: string
 }
 
 const Input: React.FC<Props> = ({
   width = '60%',
   value,
   onChange,
-  onKeyDown,
   onSend,
   placeholder = 'Что изучить, чтобы стать...',
+  className,
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && onSend) {
+      onSend()
+    }
+  }
+
   return (
-    <div className={styles.root}>
+    <div className={`${styles.root} ${className}`}>
       <div className={styles.searchBox} style={{ width }}>
         <input
           type="text"
@@ -27,7 +34,7 @@ const Input: React.FC<Props> = ({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
         />
       </div>
       <div className={styles.button} onClick={onSend}>

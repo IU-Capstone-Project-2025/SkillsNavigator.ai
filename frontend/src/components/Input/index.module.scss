@@ -70,3 +70,10 @@
   color: white;
   font-size: 24px;
 }
+
+.inputHide {
+  opacity: 0;
+  transform: translateY(60px);
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}

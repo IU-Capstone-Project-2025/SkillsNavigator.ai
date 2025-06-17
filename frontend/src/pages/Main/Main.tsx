@@ -1,13 +1,29 @@
 import roadmapMockup from '/assets/roadmap_mockup.png'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import css from './index.module.scss'
 import { Card, Input, MoreButton } from '../../components'
 import thoughts from '/assets/thoughts.png'
 import arrowRight from '/assets/arrowRight.png'
 import { cards } from '../../lib/data'
+import { useNavigate } from 'react-router-dom'
+import { getChatRoute } from '../../lib/routes'
 
 const Main = () => {
+  const navigate = useNavigate()
   const aboutRef = useRef<HTMLDivElement>(null)
+  const [inputValue, setInputValue] = useState('')
+  const [inputHide, setInputHide] = useState(false)
+
+  const handleSend = () => {
+    if (inputValue.trim()) {
+      localStorage.setItem('chatInput', inputValue)
+      setInputHide(true)
+      setTimeout(() => {
+        navigate(getChatRoute())
+      }, 400)
+    }
+  }
+
   return (
     <>
       <div className={css.banner}>
@@ -15,7 +31,12 @@ const Main = () => {
         <h1 className={css.additionalTitle}>
           со <span className={css.title}>SkillsNavigator</span>
         </h1>
-        <Input value="" onChange={() => {}} />
+        <Input
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onSend={handleSend}
+          className={inputHide ? css.inputHide : ''}
+        />
         <MoreButton onClick={() => aboutRef.current?.scrollIntoView({ behavior: 'smooth' })} />
       </div>
 
@@ -44,18 +65,20 @@ const Main = () => {
           </div>
         </div>
 
-        {cards.length !== 0 &&  <div className={css.divider} />}
+        {cards.length !== 0 && <div className={css.divider} />}
 
-        {cards.length !== 0 && <div className={css.coursesSection}>
-          <h2 className={css.coursesTitle}>Популярные курсы</h2>
-          <p className={css.additionalText}>Если хочешь попробовать что-то новое</p>
+        {cards.length !== 0 && (
+          <div className={css.coursesSection}>
+            <h2 className={css.coursesTitle}>Популярные курсы</h2>
+            <p className={css.additionalText}>Если хочешь попробовать что-то новое</p>
 
-          <div className={css.courses}>
-            {cards.map((card) => (
-              <Card {...card} key={card.id} />
-            ))}
+            <div className={css.courses}>
+              {cards.map((card) => (
+                <Card {...card} key={card.id} />
+              ))}
+            </div>
           </div>
-        </div>}
+        )}
       </div>
 
       <div className={css.bgGradient}>
@@ -77,7 +100,7 @@ const Main = () => {
       <div className={css.page} id={css.callToAction}>
         <h2 className={css.coursesTitle}>Найди свой путь с SkillsNavigator</h2>
         <p className={css.additionalText}>Получи чёткий план действий — от цели до результата</p>
-        <button className={css.ctaButton}>
+        <button className={css.ctaButton} onClick={() => navigate(getChatRoute())}>
           Начать свой путь
           <img src={arrowRight} alt="" className={css.arrowIcon} />
         </button>
