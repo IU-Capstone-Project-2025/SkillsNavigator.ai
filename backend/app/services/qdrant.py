@@ -25,7 +25,7 @@ class QdrantService:
             limit=limit
         )).points
         
-    async def loadCourses(self, collection_name):
+    def loadCourses(self, collection_name):
         print("Loading Courses from stepik")
         courses_list_req = requests.get("https://stepik.org/api/course-lists")
         courses_list = courses_list_req.json()
