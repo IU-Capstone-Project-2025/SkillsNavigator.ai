@@ -8,11 +8,10 @@ services:
       - qdrant
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8000:80"         # ← хост:контейнер — теперь 8000 на 80
     environment:
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
-
   qdrant:
     image: qdrant/qdrant
     container_name: qdrant
