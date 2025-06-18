@@ -1,0 +1,181 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.page {
+  @include page;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.banner {
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url('/assets/mainGradientBackground.png');
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100px;
+  }
+
+  &:after {
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, $defaultBackgroundColor 100%);
+  }
+}
+
+.additionalTitle {
+  font-family: $additionalFont, serif;
+}
+
+.title {
+  font-weight: bold;
+  font-family: $defaultFont, sans-serif;
+}
+
+.aboutSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.section1 {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  margin-bottom: 20px;
+}
+
+.roadmapMockup {
+  width: 40%;
+}
+
+.aboutText {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.forWhoText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  width: 80%;
+}
+
+.divider {
+  width: 75%;
+  height: 1px;
+  background-color: $darkBlue;
+  margin: 70px 0;
+}
+
+.additionalText {
+  font-family: $additionalFont, serif;
+  margin-bottom: 25px;
+}
+
+.coursesSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coursesTitle {
+  margin-bottom: 10px;
+}
+
+.courses {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.bgGradient {
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url('/assets/gradientBackground.png');
+  @include page;
+  height: 80vh;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100px;
+  }
+
+  &:after {
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, $defaultBackgroundColor 100%);
+  }
+}
+
+.additionalFont {
+  font-family: $additionalFont, serif;
+}
+
+.thoughtsSection {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.thoughtsImage {
+  width: 50%;
+}
+
+.ctaButton {
+  background: linear-gradient(90deg, $blue 0%, $green 100%);
+  color: white;
+  font-size: 1.9rem;
+  padding: 12px 26px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 4px 4px 10px rgba($blue, 0.3);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 15px rgba($blue, 0.6);
+  }
+
+  &:active {
+    background: $darkBlue;
+    transform: translateY(0);
+    box-shadow: 4px 4px 5px rgba($darkBlue, 0.6);
+  }
+}
+
+.arrowIcon {
+  width: 24px;
+}

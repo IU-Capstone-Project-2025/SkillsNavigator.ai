@@ -1,0 +1,51 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.footer {
+  @include page;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 70px;
+  background-color: #f0f7fd;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  box-shadow: 4px 4px 10px #BEDAF3 inset;
+}
+
+.headline {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.links, .nav {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  width: fit-content;
+}
+
+.links {
+  gap: 40px;
+}
+
+.contacts {
+  width: fit-content;
+  display: flex;
+  gap: 40px;
+}
+
+.contactsList {
+    font-family: $additionalFont, serif;
+    font-size: 1.8rem;
+    display: flex;
+    gap: 20px;
+}
+
+.bottomSection {
+  text-align: center;
+  padding: 5px 0;
+  color: rgb(154, 154, 154);
+  font-weight: 300;
+  background-color: #f0f7fd;
+}
