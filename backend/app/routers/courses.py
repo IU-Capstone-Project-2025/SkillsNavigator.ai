@@ -45,3 +45,46 @@ async def search_courses(payload: CourseSearchRequest = Body(...)):
     if not results:
         raise HTTPException(status_code=404, detail="Курсы не найдены")
     return results
+
+
+@router.get(
+    "/popular",
+    response_model=List[CourseSummary],
+    summary="Get popular courses"
+)
+async def get_popular_courses():
+    """
+    Возвращает список самых популярных курсов.
+    """
+    # заменить на реальную логику выборки из БД,
+    # например: results = await fetch_popular_courses_from_db()
+    results = [
+        {
+            "id": 10,
+            "cover_url": "https://avatars.mds.yandex.net/i?id=a5be1a85e5edf3a1d698f82857ed4926_l-5332940-images-thumbs&n=13",
+            "title": "Mastering Python",
+            "duration": 40,
+            "difficulty": "medium",
+            "price": 2500,
+            "pupils_num": 1200,
+            "authors": ["Alice Ivanova"],
+            "rating": 5,
+            "url": "https://example.com/course/10"
+        },
+        {
+            "id": 22,
+            "cover_url": "https://avatars.mds.yandex.net/i?id=a5be1a85e5edf3a1d698f82857ed4926_l-5332940-images-thumbs&n=13",
+            "title": "Advanced FastAPI",
+            "duration": 16,
+            "difficulty": "hard",
+            "price": 3500,
+            "pupils_num": 800,
+            "authors": ["Bob Petrov", "Carol Smirnov"],
+            "rating": 5,
+            "url": "https://example.com/course/22"
+        }
+    ]
+
+    if not results:
+        raise HTTPException(status_code=404, detail="Популярные курсы не найдены")
+    return results
