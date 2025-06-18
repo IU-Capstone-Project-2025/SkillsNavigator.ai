@@ -1,6 +1,6 @@
 # API Documentation
 
-#### Search Courses by Criteria
+## Search Courses by Criteria
 
 **Method:** `POST`
 **Endpoint:** `/courses/search`
@@ -48,13 +48,13 @@ Content-Type: application/json
 
 ---
 
-#### Responses
+#### Response
 
 ##### 200 OK
 
 A JSON array of matching courses (may be empty).
 
-**Response Body**
+**Course Object**
 
 | Field        | Type      | Description                                                                  |
 | ------------ | --------- | ---------------------------------------------------------------------------- |
@@ -125,5 +125,52 @@ Validation error in the request body (e.g., missing required field or wrong data
 ```
 
 </details>
+
+## Fetch popular courses
+
+
+**Method:** `GET`
+**Endpoint:** `/courses/popular`
+**Tags:** `courses`
+
+---
+
+#### Description
+
+Returns several popular courses.
+
+
+#### Example Response
+
+```json
+[
+        {
+            "id": 10,
+            "cover_url": "https://avatars.mds.yandex.net/i?id=a5be1a85e5edf3a1d698f82857ed4926_l-5332940-images-thumbs&n=13",
+            "title": "Mastering Python",
+            "duration": 40,
+            "difficulty": "medium",
+            "price": 2500,
+            "pupils_num": 1200,
+            "authors": ["Alice Ivanova"],
+            "rating": 5,
+            "url": "https://example.com/course/10"
+        },
+        {
+            "id": 22,
+            "cover_url": "https://avatars.mds.yandex.net/i?id=a5be1a85e5edf3a1d698f82857ed4926_l-5332940-images-thumbs&n=13",
+            "title": "Advanced FastAPI",
+            "duration": 16,
+            "difficulty": "hard",
+            "price": 3500,
+            "pupils_num": 800,
+            "authors": ["Bob Petrov", "Carol Smirnov"],
+            "rating": 5,
+            "url": "https://example.com/course/22"
+        }
+    ]
+```
+
+##### 200 OK
 
 ---
