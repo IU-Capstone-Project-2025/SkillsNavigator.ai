@@ -1,7 +1,9 @@
+import asyncio
+
 from fastapi import FastAPI
 
 from app.routers import users
-from app.services import encoder, qdrant, run_blocking
+from app.services import encoder, qdrant
 from app.config import settings
 
 from contextlib import asynccontextmanager
@@ -12,7 +14,8 @@ async def lifespan(app: FastAPI):
     await encoder.initialize()
     print("Connecting to qdrant")
     qdrant.initialize(settings.qdrant_host, settings.qdrant_port)
-    await run_blocking(qdrant.loadCourses, "courses")
+    # await qdrant.loadCourses()
+    app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
     yield
     # Clean up the ML models and release the resources
     
