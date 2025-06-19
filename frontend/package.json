@@ -16,6 +16,7 @@
   "dependencies": {
     "@mantine/core": "^8.1.0",
     "@mantine/hooks": "^8.1.0",
+    "@react-spring/web": "^10.0.1",
     "@tabler/icons-react": "^3.34.0",
     "framer-motion": "^12.18.1",
     "include-media": "^2.0.0",
