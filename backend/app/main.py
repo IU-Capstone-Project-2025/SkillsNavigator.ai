@@ -12,7 +12,7 @@ from contextlib import asynccontextmanager
 async def lifespan(app: FastAPI):
     # Load the ML model
     await encoder.initialize()
-    print("Connecting to qdrant")
+    print("Connecting to qdrant", flush=True)
     qdrant.initialize(settings.qdrant_host, settings.qdrant_port)
     # await qdrant.loadCourses()
     app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
