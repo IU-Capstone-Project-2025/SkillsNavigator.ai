@@ -4,6 +4,7 @@ services:
     container_name: backend
     volumes:
       - ./backend:/app
+      - models:/models
     depends_on:
       - qdrant
     restart: unless-stopped
@@ -33,3 +34,4 @@ services:
 
 volumes:
   qdrant_data:
+  models:
