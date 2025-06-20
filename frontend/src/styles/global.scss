@@ -1,0 +1,39 @@
+@use '../../node_modules/reset-css/sass/_reset';
+@use './_mixins' as *;
+@use './_vars' as *;
+
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+body {
+  background: $defaultBackgroundColor;
+  color: $defaultTextColor;
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+div {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

@@ -1,0 +1,15 @@
+.stars {
+  display: flex;
+}
+.starWrap {
+  position: relative;
+  display: inline-block;
+}
+
+.starIcon {
+  margin-right: 2px;
+  transition: opacity 600ms ease-out;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
