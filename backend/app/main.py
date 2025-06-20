@@ -21,9 +21,10 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    docs_url="/swagger",      # вместо /docs
-    redoc_url="/redocly",     # вместо /redoc
-    openapi_url="/api/schema" # вместо /openapi.json
+    docs_url="/swagger",  # вместо /docs
+    redoc_url="/redocly",  # вместо /redoc
+    openapi_url="/api/schema",  # вместо /openapi.json
+    lifespan=lifespan
 )
 
 app.include_router(users.router)

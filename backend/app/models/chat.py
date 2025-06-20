@@ -16,8 +16,17 @@ class CourseSummary(BaseModel):
     title: str
     duration: int         # в часах
     difficulty: str       # лёгкий/средний/сложный
-    price: int            # в рублях или другой валюте
+    price: int            # цена курса
+    currency_code: str    # в чём валюта в рублях долларах и т.д.
     pupils_num: int       # количество записавшихся учеников
     authors: List[str]    # можно отдавать пустой список, детали подтягивать позже
     rating: int           # 0–5
     url: str
+    description: str # описание курса
+    summary: str
+    target_audience: str
+    acquired_skills: str
+    acquired_assets: str
+    title_en: str
+    learning_format: str
+    # section_desc: str # описание секции курса

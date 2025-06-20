@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Body
 from typing import List
 
 from app.models import *
-
+from app.services import qdrant, encoder
 
 router = APIRouter(prefix="/courses", tags=["courses"])
 
@@ -19,28 +19,10 @@ async def search_courses(payload: CourseSearchRequest = Body(...)):
     2. **current_level** — текущий уровень (начальный/средний/продвинутый)
     3. **desired_skills** — конкретные навыки для обучения
     """
-    # Здесь реальная логика:
-    # results = await fetch_courses_from_db(
-    #     area=payload.area,
-    #     current_level=payload.current_level,
-    #     desired_skills=payload.desired_skills
-    # )
-
-    # Для примера возвращаем статичный список
-    results = [
-        {
-            "id": 1,
-            "cover_url": "https://avatars.mds.yandex.net/i?id=a5be1a85e5edf3a1d698f82857ed4926_l-5332940-images-thumbs&n=13",
-            "title": "FastAPI for Beginners",
-            "duration": 8,
-            "difficulty": "easy",  # лёгкий/средний/сложный
-            "price": 1000,
-            "pupils_num": 150,
-            "authors": ["Arthur", "Didi"],
-            "rating": 5,
-            "url": "https://letmegooglethat.com/what_is_fastAPI"
-        }
-    ]
+    results = [course.payload for course in await qdrant.search(
+        await encoder.vectorize(payload.area + " " + payload.current_level + " " + payload.desired_skills),
+        "courses"
+    )]
 
     if not results:
         raise HTTPException(status_code=404, detail="Курсы не найдены")

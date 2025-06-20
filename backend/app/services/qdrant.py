@@ -47,16 +47,26 @@ class QdrantService:
                         params = {'ids[]': course_section["courses"][100 * z:100 * (z + 1)]}
                         print("Getting courses in " + course_section["title"], flush=True)
                         courses_info_req = await client.get("https://stepik.org/api/courses", params=params)
+                        courses_info = courses_info_req.json()["courses"]
+                        # ratings_info_req = await client.get(f"https://stepik.org/api/course-review-summaries", params=params)
+                        # ratings_info = ratings_info_req.json()["course-review-summaries"]
                         try:
-                            courses_info = courses_info_req.json()["courses"]
                             for k in range(len(courses_info)):
                                 course_info = courses_info[k]
+                                # rating_info = ratings_info[k]
                                 courses.append({
                                     # Payload
                                     "id": course_info["id"],
+                                    "cover_url": course_info["cover"],
                                     "title": course_info["title"],
+                                    "duration": course_info["time_to_complete"],
                                     "difficulty": course_info["difficulty"],
-                                    # Embeddings
+                                    "price": 0 if course_info["price"] is None else course_info["price"],
+                                    "currency_code": "RUB" if course_info["currency_code"] is None else course_info["currency_code"],
+                                    "pupils_num": course_info["learners_count"],
+                                    "authors": [], # парсить авторов
+                                    "rating": 5, # парсить рейтинг
+                                    "url": f"https://stepik.org/course/{course_info['id']}/promo",
                                     "description": course_info["description"],
                                     "summary": course_info["summary"],
                                     "target_audience": course_info["target_audience"],
@@ -64,11 +74,10 @@ class QdrantService:
                                     "acquired_assets": ''.join(course_info["acquired_assets"]),
                                     "title_en": course_info["title_en"],
                                     "learning_format": course_info["learning_format"],
-                                    "section_desc": course_section["description"]
+                                    # "section_desc": course_section["description"],
                                 })
-                        except:
-                            print(courses_info_req, flush=True)
-
+                        except Exception as e:
+                            print(e, flush=True)
                     for idx, course in enumerate(courses):
                         vector = await encoder.vectorize(f"Название: {course['title']} ({course['title_en']})\n"
                                                          f"Сложность: {course['difficulty']}\n"
