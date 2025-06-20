@@ -12,7 +12,7 @@ class CourseSearchRequest(BaseModel):
 # Модель одного курса в ответе
 class CourseSummary(BaseModel):
     id: int
-    cover_url: str        # ссылка на обложку курса
+    cover_url: Optional[str]        # ссылка на обложку курса
     title: str
     duration: Optional[int]         # в часах
     difficulty: Optional[str]       # лёгкий/средний/сложный
