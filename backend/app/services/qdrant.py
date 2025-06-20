@@ -62,7 +62,7 @@ class QdrantService:
                                     "duration": course_info["time_to_complete"],
                                     "difficulty": course_info["difficulty"],
                                     "price": 0 if course_info["price"] is None else course_info["price"],
-                                    "currency_code": "RUB" if course_info["currency_code"] is None else course_info["currency_code"],
+                                    "currency_code": course_info["currency_code"],
                                     "pupils_num": course_info["learners_count"],
                                     "authors": [], # парсить авторов
                                     "rating": 5, # парсить рейтинг

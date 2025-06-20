@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 from datetime import datetime
@@ -14,10 +14,10 @@ class CourseSummary(BaseModel):
     id: int
     cover_url: str        # ссылка на обложку курса
     title: str
-    duration: int         # в часах
-    difficulty: str       # лёгкий/средний/сложный
+    duration: Optional[int]         # в часах
+    difficulty: Optional[str]       # лёгкий/средний/сложный
     price: int            # цена курса
-    currency_code: str    # в чём валюта в рублях долларах и т.д.
+    currency_code: Optional[str]    # в чём валюта в рублях долларах и т.д.
     pupils_num: int       # количество записавшихся учеников
     authors: List[str]    # можно отдавать пустой список, детали подтягивать позже
     rating: int           # 0–5
