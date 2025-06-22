@@ -18,6 +18,8 @@ RUN pnpm install
 # Копируем оставшиеся файлы
 COPY public ./public
 COPY src ./src
+ARG VITE_API
+ENV VITE_API=$VITE_API
 
 # Сборка проекта
 RUN pnpm run build

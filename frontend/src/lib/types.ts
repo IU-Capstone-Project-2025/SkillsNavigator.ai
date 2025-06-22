@@ -9,7 +9,7 @@ export type CourseType = {
   cover_url: string
   title: string
   duration: number
-  difficulty: string
+  difficulty: 'easy' | 'medium' | 'hard' | null
   price: number
   currency_code: string
   pupils_num: number

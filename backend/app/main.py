@@ -1,6 +1,7 @@
 import asyncio
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import *
 from app.services import encoder, qdrant
@@ -24,7 +25,15 @@ app = FastAPI(
     docs_url="/swagger",  # вместо /docs
     redoc_url="/redocly",  # вместо /redoc
     openapi_url="/api/schema",  # вместо /openapi.json
-    lifespan=lifespan
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # или укажите ["http://localhost:8080"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(users.router)
