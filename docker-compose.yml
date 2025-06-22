@@ -15,7 +15,12 @@ services:
       QDRANT_PORT: 6333
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API: http://backend:80
+    environment:
+      VITE_API: http://backend:80
     container_name: frontend
     ports:
       - "8080:80"

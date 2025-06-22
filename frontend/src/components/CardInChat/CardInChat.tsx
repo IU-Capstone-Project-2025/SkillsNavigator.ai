@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Rating } from '../'
-import { CardType } from '../../lib/types'
+import { CourseType } from '../../lib/types'
 import people from '/assets/people.png'
 import clock from '/assets/clock.png'
 import gotoIcon from '/assets/gotoIconBlue.png'
@@ -12,7 +12,7 @@ const level = {
   hard: 'Сложный',
 }
 
-type Props = CardType & { index?: number }
+type Props = CourseType & { index?: number }
 
 const CardInChat: React.FC<Props> = ({
   title,
@@ -24,7 +24,7 @@ const CardInChat: React.FC<Props> = ({
   pupils_num,
   rating,
   url,
-  index, // индекс карточки (начиная с 0)
+  index,
 }) => {
   const [hovered, setHovered] = useState(false)
 
@@ -35,7 +35,6 @@ const CardInChat: React.FC<Props> = ({
       onMouseLeave={() => setHovered(false)}
       onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
     >
-      {/* Индекс на фоне */}
       {typeof index === 'number' && (
         <span className={css.bgIndex}>{index + 1}</span>
       )}
@@ -44,7 +43,7 @@ const CardInChat: React.FC<Props> = ({
           <img src={cover_url} alt="" className={css.image} />
           <div className={css.infoSection}>
             <Rating rating={rating} hovered={hovered} small />
-            <div className={css.difficulty}>{level[difficulty]}</div>
+            {difficulty && <div className={css.difficulty}>{level[difficulty]}</div>}
             <div className={css.durationAndPupils}>
               <div className={css.info}>
                 <img src={clock} alt="" className={css.icon} />

@@ -1,18 +1,27 @@
 import roadmapMockup from '/assets/roadmap_mockup.png'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import css from './index.module.scss'
-import { Card, Input, MoreButton } from '../../components'
+import { Card, ErrorMessage, Input, MoreButton } from '../../components'
 import thoughts from '/assets/thoughts.png'
 import arrowRight from '/assets/arrowRight.png'
-import { cards } from '../../lib/data'
 import { useNavigate } from 'react-router-dom'
 import { getChatRoute } from '../../lib/routes'
+import { CourseType } from '../../lib/types'
+import { getPopularCourses } from '../../api/api'
 
 const Main = () => {
   const navigate = useNavigate()
   const aboutRef = useRef<HTMLDivElement>(null)
   const [inputValue, setInputValue] = useState('')
   const [inputHide, setInputHide] = useState(false)
+  const [popularCourses, setPopularCourses] = useState<CourseType[]>([])
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    getPopularCourses()
+      .then(setPopularCourses)
+      .catch(() => setError(true))
+  }, [])
 
   const handleSend = () => {
     if (inputValue.trim()) {
@@ -26,6 +35,19 @@ const Main = () => {
 
   return (
     <>
+      {error && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 24,
+            right: 24,
+            zIndex: 1000,
+            maxWidth: 350,
+          }}
+        >
+          <ErrorMessage />
+        </div>
+      )}
       <div className={css.banner}>
         <h1 className={css.additionalTitle}>Развивайся, двигайся, учись</h1>
         <h1 className={css.additionalTitle}>
@@ -65,16 +87,16 @@ const Main = () => {
           </div>
         </div>
 
-        {cards.length !== 0 && <div className={css.divider} />}
+        {popularCourses.length !== 0 && <div className={css.divider} />}
 
-        {cards.length !== 0 && (
+        {popularCourses.length !== 0 && (
           <div className={css.coursesSection}>
             <h2 className={css.coursesTitle}>Популярные курсы</h2>
             <p className={css.additionalText}>Если хочешь попробовать что-то новое</p>
 
             <div className={css.courses}>
-              {cards.map((card) => (
-                <Card {...card} key={card.id} />
+              {popularCourses.map((course) => (
+                <Card {...course} key={course.id} />
               ))}
             </div>
           </div>

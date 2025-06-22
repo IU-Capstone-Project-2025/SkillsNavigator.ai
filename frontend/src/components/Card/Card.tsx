@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Rating } from '../'
-import { CardType } from '../../lib/types'
+import { CourseType } from '../../lib/types'
 import people from '/assets/people.png'
 import clock from '/assets/clock.png'
 import gotoIcon from '/assets/gotoIcon.png'
@@ -12,7 +12,7 @@ const level = {
   hard: 'Сложный',
 }
 
-const Card: React.FC<CardType> = ({
+const Card: React.FC<CourseType> = ({
   title,
   cover_url,
   duration,
@@ -37,7 +37,7 @@ const Card: React.FC<CardType> = ({
           <img src={cover_url} alt="" className={css.image} />
           <div className={css.infoSection}>
             <Rating rating={rating} hovered={hovered} />
-            <div className={css.difficulty}>{level[difficulty]}</div>
+            {difficulty && <div className={css.difficulty}>{level[difficulty]}</div>}
             <div className={css.durationAndPupils}>
               <div className={css.info}>
                 <img src={clock} alt="" className={css.icon} />

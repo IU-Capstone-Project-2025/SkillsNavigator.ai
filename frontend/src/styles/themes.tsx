@@ -4,34 +4,14 @@ import { createTheme } from '@mantine/core'
 export const mantine = createTheme({
   cursorType: 'pointer',
   components: {
-    // Checkbox: Checkbox.extend({ classNames: checkboxClasses }),
-    TextInput: {
-      defaultProps: { radius: 'md' },
-      classNames: { label: 'label' },
-    },
-    Textarea: {
-      defaultProps: {
-        radius: 'md',
-        autosize: true,
-        minRows: 2,
-        maxRows: 25,
-      },
-      classNames: { label: 'label' },
+    Alert: {
       styles: {
-        root: { width: '100%' },
-        input: { width: '100%' },
+        root: { padding: '20px'},
+        label: { fontSize: '1.3rem', lineHeight: '1', marginBottom: '8px' },
+        message: { fontSize: '1.3rem' },
+        icon: {width: '18px'},
+        closeButton: {scale: '1.5', cursor: 'pointer'}
       },
-    },
-    MultiSelect: {
-      defaultProps: { radius: 'md' },
-    },
-    Modal: {
-      styles: {
-        root: { zIndex: 100000 },
-      },
-    },
-    Button: {
-      defaultProps: { color: '#0171fc' },
     },
   },
 })
