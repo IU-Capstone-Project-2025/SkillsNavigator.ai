@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { searchCourses } from '../../api/api'
-import { CardInChat, Input, Message } from '../../components'
+import { CardInChat, ErrorMessage, Input, Message } from '../../components'
 import { questions } from '../../lib/data'
 import { CourseType, MessageType, PayloadType } from '../../lib/types'
 import css from './index.module.scss'
@@ -17,9 +17,15 @@ const Chat = () => {
   const [shownCourses, setShownCourses] = useState<number>(0)
   const chatEndRef = useRef<HTMLDivElement>(null)
   const [courses, setCourses] = useState<CourseType[]>([])
+  const [error, setError] = useState(false)
 
   const handleSearch = async (payload: PayloadType) => {
-    searchCourses(payload).then(setCourses)
+    try {
+      const data = await searchCourses(payload)
+      setCourses(data)
+    } catch {
+      setError(true)
+    }
   }
 
   useEffect(() => {
@@ -101,6 +107,19 @@ const Chat = () => {
 
   return (
     <div className={css.root}>
+      {error && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 24,
+            right: 24,
+            zIndex: 1000,
+            maxWidth: 350,
+          }}
+        >
+          <ErrorMessage />
+        </div>
+      )}
       <div className={css.chat}>
         {messagesBeforeCourses.map((msg, idx) => (
           <Message key={idx} text={msg.text} isUser={msg.isUser} animate={idx === messages.length - 1} />
