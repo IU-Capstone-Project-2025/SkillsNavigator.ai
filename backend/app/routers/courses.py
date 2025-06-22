@@ -4,7 +4,7 @@ from typing import List
 from app.models import *
 from app.services import qdrant, encoder
 
-router = APIRouter(prefix="/courses", tags=["courses"])
+router = APIRouter(prefix="/api/courses", tags=["courses"])
 
 
 @router.post(
@@ -49,7 +49,7 @@ async def get_popular_courses():
             "difficulty": "medium",
             "price": 2500,
             "pupils_num": 1200,
-            "authors": ["Alice Ivanova"],
+            "authors": "Alice Ivanova",
             "rating": 5,
             "url": "https://example.com/course/10"
         },
@@ -61,7 +61,7 @@ async def get_popular_courses():
             "difficulty": "hard",
             "price": 3500,
             "pupils_num": 800,
-            "authors": ["Bob Petrov", "Carol Smirnov"],
+            "authors": "Bob Petrov, Carol Smirnov",
             "rating": 5,
             "url": "https://example.com/course/22"
         }

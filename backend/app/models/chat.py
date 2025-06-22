@@ -19,7 +19,7 @@ class CourseSummary(BaseModel):
     price: int            # цена курса
     currency_code: Optional[str]    # в чём валюта в рублях долларах и т.д.
     pupils_num: int       # количество записавшихся учеников
-    authors: List[str]    # можно отдавать пустой список, детали подтягивать позже
+    authors: str    # можно отдавать пустой список, детали подтягивать позже
     rating: int           # 0–5
     url: str
     description: str # описание курса

@@ -81,7 +81,7 @@ class QdrantService:
                         "id": course_info["id"],
                         "cover_url": course_info["cover"],
                         "title": course_info["title"],
-                        "duration": course_info["time_to_complete"],
+                        "duration": int(course_info["time_to_complete"]/3600) if course_info["time_to_complete"] else 0,
                         "difficulty": course_info["difficulty"],
                         "price": 0 if course_info["price"] is None else course_info["price"],
                         "currency_code": course_info["currency_code"],
@@ -104,7 +104,7 @@ class QdrantService:
                     reviews = (await client.get("https://stepik.org/api/course-review-summaries", params=params)).json()
                     for review_c in range(len(reviews["course-review-summaries"])):
                         review = reviews["course-review-summaries"][review_c]
-                        courses[review["course"]]["rating"] = review["average"]
+                        courses[review["course"]]["rating"] = int(review["average"])
 
                     print(f"Getting authors", flush=True)
                     params = {'ids[]': author_ids}
@@ -112,8 +112,10 @@ class QdrantService:
                     for author_c in range(len(authors["users"])):
                         for i in courses:
                             if courses[i]["authors"] == authors["users"][author_c]["id"]:
-                                courses[i]["authors"] = authors["users"][author_c]["full_name"]
-                                break      
+                                courses[i]["authors"] = authors["users"][author_c]["full_name"]      
+                    for i in courses:
+                            if courses[i]["authors"].isdigit():
+                                courses[i]["authors"] = ""
 
                 except Exception as e:
                     print(e, flush=True)

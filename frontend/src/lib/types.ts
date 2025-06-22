@@ -13,7 +13,7 @@ export type CourseType = {
   price: number
   currency_code: string
   pupils_num: number
-  authors: string[]
+  authors: string
   rating: number
   url: string
   description: string

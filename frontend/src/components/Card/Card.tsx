@@ -53,12 +53,9 @@ const Card: React.FC<CourseType> = ({
 
         <p className={css.title}>{title}</p>
         <div className={css.authors}>
-          {authors.map((author, index) => (
-            <span key={index} className={css.author}>
-              {author}
-              {index < authors.length - 1 && ', '}
+            <span className={css.author}>
+              {authors}
             </span>
-          ))}
         </div>
       </div>
 
