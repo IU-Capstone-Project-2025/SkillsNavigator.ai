@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { searchCourses } from '../../api/api'
-import { CardInChat, ErrorMessage, Input, Message } from '../../components'
+import { Card, Input, Message } from '../../components'
 import { questions } from '../../lib/data'
 import { CourseType, MessageType, PayloadType } from '../../lib/types'
 import css from './index.module.scss'
@@ -18,6 +18,7 @@ const Chat = () => {
   const chatEndRef = useRef<HTMLDivElement>(null)
   const [courses, setCourses] = useState<CourseType[]>([])
   const [error, setError] = useState(false)
+  const [coursesInsertIndex, setCoursesInsertIndex] = useState<number | null>(null)
 
   const handleSearch = async (payload: PayloadType) => {
     try {
@@ -73,8 +74,6 @@ const Chat = () => {
     scrollToBottom()
   }
 
-  const [coursesInsertIndex, setCoursesInsertIndex] = useState<number | null>(null)
-
   useEffect(() => {
     if (step === questions.length - 1 && answers.desired_skills) {
       handleSearch({
@@ -82,9 +81,14 @@ const Chat = () => {
         current_level: answers.current_level || '',
         desired_skills: answers.desired_skills || '',
       })
+      if (coursesInsertIndex === null) {
+        setCoursesInsertIndex(messages.length)
+      }
     }
-    if (step === questions.length - 1 && answers.desired_skills && coursesInsertIndex === null) {
-      setCoursesInsertIndex(messages.length)
+  }, [step, answers.desired_skills])
+
+  useEffect(() => {
+    if (courses.length > 0) {
       setShownCourses(0)
       let i = 0
       const interval = setInterval(() => {
@@ -96,7 +100,7 @@ const Chat = () => {
       }, 500)
       return () => clearInterval(interval)
     }
-  }, [step, answers.desired_skills])
+  }, [courses])
 
   useEffect(() => {
     scrollToBottom()
@@ -107,36 +111,37 @@ const Chat = () => {
 
   return (
     <div className={css.root}>
-      {error && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 24,
-            right: 24,
-            zIndex: 1000,
-            maxWidth: 350,
-          }}
-        >
-          <ErrorMessage />
-        </div>
-      )}
       <div className={css.chat}>
-        {messagesBeforeCourses.map((msg, idx) => (
-          <Message key={idx} text={msg.text} isUser={msg.isUser} animate={idx === messages.length - 1} />
-        ))}
+        {messagesBeforeCourses.map((msg, idx) => {
+          const isLast = idx === messagesBeforeCourses.length - 1
+          if (error && isLast) {
+            return (
+              <Message
+                key={idx}
+                text="Упс, что-то пошло не так... Повторите попытку позже"
+                isUser={false}
+                error
+                animate={isLast}
+              />
+            )
+          }
+          return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
+        })}
 
-        <div className={css.courses}>
-          {step === questions.length - 1 && answers.desired_skills && (
-            <>
-              {courses.slice(0, shownCourses).map((course, idx) => (
-                <CardInChat {...course} key={course.id} index={idx} />
-              ))}
-              {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, idx) => (
-                <div className={css.placeholderCard} key={`placeholder-${idx}`} />
-              ))}
-            </>
-          )}
-        </div>
+        {courses.length > 0 && (
+          <div className={css.courses}>
+            {step === questions.length - 1 && answers.desired_skills && (
+              <>
+                {courses.slice(0, shownCourses).map((course, idx) => (
+                  <Card {...course} key={course.id} index={idx} inChat />
+                ))}
+                {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, idx) => (
+                  <div className={css.placeholderCard} key={`placeholder-${idx}`} />
+                ))}
+              </>
+            )}
+          </div>
+        )}
 
         {messagesAfterCourses.map((msg, idx) => (
           <Message key={`after-${idx}`} text={msg.text} isUser={msg.isUser} animate={false} />

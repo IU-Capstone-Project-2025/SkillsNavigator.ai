@@ -1,7 +1,7 @@
 import roadmapMockup from '/assets/roadmap_mockup.png'
 import { useEffect, useRef, useState } from 'react'
 import css from './index.module.scss'
-import { Card, ErrorMessage, Input, MoreButton } from '../../components'
+import { Card, Input, MoreButton } from '../../components'
 import thoughts from '/assets/thoughts.png'
 import arrowRight from '/assets/arrowRight.png'
 import { useNavigate } from 'react-router-dom'
@@ -15,12 +15,9 @@ const Main = () => {
   const [inputValue, setInputValue] = useState('')
   const [inputHide, setInputHide] = useState(false)
   const [popularCourses, setPopularCourses] = useState<CourseType[]>([])
-  const [error, setError] = useState(false)
 
   useEffect(() => {
-    getPopularCourses()
-      .then(setPopularCourses)
-      .catch(() => setError(true))
+    getPopularCourses().then(setPopularCourses)
   }, [])
 
   const handleSend = () => {
@@ -35,19 +32,6 @@ const Main = () => {
 
   return (
     <>
-      {error && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 24,
-            right: 24,
-            zIndex: 1000,
-            maxWidth: 350,
-          }}
-        >
-          <ErrorMessage />
-        </div>
-      )}
       <div className={css.banner}>
         <h1 className={css.additionalTitle}>Развивайся, двигайся, учись</h1>
         <h1 className={css.additionalTitle}>
