@@ -4,6 +4,7 @@ import { CourseType } from '../../lib/types'
 import people from '/assets/people.png'
 import clock from '/assets/clock.png'
 import gotoIcon from '/assets/gotoIcon.png'
+import gotoIconBlue from '/assets/gotoIconBlue.png'
 import css from './index.module.scss'
 
 const level = {
@@ -12,7 +13,12 @@ const level = {
   hard: 'Сложный',
 }
 
-const Card: React.FC<CourseType> = ({
+type Props = CourseType & {
+  index?: number
+  inChat?: boolean
+}
+
+const Card: React.FC<Props> = ({
   title,
   cover_url,
   duration,
@@ -22,21 +28,24 @@ const Card: React.FC<CourseType> = ({
   pupils_num,
   rating,
   url,
+  index,
+  inChat = false,
 }) => {
   const [hovered, setHovered] = useState(false)
 
   return (
     <div
-      className={css.card}
+      className={`${css.card} ${inChat ? css.cardInChat : ''}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
     >
+      {inChat && typeof index === 'number' && <span className={css.bgIndex}>{index + 1}</span>}
       <div>
         <div className={css.topSection}>
           <img src={cover_url} alt="" className={css.image} />
           <div className={css.infoSection}>
-            <Rating rating={rating} hovered={hovered} />
+            <Rating rating={rating} hovered={hovered} small={inChat} />
             {difficulty && <div className={css.difficulty}>{level[difficulty]}</div>}
             <div className={css.durationAndPupils}>
               <div className={css.info}>
@@ -53,20 +62,31 @@ const Card: React.FC<CourseType> = ({
 
         <p className={css.title}>{title}</p>
         <div className={css.authors}>
-            <span className={css.author}>
-              {authors}
-            </span>
+          <span className={css.author}>{authors}</span>
         </div>
       </div>
 
       <div className={css.bottomSection}>
-        <p className={css.price}>{price} руб.</p>
-        <button className={css.gotoButton} onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}>
-          Перейти
-          <img src={gotoIcon} alt="" className={css.gotoIcon} />
+        {price !== 0 ? <p className={css.price}>{price} руб.</p> : <p className={css.price}>Бесплатно</p>}
+        <button
+          className={css.gotoButton}
+          onClick={(e) => {
+            e.stopPropagation()
+            window.open(url, '_blank', 'noopener,noreferrer')
+          }}
+        >
+          {inChat ? (
+            <img src={gotoIconBlue} alt="" className={css.gotoIcon} />
+          ) : (
+            <>
+              Перейти
+              <img src={gotoIcon} alt="" className={css.gotoIcon} />
+            </>
+          )}
         </button>
       </div>
     </div>
   )
 }
+
 export default Card

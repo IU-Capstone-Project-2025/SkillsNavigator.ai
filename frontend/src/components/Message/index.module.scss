@@ -1,22 +1,23 @@
 @use '../../styles/_vars' as *;
 @use '../../styles/_mixins' as *;
 
-.wrapper {
+// Используем placeholder-селекторы для extend
+%wrapper {
   display: flex;
   margin-bottom: 8px;
 }
 
 .userWrapper {
-  @extend .wrapper;
+  @extend %wrapper;
   justify-content: flex-end;
 }
 
 .friendWrapper {
-  @extend .wrapper;
+  @extend %wrapper;
   justify-content: flex-start;
 }
 
-.bubble {
+%bubble {
   width: fit-content;
   padding: 8px 18px;
   border-radius: 12px;
@@ -25,7 +26,7 @@
 }
 
 .userBubble {
-  @extend .bubble;
+  @extend %bubble;
   background: $blue;
   color: white;
   border-bottom-right-radius: 0;
@@ -35,7 +36,7 @@
 }
 
 .friendBubble {
-  @extend .bubble;
+  @extend %bubble;
   background: rgb($white, 0.4);
   border-bottom-left-radius: 4px;
   box-shadow:
@@ -43,7 +44,7 @@
     3px 3px 10px rgba(#abd1f3, 0.6) inset;
 }
 
-.tail {
+%tail {
   position: absolute;
   width: 12px;
   height: 12px;
@@ -51,7 +52,7 @@
 }
 
 .userTail {
-  @extend .tail;
+  @extend %tail;
   right: -10px;
   background: $blue;
   clip-path: polygon(100% 100%, 0 0, 0 100%);
@@ -61,7 +62,7 @@
 }
 
 .friendTail {
-  @extend .tail;
+  @extend %tail;
   left: -10px;
   background: rgb($white, 0.4);
   clip-path: polygon(0 100%, 100% 0, 100% 100%);
@@ -71,16 +72,30 @@
 }
 
 .animate {
-  animation: flyInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fly-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes flyInUp {
+@keyframes fly-in-up {
   from {
     opacity: 0;
     transform: translateY(40px) scale(0.96);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+.errorBubble {
+  color: $red;
+  box-shadow:
+    -4px -4px 3px rgba(#ff4d4f, 0.3) inset,
+    3px 3px 3px rgba(#ff4d4f, 0.3) inset;
+}
+
+.errorTail {
+  box-shadow:
+    -4px -4px 3px rgba(#ff4d4f, 0.3) inset,
+    3px 3px 3px rgba(#ff4d4f, 0.3) inset;
 }
