@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+import logging
 
 
 class Settings(BaseSettings):
@@ -8,3 +9,14 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+def setup_logging():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+        handlers=[logging.StreamHandler()]
+    )
+
+    # Отключаем логи от httpx
+    logging.getLogger("httpx").setLevel(logging.WARNING)
