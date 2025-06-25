@@ -12,6 +12,10 @@
   justify-content: space-between;
   flex-direction: column;
   padding: 120px 300px 30px 300px;
+
+  @include breakpoint('xlarge') {
+    padding: 120px 50px 30px 50px;
+  }
 }
 
 .chat {

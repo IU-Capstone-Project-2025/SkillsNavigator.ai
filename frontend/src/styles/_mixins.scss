@@ -34,6 +34,10 @@ $breakpoints: (
 
 @mixin page {
   padding: 0 157px;
+
+  @include breakpoint('xlarge') {
+    padding: 0 57px;
+  }
 }
 
 @mixin link {

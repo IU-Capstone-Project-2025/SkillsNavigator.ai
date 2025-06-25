@@ -1,3 +1,4 @@
+import '@mantine/core/styles.css'
 import './styles/global.scss'
 import './styles/typography.scss'
 import { MantineProvider } from '@mantine/core'
@@ -8,7 +9,7 @@ import ScrollResetProvider from './lib/ScrollResetProvider'
 import TextFormatProvider from './lib/TextFormatProvider'
 import * as routes from './lib/routes'
 import { Chat, Main } from './pages'
-import * as themes from './styles/themes'
+import { mantine } from './styles/themes'
 
 const Layout = () => {
   const location = useLocation()
@@ -29,7 +30,7 @@ const Layout = () => {
 
 function App() {
   return (
-    <MantineProvider theme={themes.mantine}>
+    <MantineProvider theme={mantine}>
       <TextFormatProvider>
         <BrowserRouter>
           <Layout />

@@ -17,7 +17,6 @@ const Header = () => {
         <NavLink text="Главная" to={routes.getMainRoute()} />
         <NavLink text="Чат" to={routes.getChatRoute()} />
         <NavLink text="Мой путь" to={routes.getRoadmapRoute()} disabled />
-        <NavLink text="О нас" to={routes.getAboutRoute()} disabled />
       </div>
 
       <button className={css.loginButton}>Вход</button>

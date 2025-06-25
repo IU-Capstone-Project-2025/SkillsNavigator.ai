@@ -8,14 +8,17 @@ services:
     depends_on:
       - qdrant
     restart: unless-stopped
-    ports:
-      - "8000:80"         # ← хост:контейнер — теперь 8000 на 80
     environment:
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API: /api
+    environment:
+      VITE_API: /api
     container_name: frontend
     ports:
       - "8080:80"
@@ -26,8 +29,6 @@ services:
   qdrant:
     image: qdrant/qdrant
     container_name: qdrant
-    ports:
-      - "6333:6333"
     volumes:
       - qdrant_data:/qdrant/storage
     restart: unless-stopped
