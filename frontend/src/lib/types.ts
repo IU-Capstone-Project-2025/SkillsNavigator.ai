@@ -4,20 +4,28 @@ export type PayloadType = {
   desired_skills: string
 }
 
-export type CardType = {
+export type CourseType = {
   id: number
-  title: string
-  pupils_num?: number
   cover_url: string
+  title: string
   duration: number
-  difficulty: 'easy' | 'medium' | 'hard'
+  difficulty: 'easy' | 'medium' | 'hard' | null
   price: number
-  authors: string[]
-  rating: 0 | 1 | 2 | 3 | 4 | 5
+  currency_code: string
+  pupils_num: number
+  authors: string
+  rating: number
   url: string
+  description: string
+  summary: string
+  target_audience: string
+  acquired_skills: string
+  acquired_assets: string
+  title_en: string
+  learning_format: string
 }
 
 export type MessageType = {
   text: string
-  isUser?: boolean
+  isUser: boolean
 }

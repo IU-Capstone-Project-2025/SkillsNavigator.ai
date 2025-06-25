@@ -10,7 +10,7 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
-  box-shadow: 4px 4px 10px #BEDAF3 inset;
+  box-shadow: 4px 4px 10px #bedaf3 inset;
 }
 
 .headline {
@@ -18,7 +18,8 @@
   white-space: nowrap;
 }
 
-.links, .nav {
+.links,
+.nav {
   display: flex;
   align-items: center;
   gap: 60px;
@@ -36,10 +37,10 @@
 }
 
 .contactsList {
-    font-family: $additionalFont, serif;
-    font-size: 1.8rem;
-    display: flex;
-    gap: 20px;
+  font-family: $additionalFont, serif;
+  font-size: 1.8rem;
+  display: flex;
+  gap: 20px;
 }
 
 .bottomSection {

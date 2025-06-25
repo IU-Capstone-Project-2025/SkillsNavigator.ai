@@ -7,7 +7,7 @@ html {
 
 body {
   font-family: $defaultFont, sans-serif;
-  font-size: 1.6rem; // 16px
+  font-size: 1.6rem !important; // 16px
   line-height: calc(1em + 0.6rem);
   letter-spacing: 0.3px;
 }

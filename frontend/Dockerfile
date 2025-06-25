@@ -18,6 +18,8 @@ RUN pnpm install
 # Копируем оставшиеся файлы
 COPY public ./public
 COPY src ./src
+ARG VITE_API
+ENV VITE_API=$VITE_API
 
 # Сборка проекта
 RUN pnpm run build
@@ -28,8 +30,7 @@ FROM nginx:alpine AS production
 # Копируем собранный фронт
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Настраиваем Nginx (опционально — если нужно SPA rewrite)
-# RUN echo 'server { listen 80; root /usr/share/nginx/html; index index.html; location / { try_files $uri $uri/ /index.html; } }' > /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
