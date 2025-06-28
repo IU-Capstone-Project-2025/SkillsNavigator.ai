@@ -29,3 +29,10 @@ export type MessageType = {
   text: string
   isUser: boolean
 }
+
+export type ChatType = {
+  id: number
+  name: string
+  roadmapId: number
+  chat: MessageType[]
+}
