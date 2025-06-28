@@ -1,10 +1,9 @@
 import { MessageType, ChatType } from './types'
 
 export const questions: MessageType[] = [
-  { text: 'Доброго времени суток! Что вы хотели бы освоить? ', isUser: false },
+  { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
   { text: 'Какой у вас уже уровень?', isUser: false },
   { text: 'Какие конкретные навыки вы хотите освоить?', isUser: false },
-  { text: 'Твой план, который приведет к цели:', isUser: false },
 ]
 
 export let chats: ChatType[] = [
@@ -13,8 +12,9 @@ export let chats: ChatType[] = [
     name: 'Маркетология',
     roadmapId: 1,
     chat: [
-      { text: 'Привет! Чем могу помочь?', isUser: false },
+      { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Хочу узнать про курсы по маркетингу.', isUser: true },
+      { text: 'Какие конкретные навыки вы хотите освоить?', isUser: false },
     ],
   },
   {
@@ -22,8 +22,9 @@ export let chats: ChatType[] = [
     name: 'Программирование',
     roadmapId: 2,
     chat: [
-      { text: 'Здравствуйте! Какие языки программирования вас интересуют?', isUser: false },
+      { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Python и JavaScript.', isUser: true },
+      { text: 'Какие конкретные навыки вы хотите освоить?', isUser: false },
     ],
   },
   {
@@ -31,8 +32,9 @@ export let chats: ChatType[] = [
     name: 'Дизайн',
     roadmapId: 3,
     chat: [
-      { text: 'Добро пожаловать в чат по дизайну!', isUser: false },
+      { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Расскажите про UX/UI.', isUser: true },
+      { text: 'Какие конкретные навыки вы хотите освоить?', isUser: false },
     ],
   },
 ]
