@@ -13,5 +13,10 @@ export const mantine = createTheme({
         closeButton: { scale: '1.5', cursor: 'pointer' },
       },
     },
+    Tooltip: {
+      styles: {
+        tooltip: { width: 'fit-content', fontSize: '1.2rem', padding: '2px 8px', borderRadius: '6px', backgroundColor: 'rgba(0, 0, 0, 0.6)' },
+      },
+    },
   },
 })

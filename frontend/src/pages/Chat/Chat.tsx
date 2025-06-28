@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { searchCourses } from '../../api/api'
-import { Card, Input, Message } from '../../components'
+import { Card, Input, Message, Sidebar } from '../../components'
 import { questions } from '../../lib/data'
 import { CourseType, MessageType, PayloadType } from '../../lib/types'
 import css from './index.module.scss'
@@ -111,6 +111,16 @@ const Chat = () => {
 
   return (
     <div className={css.root}>
+      <Sidebar
+        chats={[
+          { id: 1, title: 'Маркетология' },
+          { id: 2, title: 'Маркетология', active: true },
+          { id: 3, title: 'Маркетология' },
+          { id: 4, title: 'Маркетология' },
+        ]}
+        onSelect={(id) => console.info(`Выбран чат ${id}`)}
+      />
+
       <div className={css.chat}>
         {messagesBeforeCourses.map((msg, idx) => {
           const isLast = idx === messagesBeforeCourses.length - 1
