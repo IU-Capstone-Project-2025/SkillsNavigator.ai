@@ -1,0 +1,49 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, tests]  # Запуск на пуш в ветки main и tests
+  pull_request:
+    branches: [main, tests]  # Запуск на pull request в main и tests
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # Используется Ubuntu в качестве среды выполнения
+
+    steps:
+      # Клонирование репозитория
+      - uses: actions/checkout@v3
+
+      - name: Build app
+        # Сборка сервисов из docker-compose.yml, включая backend
+        run: docker compose build
+
+      - name: Start backend services
+        # Запуск backend и зависимостей в фоне
+        run: docker compose up -d
+
+      - name: Build test container
+        # Сборка тестового контейнера из backend/Dockerfile.test
+        run: |
+          docker buildx build \
+            -f backend/Dockerfile.test \
+            -t test-runner backend \
+            --load
+
+      - name: Run unit and integration tests
+        # Запуск unit и integration тестов внутри test-runner
+        run: docker run --network=host test-runner pytest tests/unit tests/integration
+
+      - name: Wait for backend
+        # Ожидание готовности backend (например, по /health endpoint)
+        run: |
+          docker run --network=host test-runner python wait-for-backend.py
+
+      - name: Run e2e tests
+        # Запуск end-to-end тестов, которые взаимодействуют с backend по HTTP
+        run: docker run --network=host test-runner pytest tests/e2e
+
+      - name: Shutdown
+        # Остановка всех запущенных контейнеров и удаление томов
+        if: always()
+        run: docker compose down -v

@@ -1,0 +1,272 @@
+2025-06-29 10:05:20,597 [INFO] Application started
+2025-06-29 10:05:20,598 [INFO] Init model: cointegrated/LaBSE-en-ru
+2025-06-29 10:05:20,600 [INFO] Use pytorch device_name: cpu
+2025-06-29 10:05:20,600 [INFO] Load pretrained SentenceTransformer: cointegrated/LaBSE-en-ru
+2025-06-29 10:05:25,391 [INFO] Model loaded and set up: cpu
+2025-06-29 10:05:25,392 [INFO] Init Qdrant client on qdrant:6333
+2025-06-29 10:05:25,520 [INFO] Collection 'courses' is not found, try again
+2025-06-29 10:05:25,644 [INFO] Load courses from Stepik
+2025-06-29 10:05:25,663 [INFO] Getting page courses list: 1
+2025-06-29 10:05:27,626 [INFO] Getting courses from: Новые курсы
+2025-06-29 10:05:27,627 [INFO] Getting courses from: Мини-курсы
+2025-06-29 10:05:27,627 [INFO] Getting page courses list: 2
+2025-06-29 13:04:00,165 [INFO] Application started
+2025-06-29 13:04:00,166 [INFO] Init model: cointegrated/LaBSE-en-ru
+2025-06-29 13:04:00,167 [INFO] Use pytorch device_name: cpu
+2025-06-29 13:04:00,168 [INFO] Load pretrained SentenceTransformer: cointegrated/LaBSE-en-ru
+2025-06-29 13:04:03,700 [INFO] Model loaded and set up: cpu
+2025-06-29 13:04:03,701 [INFO] Init Qdrant client on qdrant:6333
+2025-06-29 13:04:03,780 [INFO] Collection 'courses' already exists
+2025-06-29 13:04:03,781 [INFO] Load courses from Stepik
+2025-06-29 13:04:03,793 [INFO] Getting page courses list: 1
+2025-06-29 13:04:04,541 [INFO] Getting courses from: Новые курсы
+2025-06-29 13:04:04,541 [INFO] Getting courses from: Мини-курсы
+2025-06-29 13:04:04,542 [INFO] Getting page courses list: 2
+2025-06-29 13:04:05,054 [INFO] Getting courses from: Готовимся к ЕГЭ вместе
+2025-06-29 13:04:05,054 [INFO] Getting courses from: Английский
+2025-06-29 13:04:05,054 [INFO] Getting page courses list: 3
+2025-06-29 13:04:05,573 [INFO] Getting courses from: SQL
+2025-06-29 13:04:05,574 [INFO] Getting courses from: Stepik Awards 2023
+2025-06-29 13:04:05,574 [INFO] Getting page courses list: 4
+2025-06-29 13:04:06,088 [INFO] Getting courses from: Пакеты курсов
+2025-06-29 13:04:06,088 [INFO] Getting courses from: Программирование с демо-уроками
+2025-06-29 13:04:06,089 [INFO] Getting page courses list: 5
+2025-06-29 13:04:06,619 [INFO] Getting courses from: 1С и бухгалтерский учет
+2025-06-29 13:04:06,620 [INFO] Getting courses from: Курсы по разработке игр
+2025-06-29 13:04:06,620 [INFO] Getting page courses list: 6
+2025-06-29 13:04:07,203 [INFO] Getting courses from: Аналитика
+2025-06-29 13:04:07,205 [INFO] Getting courses from: Stepik Awards 2024
+2025-06-29 13:04:07,205 [INFO] Getting page courses list: 7
+2025-06-29 13:04:08,146 [INFO] Getting courses from: 3D моделирование и проектирование
+2025-06-29 13:04:08,148 [INFO] Getting courses from: Курсы по 1С и бухгалтерскому учету
+2025-06-29 13:04:08,148 [INFO] Getting page courses list: 8
+2025-06-29 13:04:08,668 [INFO] Getting courses from: Django
+2025-06-29 13:04:08,669 [INFO] Getting courses from: Java
+2025-06-29 13:04:08,669 [INFO] Getting page courses list: 9
+2025-06-29 13:04:09,270 [INFO] Getting courses from: Lua
+2025-06-29 13:04:09,271 [INFO] Getting courses from: TypeScript
+2025-06-29 13:04:09,271 [INFO] Getting page courses list: 10
+2025-06-29 13:04:09,823 [INFO] Getting courses from: BI-аналитика
+2025-06-29 13:04:09,824 [INFO] Getting courses from: Машинное обучение и наука о данных
+2025-06-29 13:04:09,824 [INFO] Getting page courses list: 11
+2025-06-29 13:04:10,360 [INFO] Getting courses from: Корейский язык
+2025-06-29 13:04:10,361 [INFO] Getting courses from: Испанский язык
+2025-06-29 13:04:10,361 [INFO] Getting page courses list: 12
+2025-06-29 13:04:10,889 [INFO] Getting courses from: Бухгалтерский учёт
+2025-06-29 13:04:10,890 [INFO] Getting courses from: Деловая коммуникация
+2025-06-29 13:04:10,890 [INFO] Getting page courses list: 13
+2025-06-29 13:04:11,450 [INFO] Getting courses from: Писательское мастерство
+2025-06-29 13:04:11,452 [INFO] Getting courses from: Промышленный дизайн
+2025-06-29 13:04:11,452 [INFO] Getting page courses list: 14
+2025-06-29 13:04:11,981 [INFO] Getting courses from: Обществознание
+2025-06-29 13:04:11,982 [INFO] Getting courses from: Управление транспортом
+2025-06-29 13:04:11,982 [INFO] Getting page courses list: 15
+2025-06-29 13:04:12,525 [INFO] Getting courses from: Астрономия
+2025-06-29 13:04:12,526 [INFO] Getting courses from: Химия
+2025-06-29 13:04:12,526 [INFO] Getting page courses list: 16
+2025-06-29 13:04:13,041 [INFO] Getting courses from: Электротехника
+2025-06-29 13:04:13,041 [INFO] Getting courses from: Машиностроение
+2025-06-29 13:04:13,042 [INFO] Getting page courses list: 17
+2025-06-29 13:04:13,562 [INFO] Getting courses from: Собеседования на работу в сфере IT
+2025-06-29 13:04:13,563 [INFO] Getting courses from: Нейросети, чат-боты и искусственный интеллект
+2025-06-29 13:04:13,563 [INFO] Getting page courses list: 18
+2025-06-29 13:04:14,274 [INFO] Getting courses from: Архитектура ЭВМ
+2025-06-29 13:04:14,274 [INFO] Getting courses from: Алгоритмы и структуры данных
+2025-06-29 13:04:14,274 [INFO] Getting page courses list: 19
+2025-06-29 13:04:14,802 [INFO] Getting courses from: Проектный менеджмент
+2025-06-29 13:04:14,803 [INFO] Getting courses from: Туризм и гостиничное дело
+2025-06-29 13:04:14,803 [INFO] Getting page courses list: 20
+2025-06-29 13:04:15,318 [INFO] Getting courses from: Английский язык
+2025-06-29 13:04:15,318 [INFO] Getting courses from: Русский язык
+2025-06-29 13:04:15,319 [INFO] Getting page courses list: 21
+2025-06-29 13:04:16,405 [INFO] Getting courses from: Языковые курсы
+2025-06-29 13:04:16,406 [INFO] Getting courses from: Математика
+2025-06-29 13:04:16,406 [INFO] Getting page courses list: 22
+2025-06-29 13:04:16,932 [INFO] Getting courses from: Менеджмент
+2025-06-29 13:04:16,933 [INFO] Getting courses from: Программирование для опытных
+2025-06-29 13:04:16,933 [INFO] Getting page courses list: 23
+2025-06-29 13:04:17,490 [INFO] Getting courses from: В тренде
+2025-06-29 13:04:17,491 [INFO] Getting courses from: Маркетинг
+2025-06-29 13:04:17,492 [INFO] Found 2390 unique courses
+2025-06-29 13:04:17,492 [INFO] Processing courses: 0 - 100
+2025-06-29 13:04:25,957 [INFO] Getting course ratings
+2025-06-29 13:04:27,680 [INFO] Getting authors info
+2025-06-29 13:04:29,319 [INFO] Starting course vectorization
+2025-06-29 13:04:43,579 [INFO] Loaded 100 dots in Qdrant
+2025-06-29 13:04:43,833 [INFO] Successful course download to Qdrant
+2025-06-29 13:44:52,264 [INFO] Application started
+2025-06-29 13:44:52,265 [INFO] Init model: cointegrated/LaBSE-en-ru
+2025-06-29 13:44:52,266 [INFO] Use pytorch device_name: cpu
+2025-06-29 13:44:52,266 [INFO] Load pretrained SentenceTransformer: cointegrated/LaBSE-en-ru
+2025-06-29 13:44:55,764 [INFO] Model loaded and set up: cpu
+2025-06-29 13:44:55,765 [INFO] Init Qdrant client on qdrant:6333
+2025-06-29 13:44:55,892 [INFO] Collection 'courses' already exists
+2025-06-29 13:44:55,893 [INFO] Load courses from Stepik
+2025-06-29 13:44:55,905 [INFO] Getting page courses list: 1
+2025-06-29 13:44:57,807 [INFO] Getting courses from: Новые курсы
+2025-06-29 13:44:57,810 [INFO] Getting courses from: Мини-курсы
+2025-06-29 13:44:57,811 [INFO] Getting page courses list: 2
+2025-06-29 13:44:59,013 [INFO] Getting courses from: Готовимся к ЕГЭ вместе
+2025-06-29 13:44:59,013 [INFO] Getting courses from: Английский
+2025-06-29 13:44:59,014 [INFO] Getting page courses list: 3
+2025-06-29 13:45:00,213 [INFO] Getting courses from: SQL
+2025-06-29 13:45:00,214 [INFO] Getting courses from: Stepik Awards 2023
+2025-06-29 13:45:00,214 [INFO] Getting page courses list: 4
+2025-06-29 13:45:01,664 [INFO] Getting courses from: Пакеты курсов
+2025-06-29 13:45:01,665 [INFO] Getting courses from: Программирование с демо-уроками
+2025-06-29 13:45:01,665 [INFO] Getting page courses list: 5
+2025-06-29 13:45:03,099 [INFO] Getting courses from: 1С и бухгалтерский учет
+2025-06-29 13:45:03,101 [INFO] Getting courses from: Курсы по разработке игр
+2025-06-29 13:45:03,101 [INFO] Getting page courses list: 6
+2025-06-29 13:45:04,137 [INFO] Getting courses from: Аналитика
+2025-06-29 13:45:04,139 [INFO] Getting courses from: Stepik Awards 2024
+2025-06-29 13:45:04,139 [INFO] Getting page courses list: 7
+2025-06-29 13:45:09,907 [INFO] Getting courses from: 3D моделирование и проектирование
+2025-06-29 13:45:09,908 [INFO] Getting courses from: Курсы по 1С и бухгалтерскому учету
+2025-06-29 13:45:09,908 [INFO] Getting page courses list: 8
+2025-06-29 13:45:11,909 [INFO] Getting courses from: Django
+2025-06-29 13:45:11,911 [INFO] Getting courses from: Java
+2025-06-29 13:45:11,911 [INFO] Getting page courses list: 9
+2025-06-29 13:45:14,805 [INFO] Getting courses from: Lua
+2025-06-29 13:45:14,807 [INFO] Getting courses from: TypeScript
+2025-06-29 13:45:14,807 [INFO] Getting page courses list: 10
+2025-06-29 13:45:19,901 [INFO] Getting courses from: BI-аналитика
+2025-06-29 13:45:19,903 [INFO] Getting courses from: Машинное обучение и наука о данных
+2025-06-29 13:45:19,903 [INFO] Getting page courses list: 11
+2025-06-29 13:45:21,966 [INFO] Getting courses from: Корейский язык
+2025-06-29 13:45:21,966 [INFO] Getting courses from: Испанский язык
+2025-06-29 13:45:21,967 [INFO] Getting page courses list: 12
+2025-06-29 13:45:23,481 [INFO] Getting courses from: Бухгалтерский учёт
+2025-06-29 13:45:23,481 [INFO] Getting courses from: Деловая коммуникация
+2025-06-29 13:45:23,482 [INFO] Getting page courses list: 13
+2025-06-29 13:45:26,263 [INFO] Getting courses from: Писательское мастерство
+2025-06-29 13:45:26,265 [INFO] Getting courses from: Промышленный дизайн
+2025-06-29 13:45:26,265 [INFO] Getting page courses list: 14
+2025-06-29 13:45:27,577 [INFO] Getting courses from: Обществознание
+2025-06-29 13:45:27,578 [INFO] Getting courses from: Управление транспортом
+2025-06-29 13:45:27,578 [INFO] Getting page courses list: 15
+2025-06-29 13:45:29,049 [INFO] Getting courses from: Астрономия
+2025-06-29 13:45:29,051 [INFO] Getting courses from: Химия
+2025-06-29 13:45:29,051 [INFO] Getting page courses list: 16
+2025-06-29 13:45:30,972 [INFO] Getting courses from: Электротехника
+2025-06-29 13:45:30,974 [INFO] Getting courses from: Машиностроение
+2025-06-29 13:45:30,975 [INFO] Getting page courses list: 17
+2025-06-29 13:45:32,450 [INFO] Getting courses from: Собеседования на работу в сфере IT
+2025-06-29 13:45:32,452 [INFO] Getting courses from: Нейросети, чат-боты и искусственный интеллект
+2025-06-29 13:45:32,452 [INFO] Getting page courses list: 18
+2025-06-29 13:45:35,812 [INFO] Getting courses from: Архитектура ЭВМ
+2025-06-29 13:45:35,814 [INFO] Getting courses from: Алгоритмы и структуры данных
+2025-06-29 13:45:35,814 [INFO] Getting page courses list: 19
+2025-06-29 13:45:38,032 [INFO] Getting courses from: Проектный менеджмент
+2025-06-29 13:45:38,032 [INFO] Getting courses from: Туризм и гостиничное дело
+2025-06-29 13:45:38,032 [INFO] Getting page courses list: 20
+2025-06-29 13:45:39,238 [INFO] Getting courses from: Английский язык
+2025-06-29 13:45:39,239 [INFO] Getting courses from: Русский язык
+2025-06-29 13:45:39,240 [INFO] Getting page courses list: 21
+2025-06-29 13:45:42,891 [INFO] Getting courses from: Языковые курсы
+2025-06-29 13:45:42,892 [INFO] Getting courses from: Математика
+2025-06-29 13:45:42,892 [INFO] Getting page courses list: 22
+2025-06-29 13:45:44,662 [INFO] Getting courses from: Менеджмент
+2025-06-29 13:45:44,663 [INFO] Getting courses from: Программирование для опытных
+2025-06-29 13:45:44,663 [INFO] Getting page courses list: 23
+2025-06-29 13:45:45,320 [INFO] Getting courses from: В тренде
+2025-06-29 13:45:45,321 [INFO] Getting courses from: Маркетинг
+2025-06-29 13:45:45,322 [INFO] Found 2390 unique courses
+2025-06-29 13:45:45,322 [INFO] Processing courses: 0 - 100
+2025-06-29 13:45:53,125 [INFO] Getting course ratings
+2025-06-29 13:45:53,852 [INFO] Getting authors info
+2025-06-29 13:45:54,981 [INFO] Starting course vectorization
+2025-06-29 13:46:04,532 [INFO] Loaded 100 dots in Qdrant
+2025-06-29 13:46:04,666 [INFO] Successful course download to Qdrant
+2025-06-29 13:47:27,129 [INFO] Search courses: area='AI', level='beginner', slills='python'
+2025-06-29 13:47:27,799 [INFO] Search in collection 'courses' with limit 10
+2025-06-29 13:47:28,089 [INFO] Found 10 similar
+2025-06-29 13:47:28,089 [INFO] Found 10 courses
+2025-06-29 13:48:28,622 [INFO] Application started
+2025-06-29 13:48:28,624 [INFO] Init model: cointegrated/LaBSE-en-ru
+2025-06-29 13:48:28,630 [INFO] Use pytorch device_name: cpu
+2025-06-29 13:48:28,630 [INFO] Load pretrained SentenceTransformer: cointegrated/LaBSE-en-ru
+2025-06-29 13:48:35,088 [INFO] Model loaded and set up: cpu
+2025-06-29 13:48:35,090 [INFO] Init Qdrant client on qdrant:6333
+2025-06-29 13:48:35,233 [INFO] Collection 'courses' already exists
+2025-06-29 13:48:35,236 [INFO] Load courses from Stepik
+2025-06-29 13:48:35,250 [INFO] Getting page courses list: 1
+2025-06-29 13:48:36,996 [INFO] Getting courses from: Новые курсы
+2025-06-29 13:48:36,999 [INFO] Getting courses from: Мини-курсы
+2025-06-29 13:48:36,999 [INFO] Getting page courses list: 2
+2025-06-29 13:48:37,616 [INFO] Getting courses from: Готовимся к ЕГЭ вместе
+2025-06-29 13:48:37,617 [INFO] Getting courses from: Английский
+2025-06-29 13:48:37,617 [INFO] Getting page courses list: 3
+2025-06-29 13:48:38,145 [INFO] Getting courses from: SQL
+2025-06-29 13:48:38,145 [INFO] Getting courses from: Stepik Awards 2023
+2025-06-29 13:48:38,145 [INFO] Getting page courses list: 4
+2025-06-29 13:48:38,667 [INFO] Getting courses from: Пакеты курсов
+2025-06-29 13:48:38,668 [INFO] Getting courses from: Программирование с демо-уроками
+2025-06-29 13:48:38,668 [INFO] Getting page courses list: 5
+2025-06-29 13:48:39,184 [INFO] Getting courses from: 1С и бухгалтерский учет
+2025-06-29 13:48:39,185 [INFO] Getting courses from: Курсы по разработке игр
+2025-06-29 13:48:39,185 [INFO] Getting page courses list: 6
+2025-06-29 13:48:39,717 [INFO] Getting courses from: Аналитика
+2025-06-29 13:48:39,717 [INFO] Getting courses from: Stepik Awards 2024
+2025-06-29 13:48:39,718 [INFO] Getting page courses list: 7
+2025-06-29 13:48:40,662 [INFO] Getting courses from: 3D моделирование и проектирование
+2025-06-29 13:48:40,664 [INFO] Getting courses from: Курсы по 1С и бухгалтерскому учету
+2025-06-29 13:48:40,664 [INFO] Getting page courses list: 8
+2025-06-29 13:48:41,185 [INFO] Getting courses from: Django
+2025-06-29 13:48:41,185 [INFO] Getting courses from: Java
+2025-06-29 13:48:41,186 [INFO] Getting page courses list: 9
+2025-06-29 13:48:41,809 [INFO] Getting courses from: Lua
+2025-06-29 13:48:41,810 [INFO] Getting courses from: TypeScript
+2025-06-29 13:48:41,810 [INFO] Getting page courses list: 10
+2025-06-29 13:48:42,424 [INFO] Getting courses from: BI-аналитика
+2025-06-29 13:48:42,425 [INFO] Getting courses from: Машинное обучение и наука о данных
+2025-06-29 13:48:42,425 [INFO] Getting page courses list: 11
+2025-06-29 13:48:43,007 [INFO] Getting courses from: Корейский язык
+2025-06-29 13:48:43,007 [INFO] Getting courses from: Испанский язык
+2025-06-29 13:48:43,007 [INFO] Getting page courses list: 12
+2025-06-29 13:48:43,524 [INFO] Getting courses from: Бухгалтерский учёт
+2025-06-29 13:48:43,524 [INFO] Getting courses from: Деловая коммуникация
+2025-06-29 13:48:43,524 [INFO] Getting page courses list: 13
+2025-06-29 13:48:43,582 [INFO] Search courses: area='AI', level='beginner', slills='python'
+2025-06-29 13:48:44,056 [INFO] Getting courses from: Писательское мастерство
+2025-06-29 13:48:44,061 [INFO] Getting courses from: Промышленный дизайн
+2025-06-29 13:48:44,067 [INFO] Getting page courses list: 14
+2025-06-29 13:48:44,667 [INFO] Getting courses from: Обществознание
+2025-06-29 13:48:44,673 [INFO] Getting courses from: Управление транспортом
+2025-06-29 13:48:44,679 [INFO] Getting page courses list: 15
+2025-06-29 13:48:45,359 [INFO] Getting courses from: Астрономия
+2025-06-29 13:48:45,364 [INFO] Getting courses from: Химия
+2025-06-29 13:48:45,368 [INFO] Getting page courses list: 16
+2025-06-29 13:48:45,719 [INFO] Search in collection 'courses' with limit 10
+2025-06-29 13:48:45,790 [INFO] Found 10 similar
+2025-06-29 13:48:45,790 [INFO] Found 10 courses
+2025-06-29 13:48:46,007 [INFO] Getting courses from: Электротехника
+2025-06-29 13:48:46,008 [INFO] Getting courses from: Машиностроение
+2025-06-29 13:48:46,008 [INFO] Getting page courses list: 17
+2025-06-29 13:48:46,544 [INFO] Getting courses from: Собеседования на работу в сфере IT
+2025-06-29 13:48:46,545 [INFO] Getting courses from: Нейросети, чат-боты и искусственный интеллект
+2025-06-29 13:48:46,545 [INFO] Getting page courses list: 18
+2025-06-29 13:48:47,075 [INFO] Getting courses from: Архитектура ЭВМ
+2025-06-29 13:48:47,075 [INFO] Getting courses from: Алгоритмы и структуры данных
+2025-06-29 13:48:47,075 [INFO] Getting page courses list: 19
+2025-06-29 13:48:47,589 [INFO] Getting courses from: Проектный менеджмент
+2025-06-29 13:48:47,591 [INFO] Getting courses from: Туризм и гостиничное дело
+2025-06-29 13:48:47,591 [INFO] Getting page courses list: 20
+2025-06-29 13:48:48,115 [INFO] Getting courses from: Английский язык
+2025-06-29 13:48:48,116 [INFO] Getting courses from: Русский язык
+2025-06-29 13:48:48,117 [INFO] Getting page courses list: 21
+2025-06-29 13:48:48,677 [INFO] Getting courses from: Языковые курсы
+2025-06-29 13:48:48,685 [INFO] Getting courses from: Математика
+2025-06-29 13:48:48,686 [INFO] Getting page courses list: 22
+2025-06-29 13:48:49,211 [INFO] Getting courses from: Менеджмент
+2025-06-29 13:48:49,217 [INFO] Getting courses from: Программирование для опытных
+2025-06-29 13:48:49,218 [INFO] Getting page courses list: 23
+2025-06-29 13:48:50,021 [INFO] Getting courses from: В тренде
+2025-06-29 13:48:50,022 [INFO] Getting courses from: Маркетинг
+2025-06-29 13:48:50,023 [INFO] Found 2390 unique courses
+2025-06-29 13:48:50,023 [INFO] Processing courses: 0 - 100
+2025-06-29 13:49:05,008 [INFO] Getting course ratings
+2025-06-29 13:49:05,925 [INFO] Getting authors info
+2025-06-29 13:49:07,076 [INFO] Starting course vectorization
+2025-06-29 13:49:16,718 [INFO] Loaded 100 dots in Qdrant
+2025-06-29 13:49:16,858 [INFO] Successful course download to Qdrant
