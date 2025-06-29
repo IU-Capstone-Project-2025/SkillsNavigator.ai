@@ -16,4 +16,3 @@ ENV PYTHONPATH=/app
 COPY . .
 
 # Входной точки нет — будем вызывать pytest в docker run
-# TODO в докере теперь не проверяется
