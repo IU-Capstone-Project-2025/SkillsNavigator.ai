@@ -50,10 +50,16 @@ jobs:
 
   test-frontend:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run frontend unit tests
+      - name: Set up pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@8.15.5 --activate
+
+      - name: Install dependencies and run frontend tests
         working-directory: frontend
         run: |
           pnpm install
