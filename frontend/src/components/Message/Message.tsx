@@ -13,6 +13,7 @@ const Message: React.FC<MessageProps> = ({ text, isUser, animate }) => {
     <div className={`${css.wrapper} ${isUser ? css.userWrapper : css.friendWrapper}`}>
       <div
         className={`${css.bubble} ${isUser ? css.userBubble : css.friendBubble} ${animate ? css.animate : ''} ${error ? css.errorBubble : ''}`}
+        data-testid={error ? 'errorBubble' : undefined}
       >
         {text}
         <div className={`${isUser ? css.userTail : css.friendTail} ${error ? css.errorTail : ''}`} />
