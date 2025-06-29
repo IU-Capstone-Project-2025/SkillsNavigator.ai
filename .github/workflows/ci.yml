@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [main, tests]  # Запуск на пуш в ветки main и tests
+    branches: [main, deploy]  # Запуск на пуш в ветки main и tests
   pull_request:
-    branches: [main, tests]  # Запуск на pull request в main и tests
+    branches: [main, deploy]  # Запуск на pull request в main и tests
 
 jobs:
   build-and-test-backend:
