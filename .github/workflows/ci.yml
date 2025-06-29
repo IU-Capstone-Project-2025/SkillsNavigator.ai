@@ -7,7 +7,7 @@ on:
     branches: [main, tests]  # Запуск на pull request в main и tests
 
 jobs:
-  build-and-test:
+  build-and-test-backend:
     runs-on: ubuntu-latest  # Используется Ubuntu в качестве среды выполнения
 
     steps:
@@ -47,3 +47,14 @@ jobs:
         # Остановка всех запущенных контейнеров и удаление томов
         if: always()
         run: docker compose down -v
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run frontend unit tests
+        working-directory: frontend
+        run: |
+          pnpm install
+          pnpm test
