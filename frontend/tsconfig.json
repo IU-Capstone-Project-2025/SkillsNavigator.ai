@@ -6,6 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "tsBuildInfoFile": "./.node_modules/tsconfig.buildinfo",
+    "esModuleInterop": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

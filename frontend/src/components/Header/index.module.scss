@@ -39,12 +39,11 @@
 .links {
   display: flex;
   align-items: center;
-  gap: 70px;
+  gap: 90px;
   width: fit-content;
 }
 
 .loginButton {
-  visibility: hidden;
   padding: 10px 45px;
   display: flex;
   align-items: center;
@@ -55,7 +54,10 @@
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  @include shadow($dropBlur: 4px, $innerColor: $darkBlue, $innerOpacity: 0.1);
+  box-shadow:
+    2px 2px 5px 0 rgb($darkBlue, 0.2),
+    3px 3px 5px 0 rgb($darkBlue, 0.1) inset;
+
   transition:
     color 0.3s ease-out,
     box-shadow 0.3s ease-out;
