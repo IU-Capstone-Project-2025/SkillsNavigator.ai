@@ -59,7 +59,7 @@ class QdrantService:
                     logger.info(f"Getting page courses list: {page}")
                     res = await client.get(f"https://stepik.org/api/course-lists?page={page}")
                     course_lists = res.json()
-                    for section in course_lists["course-lists"]:
+                    for section in course_lists["course-lists"][:2]:
                         logger.info(f"Getting courses from: {section['title']}")
                         courses_ids_set.update(section["courses"])
 
@@ -70,7 +70,7 @@ class QdrantService:
                 logger.info(f"Found {len(courses_ids_set)} unique courses")
 
                 courses_ids_list = list(courses_ids_set)
-                for i in range(0, len(courses_ids_list), 100):
+                for i in range(0, 1, 100):
                     subset = courses_ids_list[i:i + 100]
                     logger.info(f"Processing courses: {i} - {i + len(subset)}")
                     params = {'ids[]': subset}

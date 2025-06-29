@@ -26,7 +26,7 @@ class EncoderService:
     async def vectorize(self, text: str):
         try:
             logger.debug(f"Vectorize text of length {len(text)}")
-            return await run_blocking(self.model.encode, text)
+            return await run_blocking(self.model.encode, text, show_progress_bar=False)
         except Exception as e:
             logger.exception("Error Vectorization")
             raise

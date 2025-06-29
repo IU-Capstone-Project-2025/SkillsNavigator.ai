@@ -5,8 +5,12 @@ services:
     volumes:
       - ./backend:/app
       - models:/models
+
+
     depends_on:
       - qdrant
+    ports:
+      - "8000:80"
     restart: unless-stopped
     environment:
       QDRANT_HOST: qdrant
@@ -32,6 +36,20 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
     restart: unless-stopped
+
+  test-e2e:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./backend:/app
+      - models:/models
+    depends_on:
+      - backend
+    environment:
+      - BASE_URL=http://backend:80
+      - PYTHONUNBUFFERED=1
+
 
 volumes:
   qdrant_data:
