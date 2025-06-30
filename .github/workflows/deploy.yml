@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main, devops]  # Запуск на pull request в main и tests
 
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
 jobs:
   deploy:
     name: Deploy to Staging Server
