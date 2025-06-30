@@ -69,7 +69,7 @@ export const roadmaps: RoadmapType[] = [
           authors: 'Александр Данилов',
           rating: 4,
           url: '#course-1',
-          progress: 0.5,
+          progress: 1,
         },
       ],
     },
