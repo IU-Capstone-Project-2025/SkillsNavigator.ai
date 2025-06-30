@@ -8,7 +8,10 @@ RUN apt-get update && apt-get install -y gcc curl && rm -rf /var/lib/apt/lists/*
 
 # Установим зависимости
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt \
+ && rm -rf /root/.cache/pip
+
 
 ENV PYTHONPATH=/app
 

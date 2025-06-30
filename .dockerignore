@@ -5,7 +5,7 @@ node_modules/
 __pycache__/
 *.pyc
 .env
-
+data/
 venv/
 env/
 *.log
