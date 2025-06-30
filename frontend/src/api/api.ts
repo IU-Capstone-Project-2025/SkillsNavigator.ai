@@ -1,6 +1,5 @@
 import { PayloadType, CourseType } from '../lib/types'
-
-const API_URL = import.meta.env.VITE_API as string
+import { API_URL } from './env'
 
 export async function searchCourses(payload: PayloadType): Promise<CourseType[]> {
   const res = await fetch(`${API_URL}/courses/search`, {

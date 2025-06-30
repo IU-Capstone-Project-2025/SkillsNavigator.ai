@@ -11,6 +11,27 @@ body,
   position: relative;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #e6f7f7;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: lightBlue;
+  border-radius: 8px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: lightBlue #e6f7f7;
+}
+
+
 body {
   background: $defaultBackgroundColor;
   color: $defaultTextColor;

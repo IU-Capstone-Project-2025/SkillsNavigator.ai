@@ -1,0 +1,18 @@
+# backend/Dockerfile.test
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Установим системные зависимости (если нужны)
+RUN apt-get update && apt-get install -y gcc curl && rm -rf /var/lib/apt/lists/*
+
+# Установим зависимости
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+ENV PYTHONPATH=/app
+
+# Копируем весь проект
+COPY . .
+
+# Входной точки нет — будем вызывать pytest в docker run
