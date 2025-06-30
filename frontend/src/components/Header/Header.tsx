@@ -1,7 +1,7 @@
 import logo from '/assets/logo.png'
-import css from './index.module.scss'
 import { NavLink } from '../'
 import * as routes from '../../lib/routes'
+import css from './index.module.scss'
 
 const Header = () => {
   return (
@@ -16,7 +16,7 @@ const Header = () => {
       <div className={css.links}>
         <NavLink text="Главная" to={routes.getMainRoute()} />
         <NavLink text="Чат" to={routes.getChatRoute()} />
-        <NavLink text="Мой путь" to={routes.getRoadmapRoute()} disabled />
+        <NavLink text="Мой путь" to={routes.getRoadmapRoute()} />
       </div>
 
       <button className={css.loginButton}>Вход</button>

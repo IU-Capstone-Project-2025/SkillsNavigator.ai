@@ -187,74 +187,66 @@ const Chat = () => {
   }
 
   const handleDraftSend = () => {
-  if (!draftInput.trim()) {
-    return
-  }
-
-  const userMsg = { text: draftInput, isUser: true }
-  const newMessages = [...draftMessages, userMsg]
-
-  if (draftStep === 0) {
-    // Сохраняем area сразу
-    setAnswers((prev) => ({ ...prev, area: draftInput }))
-
-    const newId = Math.max(...localChats.map((c) => c.id), 0) + 1
-    const newChat: ChatType = {
-      id: newId,
-      name: draftInput,
-      roadmapId: 0,
-      chat: [...newMessages, { text: questions[1].text, isUser: false }],
+    if (!draftInput.trim()) {
+      return
     }
-    setLocalChats([newChat, ...localChats])
-    setActiveChat(newId)
-    setMessages(newChat.chat)
-    setStep(1)
-    setInputValue('')
-    setIsDraft(false)
-    setDraftMessages([])
-    setDraftInput('')
-  } else {
-    // Сохраняем по порядку
-    const key = answerKeys[draftStep]
-    setAnswers((prev) => ({ ...prev, [key]: draftInput }))
 
-    setDraftStep(draftStep + 1)
-    setDraftMessages([
-      ...newMessages,
-      { text: questions[draftStep + 1].text, isUser: false },
-    ])
+    const userMsg = { text: draftInput, isUser: true }
+    const newMessages = [...draftMessages, userMsg]
+
+    if (draftStep === 0) {
+      setAnswers((prev) => ({ ...prev, area: draftInput }))
+
+      const newId = Math.max(...localChats.map((c) => c.id), 0) + 1
+      const newChat: ChatType = {
+        id: newId,
+        name: draftInput,
+        roadmapId: 0,
+        messages: [...newMessages, { text: questions[1].text, isUser: false }],
+      }
+      setLocalChats([newChat, ...localChats])
+      setActiveChat(newId)
+      setMessages(newChat.messages)
+      setStep(1)
+      setInputValue('')
+      setIsDraft(false)
+      setDraftMessages([])
+      setDraftInput('')
+    } else {
+      const key = answerKeys[draftStep]
+      setAnswers((prev) => ({ ...prev, [key]: draftInput }))
+
+      setDraftStep(draftStep + 1)
+      setDraftMessages([...newMessages, { text: questions[draftStep + 1].text, isUser: false }])
+    }
   }
-}
+
+  const onSelect = (id: number) => {
+    setActiveChat(id)
+    const chat = localChats.find((c) => c.id === id)
+    const messages = chat?.messages ?? []
+    setMessages(messages)
+    setStep(messages.filter((m) => !m.isUser).length - 1)
+    setInputValue('')
+    setCourses([])
+    setCoursesInsertIndex(null)
+    setIsDraft(false)
+
+    const userAnswers: Partial<PayloadType> = {}
+    let answerIdx = 0
+    messages.forEach((msg) => {
+      if (msg.isUser && answerIdx < answerKeys.length) {
+        const key = answerKeys[answerIdx]
+        userAnswers[key] = msg.text
+        answerIdx++
+      }
+    })
+    setAnswers(userAnswers)
+  }
 
   return (
     <div className={css.root}>
-      <Sidebar
-        chats={localChats}
-        activeChat={activeChat}
-        onSelect={(id) => {
-          setActiveChat(id)
-          const chat = localChats.find((c) => c.id === id)
-          const messages = chat?.chat ?? []
-          setMessages(messages)
-          setStep(messages.filter((m) => !m.isUser).length - 1) // сколько вопросов было задано
-          setInputValue('')
-          setCourses([])
-          setCoursesInsertIndex(null)
-          setIsDraft(false)
-
-          const userAnswers: Partial<PayloadType> = {}
-          let answerIdx = 0
-          messages.forEach((msg) => {
-            if (msg.isUser && answerIdx < answerKeys.length) {
-              const key = answerKeys[answerIdx]
-              userAnswers[key] = msg.text
-              answerIdx++
-            }
-          })
-          setAnswers(userAnswers)
-        }}
-        onNewChat={handleNewChat}
-      />
+      <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
 
       <div className={css.chat}>
         {isDraft ? (

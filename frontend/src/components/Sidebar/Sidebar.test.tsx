@@ -4,8 +4,8 @@ import '@testing-library/jest-dom'
 import Sidebar from './Sidebar'
 
 const chats = [
-  { id: 1, name: 'Чат 1', roadmapId: 0, chat: [] },
-  { id: 2, name: 'Чат 2', roadmapId: 0, chat: [] },
+  { id: 1, name: 'Чат 1', roadmapId: 0, messages: [] },
+  { id: 2, name: 'Чат 2', roadmapId: 0, messages: [] },
 ]
 
 describe('Sidebar', () => {

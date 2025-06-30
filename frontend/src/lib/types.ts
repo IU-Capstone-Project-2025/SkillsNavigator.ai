@@ -11,18 +11,11 @@ export type CourseType = {
   duration: number
   difficulty: 'easy' | 'medium' | 'hard' | null
   price: number
-  currency_code: string
   pupils_num: number
   authors: string
   rating: number
   url: string
-  description: string
-  summary: string
-  target_audience: string
-  acquired_skills: string
-  acquired_assets: string
-  title_en: string
-  learning_format: string
+  progress: number
 }
 
 export type MessageType = {
@@ -34,5 +27,12 @@ export type ChatType = {
   id: number
   name: string
   roadmapId: number
-  chat: MessageType[]
+  messages: MessageType[]
+}
+
+export type RoadmapType = {
+  id: number
+  status: 'current' | 'notNow' | 'done'
+  name: string
+  courses: CourseType[]
 }
