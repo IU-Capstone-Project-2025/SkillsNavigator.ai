@@ -6,9 +6,8 @@ services:
     image: skills-app
     container_name: backend
     volumes:
-      - ./backend:/app
+#      - ./backend:/app
       - models:/models
-
 
     depends_on:
       - qdrant
