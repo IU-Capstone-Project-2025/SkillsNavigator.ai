@@ -70,7 +70,7 @@ class QdrantService:
                 logger.info(f"Found {len(courses_ids_set)} unique courses")
 
                 courses_ids_list = list(courses_ids_set)
-                for i in range(0, 1, 100):
+                for i in range(0, len(courses_ids_set), 100):
                     subset = courses_ids_list[i:i + 100]
                     logger.info(f"Processing courses: {i} - {i + len(subset)}")
                     params = {'ids[]': subset}
