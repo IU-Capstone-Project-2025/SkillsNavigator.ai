@@ -28,7 +28,7 @@ jobs:
       - name: Restart Docker container on server
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} << 'EOF'
-          cd /home/${{ secrets.STAGING_USER }}/staging-app
+          cd /home/${{ secrets.STAGING_USER }}/skillsnavigator
           docker compose pull || true
           docker compose down || true
           docker compose up -d
