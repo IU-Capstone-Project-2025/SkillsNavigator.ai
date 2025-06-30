@@ -1,10 +1,10 @@
-name: CI Pipeline
+name: CI
 
 on:
   push:
-    branches: [main, devops]  # Запуск на пуш в ветки main и tests
+    branches: [main]  # Запуск на пуш в ветки main
   pull_request:
-    branches: [main, devops]  # Запуск на pull request в main и tests
+    branches: [main]  # Запуск на pull request в main
 
 jobs:
   build-and-test-backend:
