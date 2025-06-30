@@ -28,6 +28,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease-out;
+  animation: float 3s ease-in-out infinite;
 
   &:hover {
     transform: scale(1.03);
@@ -45,6 +46,15 @@
 
   &.position-right {
     align-self: flex-end;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 

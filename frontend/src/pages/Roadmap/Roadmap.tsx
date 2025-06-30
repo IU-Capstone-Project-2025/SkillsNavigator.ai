@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Node } from '../../components'
+import { useNavigate } from 'react-router-dom'
+import { Node, Sidebar } from '../../components'
 import { roadmaps } from '../../lib/data'
+import { getChatRoute } from '../../lib/routes'
 import styles from './index.module.scss'
 
 type Line = {
@@ -12,9 +14,14 @@ type Line = {
 }
 
 const Roadmap = () => {
+  const navigate = useNavigate()
   const nodeRefs = useRef<(HTMLDivElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [lines, setLines] = useState<Line[]>([])
+  const [roadmapsState, setRoadmapsState] = useState(roadmaps)
+  const [activeRoadmap, setActiveRoadmap] = useState(roadmaps[0].id)
+  const roadmap = roadmaps.find(r => r.id === activeRoadmap) ?? roadmaps[0]
+  const courses = roadmap.courses
 
   const getLineColor = (progressA: number, progressB: number) => {
     if (progressA === 1 && progressB === 1) {
@@ -94,11 +101,45 @@ const Roadmap = () => {
     return states
   }
 
-  const courses = roadmaps[1].courses
+  useEffect(() => {
+    recalcLines()
+    const handleResize = () => setTimeout(recalcLines, 100)
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', handleResize)
+    }
+  }, [courses])
+
   const disabledStates = getCourseStates(courses)
+
+  const sidebarRoadmaps = roadmaps.map(r => ({
+    id: r.id,
+    name: r.name,
+    roadmapId: r.id,
+    messages: [],
+  }))
 
   return (
     <div ref={containerRef} style={{ position: 'relative' }} className={styles.root}>
+      <Sidebar
+        chats={sidebarRoadmaps}
+        activeChat={activeRoadmap}
+        onSelect={setActiveRoadmap}
+        onNewChat={() => navigate(getChatRoute())}
+        isRoadmap
+        roadmaps={roadmapsState}
+        onToggleStatus={id => {
+    setRoadmapsState(prev =>
+      prev.map(r =>
+        r.id === id
+          ? { ...r, status: r.status === 'current' ? 'notNow' : 'current' }
+          : r
+      )
+    )
+  }}
+      />
       <svg className={styles.line}>
         <defs>
           <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -122,7 +163,7 @@ const Roadmap = () => {
       </svg>
 
       <div className={styles.roadmap}>
-        {roadmaps[1].courses.map((course, index) => (
+        {roadmapsState.find(r => r.id === activeRoadmap)?.courses.map((course, index) => (
           <div
             key={course.id}
             ref={(el) => {
