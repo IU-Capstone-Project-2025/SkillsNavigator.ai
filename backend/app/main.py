@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,8 +21,15 @@ async def lifespan(app: FastAPI):
     await encoder.initialize()
     print("Connecting to qdrant", flush=True)
     qdrant.initialize(settings.qdrant_host, settings.qdrant_port)
-    # await qdrant.loadCourses()
-    app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
+    
+    # Only load courses if explicitly requested via environment variable
+    load_courses = os.getenv("LOAD_COURSES", "false").lower() == "true"
+    if load_courses:
+        logger.info("LOAD_COURSES=true, starting course data loading...")
+        app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
+    else:
+        logger.info("LOAD_COURSES=false, skipping course data loading. Data will be loaded from existing Qdrant storage.")
+    
     yield
     # Clean up the ML models and release the resources
 
