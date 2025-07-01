@@ -34,7 +34,7 @@
     transform: scale(1.03);
     animation: none;
     z-index: 1000;
-    
+
     .progressRing {
       transform: scale(1.03);
     }
@@ -50,9 +50,11 @@
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
+  0%,
+  100% {
+    transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
@@ -87,9 +89,9 @@
   border-radius: 999px;
   z-index: 1;
   transition: all 0.3s ease-out;
-    box-shadow:
-      0 4px 15px rgba(0, 0, 0, 0.1),
-      3px 3px 10px 0 rgba($white, 1) inset;
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    3px 3px 10px 0 rgba($white, 1) inset;
 
   &:hover {
     box-shadow:

@@ -21,7 +21,7 @@ const Layout = () => {
         <Routes>
           <Route path={routes.getMainRoute()} element={<Main />} />
           <Route path={routes.getChatRoute()} element={<Chat />} />
-          <Route path={routes.getRoadmapRoute()} element={<Roadmap/>} />
+          <Route path={routes.getRoadmapRoute()} element={<Roadmap />} />
         </Routes>
       </ScrollResetProvider>
       {!isChat && <Footer />}

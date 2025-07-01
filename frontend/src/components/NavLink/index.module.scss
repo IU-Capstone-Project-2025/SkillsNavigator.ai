@@ -1,7 +1,9 @@
 @use '../../styles/_vars' as *;
 @use '../../styles/_mixins' as *;
 
-.link, .activeLink, .disabled {
+.link,
+.activeLink,
+.disabled {
   font-size: 1.75rem;
 }
 

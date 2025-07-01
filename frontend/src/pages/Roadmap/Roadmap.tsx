@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Node, Sidebar } from '../../components'
+import { LoginModal, Node, Sidebar } from '../../components'
 import Loading from '../../components/Loading/Loading'
 import { roadmaps } from '../../lib/data'
 import { getChatRoute } from '../../lib/routes'
 import { RoadmapType } from '../../lib/types'
-import styles from './index.module.scss'
+import css from './index.module.scss'
 
 type Line = {
   x1: number
@@ -25,11 +25,13 @@ const Roadmap = () => {
   const roadmap = roadmapsState.find((r) => r.id === activeRoadmap) ?? roadmapsState[0]
   const courses = roadmap?.courses ?? []
   const [loading, setLoading] = useState(false)
+  const [authentificated] = useState(true)
+  const [openedLogin] = useState(!authentificated)
 
   useEffect(() => {
     const fetchRoadmaps = async () => {
       setLoading(true)
-      await new Promise((resolve) => setTimeout(resolve, 3000))
+      await new Promise((resolve) => setTimeout(resolve, 300))
       setRoadmapsState(roadmaps)
       setLoading(false)
     }
@@ -137,14 +139,14 @@ const Roadmap = () => {
 
   if (loading) {
     return (
-      <div className={styles.root}>
+      <div className={css.root}>
         <Loading />
       </div>
     )
   }
 
   return (
-    <div ref={containerRef} style={{ position: 'relative' }} className={styles.root}>
+    <div ref={containerRef} style={{ position: 'relative' }} className={css.root}>
       <Sidebar
         chats={sidebarRoadmaps}
         activeChat={activeRoadmap}
@@ -158,7 +160,12 @@ const Roadmap = () => {
           )
         }}
       />
-      <svg className={styles.line}>
+      {!authentificated && (
+        <div className={css.lockOverlay}>
+          <LoginModal opened={openedLogin} onClose={() => {}} withClose={false} />
+        </div>
+      )}
+      <svg className={css.line}>
         <defs>
           <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="4" dy="4" stdDeviation="4" flood-color="#1a2644" flood-opacity="0.3" />
@@ -180,7 +187,7 @@ const Roadmap = () => {
         ))}
       </svg>
 
-      <div className={styles.roadmap}>
+      <div className={css.roadmap}>
         {roadmapsState
           .find((r) => r.id === activeRoadmap)
           ?.courses.map((course, index) => (
@@ -189,7 +196,7 @@ const Roadmap = () => {
               ref={(el) => {
                 nodeRefs.current[index] = el
               }}
-              className={index % 2 === 0 ? styles.nodeRight : styles.nodeLeft}
+              className={index % 2 === 0 ? css.nodeRight : css.nodeLeft}
             >
               <Node course={course} position={index % 2 === 0 ? 'right' : 'left'} disabled={disabledStates[index]} />
             </div>

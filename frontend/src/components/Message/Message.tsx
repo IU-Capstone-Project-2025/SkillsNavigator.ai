@@ -8,7 +8,7 @@ type MessageProps = {
 
 const Message: React.FC<MessageProps> = ({ text, isUser, animate }) => {
   const error = text === 'Упс, что-то пошло не так... Повторите попытку позже'
-  
+
   return (
     <div className={`${css.wrapper} ${isUser ? css.userWrapper : css.friendWrapper}`}>
       <div

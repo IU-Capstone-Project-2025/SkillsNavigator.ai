@@ -8,12 +8,16 @@ const RING_SIZE = 100
 const RING_STROKE = 9
 const IMG_SIZE = 88
 
-const Node: React.FC<{ course: CourseType; position: 'left' | 'right'; disabled?: boolean }> = ({ course, position, disabled = false }) => {
-  const [isHovered, setIsHovered] = useState(false);
+const Node: React.FC<{ course: CourseType; position: 'left' | 'right'; disabled?: boolean }> = ({
+  course,
+  position,
+  disabled = false,
+}) => {
+  const [isHovered, setIsHovered] = useState(false)
 
-  const radius = (RING_SIZE - RING_STROKE) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (course.progress * circumference);
+  const radius = (RING_SIZE - RING_STROKE) / 2
+  const circumference = 2 * Math.PI * radius
+  const strokeDashoffset = circumference - course.progress * circumference
 
   return (
     <div className={css.node} style={disabled ? { opacity: 0.6, pointerEvents: 'none' } : {}}>
@@ -22,11 +26,7 @@ const Node: React.FC<{ course: CourseType; position: 'left' | 'right'; disabled?
         onMouseEnter={disabled ? undefined : () => setIsHovered(true)}
         onMouseLeave={disabled ? undefined : () => setIsHovered(false)}
       >
-        <svg
-          className={css.progressRing}
-          width={RING_SIZE}
-          height={RING_SIZE}
-        >
+        <svg className={css.progressRing} width={RING_SIZE} height={RING_SIZE}>
           <circle
             cx={RING_SIZE / 2}
             cy={RING_SIZE / 2}
