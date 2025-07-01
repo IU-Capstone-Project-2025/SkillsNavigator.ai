@@ -2,8 +2,8 @@ name: CD-Staging
 
 on:
   workflow_run:
-    workflows: ["CI"]
-    branches: [develop]
+    workflows: [ "CI" ]
+    branches: [ develop ]
     types:
       - completed
 

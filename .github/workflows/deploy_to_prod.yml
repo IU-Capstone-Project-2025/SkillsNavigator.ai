@@ -2,8 +2,8 @@ name: CD-Production
 
 on:
   workflow_run:
-    workflows: ["CI"]
-    branches: [master]
+    workflows: [ "CI" ]
+    branches: [ master ]
     types:
       - completed
 

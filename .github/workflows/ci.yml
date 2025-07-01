@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [master, develop]  # Запуск на пуш в ветки main
+    branches: [ master, develop ]  # Запуск на пуш в ветки main
   pull_request:
-    branches: [master, develop]  # Запуск на pull request в main
+    branches: [ master, develop ]  # Запуск на pull request в main
 
 jobs:
   build-and-test-backend:
