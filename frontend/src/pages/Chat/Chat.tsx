@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { searchCourses } from '../../api/api'
-import { Card, Input, Message, Sidebar } from '../../components'
+import { Card, Input, Loading, Message, Sidebar } from '../../components'
 import { questions } from '../../lib/data'
 import { chats } from '../../lib/data'
 import { ChatType, CourseType, MessageType, PayloadType } from '../../lib/types'
@@ -25,8 +25,19 @@ const Chat = () => {
   const [draftMessages, setDraftMessages] = useState<MessageType[]>([{ text: questions[0].text, isUser: false }])
   const [draftStep, setDraftStep] = useState(0)
   const [draftInput, setDraftInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [loadingChats, setLoadingChats] = useState(true)
+
+  useEffect(() => {
+    setLoadingChats(true)
+    setTimeout(() => {
+      setLocalChats(chats)
+      setLoadingChats(false)
+    }, 300)
+  }, [])
 
   const handleSearch = async (payload: PayloadType) => {
+    setLoading(true)
     try {
       const data = await searchCourses(payload)
       setCourses(data)
@@ -62,6 +73,8 @@ const Chat = () => {
 
         return updated
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -244,12 +257,22 @@ const Chat = () => {
     setAnswers(userAnswers)
   }
 
+  if (loadingChats) {
+    return (
+      <div className={css.root}>
+        <Loading />
+      </div>
+    )
+  }
+
   return (
     <div className={css.root}>
       <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
 
       <div className={css.chat}>
-        {isDraft ? (
+        {loading ? (
+          <Loading />
+        ) : isDraft ? (
           draftMessages.map((msg, idx) => <Message key={idx} text={msg.text} isUser={msg.isUser} animate={false} />)
         ) : (
           <>

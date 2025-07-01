@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Node, Sidebar } from '../../components'
+import Loading from '../../components/Loading/Loading'
 import { roadmaps } from '../../lib/data'
 import { getChatRoute } from '../../lib/routes'
+import { RoadmapType } from '../../lib/types'
 import styles from './index.module.scss'
 
 type Line = {
@@ -18,10 +20,22 @@ const Roadmap = () => {
   const nodeRefs = useRef<(HTMLDivElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [lines, setLines] = useState<Line[]>([])
-  const [roadmapsState, setRoadmapsState] = useState(roadmaps)
+  const [roadmapsState, setRoadmapsState] = useState<RoadmapType[]>([])
   const [activeRoadmap, setActiveRoadmap] = useState(roadmaps[0].id)
-  const roadmap = roadmaps.find(r => r.id === activeRoadmap) ?? roadmaps[0]
-  const courses = roadmap.courses
+  const roadmap = roadmapsState.find((r) => r.id === activeRoadmap) ?? roadmapsState[0]
+  const courses = roadmap?.courses ?? []
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchRoadmaps = async () => {
+      setLoading(true)
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+      setRoadmapsState(roadmaps)
+      setLoading(false)
+    }
+
+    fetchRoadmaps()
+  }, [])
 
   const getLineColor = (progressA: number, progressB: number) => {
     if (progressA === 1 && progressB === 1) {
@@ -114,12 +128,20 @@ const Roadmap = () => {
 
   const disabledStates = getCourseStates(courses)
 
-  const sidebarRoadmaps = roadmaps.map(r => ({
+  const sidebarRoadmaps = roadmapsState.map((r) => ({
     id: r.id,
     name: r.name,
     roadmapId: r.id,
     messages: [],
   }))
+
+  if (loading) {
+    return (
+      <div className={styles.root}>
+        <Loading />
+      </div>
+    )
+  }
 
   return (
     <div ref={containerRef} style={{ position: 'relative' }} className={styles.root}>
@@ -130,15 +152,11 @@ const Roadmap = () => {
         onNewChat={() => navigate(getChatRoute())}
         isRoadmap
         roadmaps={roadmapsState}
-        onToggleStatus={id => {
-    setRoadmapsState(prev =>
-      prev.map(r =>
-        r.id === id
-          ? { ...r, status: r.status === 'current' ? 'notNow' : 'current' }
-          : r
-      )
-    )
-  }}
+        onToggleStatus={(id) => {
+          setRoadmapsState((prev) =>
+            prev.map((r) => (r.id === id ? { ...r, status: r.status === 'current' ? 'notNow' : 'current' } : r))
+          )
+        }}
       />
       <svg className={styles.line}>
         <defs>
@@ -163,17 +181,19 @@ const Roadmap = () => {
       </svg>
 
       <div className={styles.roadmap}>
-        {roadmapsState.find(r => r.id === activeRoadmap)?.courses.map((course, index) => (
-          <div
-            key={course.id}
-            ref={(el) => {
-              nodeRefs.current[index] = el
-            }}
-            className={index % 2 === 0 ? styles.nodeRight : styles.nodeLeft}
-          >
-            <Node course={course} position={index % 2 === 0 ? 'right' : 'left'} disabled={disabledStates[index]}/>
-          </div>
-        ))}
+        {roadmapsState
+          .find((r) => r.id === activeRoadmap)
+          ?.courses.map((course, index) => (
+            <div
+              key={course.id}
+              ref={(el) => {
+                nodeRefs.current[index] = el
+              }}
+              className={index % 2 === 0 ? styles.nodeRight : styles.nodeLeft}
+            >
+              <Node course={course} position={index % 2 === 0 ? 'right' : 'left'} disabled={disabledStates[index]} />
+            </div>
+          ))}
       </div>
     </div>
   )

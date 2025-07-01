@@ -58,7 +58,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
         <ul className={css.chatList}>
-          {chats.map((chat, index) => (
+          {chats.length > 0 && chats.map((chat, index) => (
             <div
               key={chat.id}
               className={`${css.chatItem} ${chat.id === activeChat ? css.active : ''}`}
