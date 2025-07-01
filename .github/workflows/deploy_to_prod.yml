@@ -1,4 +1,4 @@
-name: CD
+name: CD-Production
 
 on:
   workflow_run:
@@ -21,18 +21,18 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
 
       - name: Rsync project to server
         run: |
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./ ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }}:/home/${{ secrets.STAGING_USER }}/skillsnavigator/
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./ ${{ secrets.PRODUCTION_USER }}@${{ secrets.PRODUCTION_HOST }}:/home/${{ secrets.PRODUCTION_USER }}/skillsnavigator/
 
       - name: Restart Docker container on server
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} << 'EOF'
-          cd /home/${{ secrets.STAGING_USER }}/skillsnavigator
+          ssh -i ~/.ssh/id_rsa ${{ secrets.PRODUCTION_USER }}@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+          cd /home/${{ secrets.PRODUCTION_USER }}/skillsnavigator
           docker compose down || true
           docker compose up --build -d --remove-orphans
           EOF
