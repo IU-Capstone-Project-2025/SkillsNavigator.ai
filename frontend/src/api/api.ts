@@ -20,3 +20,34 @@ export async function getPopularCourses(): Promise<CourseType[]> {
   }
   return res.json()
 }
+
+export async function getUserRoadmaps(): Promise<any[]> {
+  const res = await fetch(`${API_URL}/roadmap/get-roadmaps`)
+  if (!res.ok) {
+    throw new Error('Failed to fetch user roadmaps')
+  }
+  return res.json()
+}
+
+export async function saveCoursesToRoadmap(roadmapName: string, courses: CourseType[]): Promise<any> {
+  const res = await fetch(`${API_URL}/roadmap/save-courses`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roadmap_name: roadmapName, courses }),
+  })
+  if (!res.ok) {
+    throw new Error('Failed to save courses to roadmap')
+  }
+  return res.json()
+}
+
+export async function clearUserRoadmaps(): Promise<any> {
+  const res = await fetch(`${API_URL}/roadmap/clear-roadmaps`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  if (!res.ok) {
+    throw new Error('Failed to clear roadmaps')
+  }
+  return res.json()
+}

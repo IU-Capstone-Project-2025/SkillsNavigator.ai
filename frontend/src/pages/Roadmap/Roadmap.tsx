@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { LoginModal, Node, Sidebar } from '../../components'
 import Loading from '../../components/Loading/Loading'
 import { roadmaps } from '../../lib/data'
+import { getUserRoadmaps } from '../../api/api'
 import { getChatRoute } from '../../lib/routes'
 import { RoadmapType } from '../../lib/types'
 import css from './index.module.scss'
@@ -21,21 +22,38 @@ const Roadmap = () => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [lines, setLines] = useState<Line[]>([])
   const [roadmapsState, setRoadmapsState] = useState<RoadmapType[]>([])
-  const [activeRoadmap, setActiveRoadmap] = useState(roadmaps[0].id)
+  const [activeRoadmap, setActiveRoadmap] = useState(1)
   const roadmap = roadmapsState.find((r) => r.id === activeRoadmap) ?? roadmapsState[0]
   const courses = roadmap?.courses ?? []
   const [loading, setLoading] = useState(false)
   const [authentificated] = useState(true)
   const [openedLogin] = useState(!authentificated)
+  const fetchRoadmaps = async () => {
+    setLoading(true)
+    try {
+      // Try to fetch real roadmaps from API
+      console.log('Fetching roadmaps from API...')
+      const realRoadmaps = await getUserRoadmaps()
+      console.log('Received roadmaps from API:', realRoadmaps)
+      setRoadmapsState(realRoadmaps)
+      // Set active roadmap to the first one from API
+      if (realRoadmaps.length > 0) {
+        setActiveRoadmap(realRoadmaps[0].id)
+        console.log('Set active roadmap to:', realRoadmaps[0].id)
+      }
+    } catch (error) {
+      console.error('Failed to fetch roadmaps from API, using fallback data:', error)
+      // Fallback to static data if API fails
+      console.log('Using fallback roadmaps:', roadmaps)
+      setRoadmapsState(roadmaps)
+      if (roadmaps.length > 0) {
+        setActiveRoadmap(roadmaps[0].id)
+      }
+    }
+    setLoading(false)
+  }
 
   useEffect(() => {
-    const fetchRoadmaps = async () => {
-      setLoading(true)
-      await new Promise((resolve) => setTimeout(resolve, 300))
-      setRoadmapsState(roadmaps)
-      setLoading(false)
-    }
-
     fetchRoadmaps()
   }, [])
 

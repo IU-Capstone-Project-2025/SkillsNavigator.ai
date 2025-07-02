@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { searchCourses } from '../../api/api'
+import { searchCourses, saveCoursesToRoadmap, clearUserRoadmaps } from '../../api/api'
 import { Card, Input, Loading, Message, Sidebar } from '../../components'
 import { questions } from '../../lib/data'
 import { chats } from '../../lib/data'
@@ -39,8 +39,28 @@ const Chat = () => {
   const handleSearch = async (payload: PayloadType) => {
     setLoading(true)
     try {
+      // Clear existing roadmaps before saving new courses
+      try {
+        await clearUserRoadmaps()
+        console.log('Cleared existing roadmaps before new search')
+      } catch (error) {
+        console.error('Failed to clear roadmaps before search:', error)
+      }
+      
       const data = await searchCourses(payload)
       setCourses(data)
+      
+      // Automatically save courses to roadmap
+      if (data.length > 0) {
+        try {
+          const roadmapName = payload.area || 'My Learning Path'
+          await saveCoursesToRoadmap(roadmapName, data)
+          console.log(`Automatically saved ${data.length} courses to "${roadmapName}"`)
+        } catch (error) {
+          console.error('Failed to auto-save courses to roadmap:', error)
+        }
+      }
+      
       const answerMessage = {
         text: 'Твой план, который приведет к цели:',
         isUser: false,
@@ -98,6 +118,8 @@ const Chat = () => {
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, 50)
   }
+
+
 
   const handleSend = () => {
     if (!inputValue.trim()) {
