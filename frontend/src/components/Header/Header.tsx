@@ -1,9 +1,12 @@
 import logo from '/assets/logo.png'
-import css from './index.module.scss'
-import { NavLink } from '../'
+import { useState } from 'react'
+import { LoginModal, NavLink } from '../'
 import * as routes from '../../lib/routes'
+import css from './index.module.scss'
 
 const Header = () => {
+  const [openedLogin, setOpenedLogin] = useState(false)
+
   return (
     <div className={css.header}>
       <a href={routes.getMainRoute()}>
@@ -16,10 +19,14 @@ const Header = () => {
       <div className={css.links}>
         <NavLink text="Главная" to={routes.getMainRoute()} />
         <NavLink text="Чат" to={routes.getChatRoute()} />
-        <NavLink text="Мой путь" to={routes.getRoadmapRoute()} disabled />
+        <NavLink text="Мой путь" to={routes.getRoadmapRoute()} />
       </div>
 
-      <button className={css.loginButton}>Вход</button>
+      <button className={css.loginButton} onClick={() => setOpenedLogin(true)}>
+        Вход
+      </button>
+
+      <LoginModal opened={openedLogin} onClose={() => setOpenedLogin(false)} />
     </div>
   )
 }

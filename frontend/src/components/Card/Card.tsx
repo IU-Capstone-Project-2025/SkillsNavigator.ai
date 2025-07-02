@@ -28,7 +28,7 @@ const Card: React.FC<Props> = ({
   pupils_num,
   rating,
   url,
-  index,
+  index = '',
   inChat = false,
 }) => {
   const [hovered, setHovered] = useState(false)

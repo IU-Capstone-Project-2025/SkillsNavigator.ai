@@ -1,0 +1,124 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.cardWrapper {
+  position: absolute;
+  z-index: 100;
+  width: fit-content;
+  background-color: rgb($white, 0.5);
+  border-radius: 15px;
+  top: 90%;
+  transform: translateY(-50%);
+  transition: all 0.3s ease-out;
+
+  &.position-left {
+    right: calc(100% + 20px);
+    transform: translateY(-50%);
+  }
+
+  &.position-right {
+    left: calc(100% + 20px);
+  }
+}
+
+.node {
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-out;
+  animation: float 3s ease-in-out infinite;
+
+  &:hover {
+    transform: scale(1.03);
+    animation: none;
+    z-index: 1000;
+
+    .progressRing {
+      transform: scale(1.03);
+    }
+  }
+
+  &.position-left {
+    align-self: flex-start;
+  }
+
+  &.position-right {
+    align-self: flex-end;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.ringWrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  transition: all 0.3s ease-out;
+}
+
+.progressRing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  z-index: 0;
+  pointer-events: none;
+  transition: all 0.3s ease-out;
+}
+
+.image {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 999px;
+  z-index: 1;
+  transition: all 0.3s ease-out;
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.1),
+    3px 3px 10px 0 rgba($white, 1) inset;
+
+  &:hover {
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.1),
+      3px 3px 10px 0 rgba($white, 1) inset;
+  }
+}
+
+.label {
+  position: absolute;
+  background: rgba($white, 0.6);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-out;
+  white-space: nowrap;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
+
+  &.position-left {
+    padding: 0.75rem 3rem 0.75rem 1.2rem;
+    right: calc(60% + 10px);
+  }
+
+  &.position-right {
+    padding: 0.75rem 1.2rem 0.75rem 3rem;
+    left: calc(60% + 15px);
+  }
+}
