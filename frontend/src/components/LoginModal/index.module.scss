@@ -1,0 +1,36 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.content {
+  position: relative;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: $darkBlue;
+  margin-bottom: 40px;
+}
+
+.crossIcon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  transition: all 0.3s ease-out;
+  opacity: 0.5;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+}

@@ -8,7 +8,7 @@ import { Footer, Header } from './components'
 import ScrollResetProvider from './lib/ScrollResetProvider'
 import TextFormatProvider from './lib/TextFormatProvider'
 import * as routes from './lib/routes'
-import { Chat, Main } from './pages'
+import { Chat, Main, Roadmap } from './pages'
 import { mantine } from './styles/themes'
 
 const Layout = () => {
@@ -21,6 +21,7 @@ const Layout = () => {
         <Routes>
           <Route path={routes.getMainRoute()} element={<Main />} />
           <Route path={routes.getChatRoute()} element={<Chat />} />
+          <Route path={routes.getRoadmapRoute()} element={<Roadmap />} />
         </Routes>
       </ScrollResetProvider>
       {!isChat && <Footer />}
