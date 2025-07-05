@@ -47,7 +47,7 @@ const Roadmap = () => {
       return '#9FDDFF'
     }
     if ((progressA !== 0 && progressB === 0) || (progressA === 0 && progressB !== 0)) {
-      return 'rgb(255, 255, 255, 0.7)'
+      return 'rgb(255, 255, 255, 0.3)'
     }
     return '#2196F3'
   }
@@ -76,17 +76,6 @@ const Roadmap = () => {
     }
     setLines(newLines)
   }
-
-  useEffect(() => {
-    recalcLines()
-    const handleResize = () => setTimeout(recalcLines, 100)
-    window.addEventListener('resize', handleResize)
-    window.addEventListener('scroll', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('scroll', handleResize)
-    }
-  }, [])
 
   const getCourseStates = (courses: any[]) => {
     if (courses.length === 1) {
@@ -168,8 +157,7 @@ const Roadmap = () => {
       <svg className={css.line}>
         <defs>
           <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="4" dy="4" stdDeviation="4" flood-color="#1a2644" flood-opacity="0.3" />
-            <feDropShadow dx="3" dy="3" stdDeviation="10.5" flood-color="#ffffff" flood-opacity="1" result="inset" />
+            <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#1a2644" flood-opacity="0.2" />
           </filter>
         </defs>
         {lines.map((line, idx) => (

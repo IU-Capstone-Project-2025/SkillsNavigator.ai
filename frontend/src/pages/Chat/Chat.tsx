@@ -1,8 +1,10 @@
 import { useRef, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { searchCourses } from '../../api/api'
 import { Card, Input, Loading, Message, Sidebar } from '../../components'
 import { questions } from '../../lib/data'
 import { chats } from '../../lib/data'
+import { getRoadmapRoute } from '../../lib/routes'
 import { ChatType, CourseType, MessageType, PayloadType } from '../../lib/types'
 import css from './index.module.scss'
 
@@ -11,6 +13,7 @@ const PLACEHOLDER_COUNT = 3
 const answerKeys: (keyof PayloadType)[] = ['area', 'current_level', 'desired_skills']
 
 const Chat = () => {
+  const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState<Partial<PayloadType>>({})
   const [inputValue, setInputValue] = useState('')
@@ -25,9 +28,11 @@ const Chat = () => {
   const [draftMessages, setDraftMessages] = useState<MessageType[]>([{ text: questions[0].text, isUser: false }])
   const [draftStep, setDraftStep] = useState(0)
   const [draftInput, setDraftInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [loadingChats, setLoadingChats] = useState(true)
+  const [loadingChats, setLoadingChats] = useState(false)
+  const [coursesLoading, setCoursesLoading] = useState(false)
+  const chatContainerRef = useRef<HTMLDivElement>(null)
 
+  // /api/getChats
   useEffect(() => {
     setLoadingChats(true)
     setTimeout(() => {
@@ -37,17 +42,16 @@ const Chat = () => {
   }, [])
 
   const handleSearch = async (payload: PayloadType) => {
-    setLoading(true)
+    setCoursesLoading(true)
     try {
       const data = await searchCourses(payload)
-      setCourses(data)
       const answerMessage = {
         text: 'Твой план, который приведет к цели:',
         isUser: false,
       }
       setMessages((prev) => {
         const updated = [...prev, answerMessage]
-
+        setCoursesInsertIndex(updated.length + 1)
         if (activeChat !== -1) {
           setLocalChats((prevChats) =>
             prevChats.map((chat) => (chat.id === activeChat ? { ...chat, chat: updated } : chat))
@@ -56,6 +60,7 @@ const Chat = () => {
 
         return updated
       })
+      setCourses(data)
     } catch {
       const errorMessage = {
         text: 'Упс, что-то пошло не так... Повторите попытку позже',
@@ -74,21 +79,34 @@ const Chat = () => {
         return updated
       })
     } finally {
-      setLoading(false)
+      setCoursesLoading(false)
     }
   }
 
   useEffect(() => {
     const saved = localStorage.getItem('chatInput')
     if (saved) {
-      setMessages([
+      const newId = Math.max(...localChats.map((c) => c.id), 0) + 1
+      const newMessages = [
         { text: questions[0].text, isUser: false },
         { text: saved, isUser: true },
         { text: questions[1].text, isUser: false },
-      ])
+      ]
+      const newChat: ChatType = {
+        id: newId,
+        name: saved,
+        roadmapId: 0,
+        messages: newMessages,
+      }
+      setLocalChats([newChat, ...localChats])
+      setActiveChat(newId)
+      setMessages(newMessages)
       setStep(1)
       setInputValue('')
-      answers.area = saved
+      setIsDraft(false)
+      setDraftMessages([])
+      setDraftInput('')
+      setAnswers((prev) => ({ ...prev, area: saved }))
       localStorage.removeItem('chatInput')
     }
   }, [])
@@ -186,7 +204,13 @@ const Chat = () => {
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages, shownCourses])
+  }, [messages])
+
+  useEffect(() => {
+    if (shownCourses === courses.length && courses.length > 0) {
+      scrollToBottom()
+    }
+  }, [shownCourses, courses.length])
 
   const messagesBeforeCourses = coursesInsertIndex !== null ? messages.slice(0, coursesInsertIndex) : messages
   const messagesAfterCourses = coursesInsertIndex !== null ? messages.slice(coursesInsertIndex) : []
@@ -197,6 +221,9 @@ const Chat = () => {
     setDraftStep(0)
     setDraftInput('')
     setActiveChat(-1)
+    setCourses([])
+    setCoursesInsertIndex(null)
+    setShownCourses(0)
   }
 
   const handleDraftSend = () => {
@@ -208,7 +235,7 @@ const Chat = () => {
     const newMessages = [...draftMessages, userMsg]
 
     if (draftStep === 0) {
-      setAnswers((prev) => ({ ...prev, area: draftInput }))
+      setAnswers(() => ({ area: draftInput }))
 
       const newId = Math.max(...localChats.map((c) => c.id), 0) + 1
       const newChat: ChatType = {
@@ -228,8 +255,7 @@ const Chat = () => {
     } else {
       const key = answerKeys[draftStep]
       setAnswers((prev) => ({ ...prev, [key]: draftInput }))
-
-      setDraftStep(draftStep + 1)
+      setDraftStep(draftStep)
       setDraftMessages([...newMessages, { text: questions[draftStep + 1].text, isUser: false }])
     }
   }
@@ -269,10 +295,8 @@ const Chat = () => {
     <div className={css.root}>
       <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
 
-      <div className={css.chat}>
-        {loading ? (
-          <Loading />
-        ) : isDraft ? (
+      <div className={css.chat} ref={chatContainerRef}>
+        {isDraft ? (
           draftMessages.map((msg, idx) => <Message key={idx} text={msg.text} isUser={msg.isUser} animate={false} />)
         ) : (
           <>
@@ -281,7 +305,7 @@ const Chat = () => {
               return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
             })}
 
-            {courses.length > 0 && (
+            {courses.length > 0 ? (
               <div className={css.courses}>
                 {step === questions.length - 1 && answers.desired_skills && (
                   <>
@@ -294,12 +318,29 @@ const Chat = () => {
                   </>
                 )}
               </div>
+            ) : (
+              coursesLoading && (
+                <div className={css.courses}>
+                  <Message text="" loading isUser={false} />
+                </div>
+              )
             )}
 
             {messagesAfterCourses.map((msg, idx) => (
               <Message key={`after-${idx}`} text={msg.text} isUser={msg.isUser} animate={false} />
             ))}
           </>
+        )}
+
+        {shownCourses === courses.length && courses.length > 0 && (
+          <button
+            className={css.goToRoadmapButton}
+            onClick={() => {
+              navigate(getRoadmapRoute())
+            }}
+          >
+            Перейти к пути
+          </button>
         )}
 
         <div ref={chatEndRef} />
