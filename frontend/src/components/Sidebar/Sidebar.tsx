@@ -97,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             ))}
         </ul>
-        {!authentificated && (
+        {!authentificated && !isRoadmap && (
           <div className={css.lockOverlay}>
             <div className={css.lockText}>
               <img src={lockIcon} className={css.lockIcon} alt="lock" />
