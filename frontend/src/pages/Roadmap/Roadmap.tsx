@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoginModal, Node, Sidebar } from '../../components'
 import Loading from '../../components/Loading/Loading'
+import { useAuth } from '../../lib/AuthProvider'
 import { roadmaps } from '../../lib/data'
 import { getChatRoute } from '../../lib/routes'
 import { RoadmapType } from '../../lib/types'
@@ -25,8 +26,8 @@ const Roadmap = () => {
   const roadmap = roadmapsState.find((r) => r.id === activeRoadmap) ?? roadmapsState[0]
   const courses = roadmap?.courses ?? []
   const [loading, setLoading] = useState(false)
-  const [authentificated] = useState(true)
-  const [openedLogin] = useState(!authentificated)
+  const authenticated = useAuth().authenticated
+  const [openedLogin] = useState(!authenticated)
 
   useEffect(() => {
     const fetchRoadmaps = async () => {
@@ -149,7 +150,7 @@ const Roadmap = () => {
           )
         }}
       />
-      {!authentificated && (
+      {!authenticated && (
         <div className={css.lockOverlay}>
           <LoginModal opened={openedLogin} onClose={() => {}} withClose={false} />
         </div>

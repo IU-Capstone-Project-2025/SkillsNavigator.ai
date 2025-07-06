@@ -9,7 +9,7 @@
   width: fit-content;
   min-width: 200px;
   max-width: 250px;
-  background-color: rgb($white, 0.6);
+  background-color: rgb($white, 0.4);
   padding: 20px 20px 24px 0;
   display: flex;
   flex-direction: column;
@@ -97,13 +97,15 @@
   align-items: center;
   gap: 8px;
   font-weight: 500;
-  box-shadow: 3px 3px 10px 0 $white inset;
+  box-shadow: 
+    0px 0px 5px 0 rgb($darkBlue, 0.1),
+    3px 3px 10px 0 $white inset;
   width: fit-content;
 }
 
 .newChat:hover {
   box-shadow:
-    0 0 10px 0 rgb($darkBlue, 0.1),
+    0 0 10px 0 rgb($darkBlue, 0.15),
     3px 3px 10px 0 $white inset;
 }
 
@@ -119,8 +121,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background-color: rgb($white, 0.2);
-  box-shadow: 3px 3px 10px 0 $white inset;
+  background-color: rgb($white, 0.3);
+  box-shadow:
+    0px 0px 5px 0 rgb($darkBlue, 0.1),
+    3px 3px 10px 0 $white inset;
   padding: 6px 10px 6px 29px;
   border-radius: 0 10px 10px 0;
   cursor: pointer;
@@ -159,7 +163,7 @@
   border-radius: 8px;
 
   &:hover {
-    box-shadow: 0 0 4px 0 rgb($darkBlue, 0.6);
+    box-shadow: 0 0 6px 0 rgb($darkBlue, 0.25);
   }
 }
 
@@ -179,7 +183,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   padding: 16px 8px;
   border-radius: 16px;
   text-align: center;

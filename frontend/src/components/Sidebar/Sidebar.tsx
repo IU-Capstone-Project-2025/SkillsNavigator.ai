@@ -9,6 +9,7 @@ import lockIcon from '/assets/lock.png'
 import mark from '/assets/mark.png'
 import filledMark from '/assets/filledMark.png'
 import doneImage from '/assets/doneImage.png'
+import { useAuth } from '../../lib/AuthProvider'
 import { getRoadmapRoute } from '../../lib/routes'
 import { ChatType, RoadmapType } from '../../lib/types'
 import LoginButton from '../LoginButton/LoginButton'
@@ -34,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleStatus,
 }) => {
   const navigate = useNavigate()
-  const [authentificated] = useState(true)
+  const authenticated = useAuth().authenticated
   const [open, setOpen] = useState(() => {
     const saved = localStorage.getItem('sidebarOpen')
     return saved === null ? false : saved === 'true'
@@ -59,7 +60,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {!isRoadmap ? 'Новый чат' : 'Новый путь'}
           </button>
         </div>
-        <ul className={authentificated ? `${css.chatList}` : `${css.chatList} ${css.blockChatHistory}`}>
+        <ul className={authenticated ? `${css.chatList}` : `${css.chatList} ${css.blockChatHistory}`}>
           {chats.length > 0 &&
             chats.map((chat, index) => (
               <div
@@ -97,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             ))}
         </ul>
-        {!authentificated && !isRoadmap && (
+        {!authenticated && !isRoadmap && (
           <div className={css.lockOverlay}>
             <div className={css.lockText}>
               <img src={lockIcon} className={css.lockIcon} alt="lock" />
