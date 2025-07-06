@@ -4,6 +4,10 @@ import { MemoryRouter } from 'react-router-dom'
 import '@testing-library/jest-dom'
 import Sidebar from './Sidebar'
 
+jest.mock('../../api/env', () => ({
+  API_URL: 'http://mocked-api',
+}))
+
 const chats = [
   { id: 1, name: 'Чат 1', roadmapId: 0, messages: [] },
   { id: 2, name: 'Чат 2', roadmapId: 0, messages: [] },
