@@ -1,12 +1,18 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: skills-app
     container_name: backend
     volumes:
-      - ./backend:/app
+#      - ./backend:/app
       - models:/models
+
     depends_on:
       - qdrant
+    ports:
+      - "8000:80"
     restart: unless-stopped
     environment:
       QDRANT_HOST: qdrant
@@ -25,7 +31,7 @@ services:
       WEB_URL: ${WEB_URL}
     container_name: frontend
     ports:
-      - "8080:80"
+      - "3000:80"
     depends_on:
       - backend
     restart: unless-stopped
