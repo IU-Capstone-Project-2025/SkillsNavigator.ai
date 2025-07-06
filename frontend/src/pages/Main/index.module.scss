@@ -12,7 +12,7 @@
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('/assets/mainGradientBackground.png');
+  background-image: url('/assets/mainGradientBackground.svg');
   height: 100vh;
   display: flex;
   align-items: center;
@@ -109,7 +109,7 @@
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('/assets/gradientBackground.png');
+  background-image: url('/assets/gradientBackground.svg');
   @include page;
   height: 80vh;
   margin-bottom: 30px;
