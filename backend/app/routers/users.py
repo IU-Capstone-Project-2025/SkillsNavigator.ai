@@ -1,26 +1,35 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Depends, status
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import RedirectResponse
 import httpx
-import requests
-import json
 import os
 from app.config import settings
+import jwt
+from datetime import datetime, timedelta
+from app.services.database import session
+from sqlalchemy.orm import Session
+from app.services.user_service import fetch_user_info, get_or_create_user 
 
 router = APIRouter(prefix="/api")
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/callback")
 
-@router.get("/users/me", tags=["users"])
-async def read_user_me(request: Request):
-    token = request.cookies.get("access_token")
-    if not token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
+        user_id = payload.get("sub")
+        print("AAAA", flush=True)
+        if user_id is None:
+            print("DDD", flush=True)
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
+        return user_id
+    except jwt.PyJWTError:
+        print("CCC", flush=True)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
     
-    api_url = 'https://stepik.org/api/stepics/1'  # should be stepic with "c"!
-    resp = json.loads(requests.get(api_url, headers={'Authorization': 'Bearer '+ token}).text)
-
-    user = resp['users']
-    name = user[0]['first_name'] +' ' + user[0]['last_name']
-    return user[0]
+@router.get("/users/me")
+async def read_users_me(current_user: str = Depends(get_current_user)):
+    return {"user_id": current_user}
 
 @router.get("/login")
 async def get_login_url():
@@ -34,15 +43,47 @@ async def get_login_url():
 async def get_access_token(code: str):
     client_id = os.getenv("CLIENT_ID", "")
     client_secret = os.getenv("CLIENT_SECRET", "")
-    redirect_url = settings.web_url + "/api/callback" # why?
-    #TODO: Make separate function to update token.
+    redirect_url = f"{settings.web_url}/api/callback"
+    
     auth = httpx.BasicAuth(username=client_id, password=client_secret)
+    
     async with httpx.AsyncClient(timeout=None, auth=auth) as client:
-        result = await client.post(f"https://stepik.org/oauth2/token/?grant_type=authorization_code&code={code}&redirect_uri={redirect_url}")
-        print(result, flush=True)
-        access_token = result.json()["access_token"]
-        response = RedirectResponse(settings.web_url)
-        response.set_cookie(key="access_token", value=access_token, max_age=result.json()["expires_in"], httponly=True, secure=True)
-        return response
-        # Example of result: {"access_token": "ACCESS_TOKEN", "scope": "read write", "expires_in": 36000, "token_type": "Bearer"}
+        token_response = await client.post(
+            "https://stepik.org/oauth2/token/",
+            params={"grant_type": "authorization_code", "code": code, "redirect_uri": redirect_url}
+        )
         
+        if token_response.status_code != 200:
+            raise HTTPException(status_code=token_response.status_code, detail="Failed to get access token")
+        
+        access_token = token_response.json().get("access_token")
+        if not access_token:
+            raise HTTPException(status_code=400, detail="Access token not found in response")
+
+        stepik_user_info = await fetch_user_info(access_token)
+        user_data = await get_or_create_user(stepik_user_info, session)
+
+        jwt_token = create_access_token(data=user_data)
+
+        response = RedirectResponse(settings.web_url)
+        response.set_cookie(
+            key="access_token",
+            value=jwt_token,
+            max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            httponly=True,
+            secure=True
+        )
+        
+        return response
+        
+
+
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + expires_delta
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=ALGORITHM)
+    return encoded_jwt

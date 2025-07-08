@@ -1,1 +1,1 @@
-from .chat import *
+from .course import *

@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from .config import setup_logging
 import logging
 
+
 setup_logging()
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -43,6 +45,7 @@ app.add_middleware(
 
 app.include_router(users.router)
 app.include_router(courses.router)
+
 
 logger.info("Application started")
 

@@ -1,32 +1,23 @@
-from typing import List, Optional
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy.orm import relationship, declarative_base
 
-from pydantic import BaseModel
-from datetime import datetime
+Base = declarative_base()
 
-# Модель запроса от фронта
-class CourseSearchRequest(BaseModel):
-    area: str
-    current_level: str
-    desired_skills: str
+class Dialog(Base):
+    __tablename__ = 'dialogs'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    # Relationship to access messages
+    messages = relationship("Message", back_populates="roadmap")
 
-# Модель одного курса в ответе
-class CourseSummary(BaseModel):
-    id: int
-    cover_url: Optional[str]        # ссылка на обложку курса
-    title: str
-    duration: Optional[int]         # в часах
-    difficulty: Optional[str]       # лёгкий/средний/сложный
-    price: int            # цена курса
-    currency_code: Optional[str]    # в чём валюта в рублях долларах и т.д.
-    pupils_num: int       # количество записавшихся учеников
-    authors: str    # можно отдавать пустой список, детали подтягивать позже
-    rating: int           # 0–5
-    url: str
-    description: str # описание курса
-    summary: str
-    target_audience: str
-    acquired_skills: str
-    acquired_assets: str
-    title_en: str
-    learning_format: str
-    # section_desc: str # описание секции курса
+class Message(Base):
+    __tablename__ = 'messages'
+    
+    id = Column(Integer, primary_key=True)
+    text = Column(String, nullable=False)
+    is_user = Column(Boolean, nullable=False)
+    roadmap_id = Column(Integer, ForeignKey('dialogs.id'), nullable=False)
+    
+    # Relationship to access the roadmap
+    roadmap = relationship("Dialog", back_populates="messages")
