@@ -1,14 +1,9 @@
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: skills-app
+    image: registry.skillsnavigator.ru/skills-app-backend:${TAG}
     container_name: backend
     volumes:
-#      - ./backend:/app
       - models:/models
-
     depends_on:
       - qdrant
     ports:
@@ -19,12 +14,7 @@ services:
       QDRANT_PORT: 6333
 
   frontend:
-    build:
-      context: ./frontend
-      args:
-        VITE_API: /api
-    environment:
-      VITE_API: /api
+    image: registry.skillsnavigator.ru/skills-app-frontend:${TAG}
     container_name: frontend
     ports:
       - "3000:80"
