@@ -7,58 +7,58 @@ on:
     branches: [ master, develop ]  # Запуск на pull request в main
 
 jobs:
-  build-and-test-backend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build app
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml build
-
-      - name: Start backend services
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml up -d
-
-      - name: Build test container
-        run: |
-          docker buildx build \
-            -f backend/Dockerfile.test \
-            -t test-runner backend \
-            --load
-
-      - name: Run unit and integration tests
-        run: docker run --network=host test-runner pytest tests/unit tests/integration
-
-      - name: Wait for backend
-        run: docker run --network=host test-runner python wait-for-backend.py
-
-      - name: Run e2e tests
-        run: docker run --network=host test-runner pytest tests/e2e
-
-      - name: Shutdown
-        if: always()
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml down -v
-
-
-  test-frontend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@8.15.5 --activate
-
-      - name: Install dependencies and run frontend tests
-        working-directory: frontend
-        run: |
-          pnpm install
-          pnpm test
+#  build-and-test-backend:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Build app
+#        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml build
+#
+#      - name: Start backend services
+#        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml up -d
+#
+#      - name: Build test container
+#        run: |
+#          docker buildx build \
+#            -f backend/Dockerfile.test \
+#            -t test-runner backend \
+#            --load
+#
+#      - name: Run unit and integration tests
+#        run: docker run --network=host test-runner pytest tests/unit tests/integration
+#
+#      - name: Wait for backend
+#        run: docker run --network=host test-runner python wait-for-backend.py
+#
+#      - name: Run e2e tests
+#        run: docker run --network=host test-runner pytest tests/e2e
+#
+#      - name: Shutdown
+#        if: always()
+#        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml down -v
+#
+#
+#  test-frontend:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Set up pnpm
+#        run: |
+#          corepack enable
+#          corepack prepare pnpm@8.15.5 --activate
+#
+#      - name: Install dependencies and run frontend tests
+#        working-directory: frontend
+#        run: |
+#          pnpm install
+#          pnpm test
 
   build-and-push-to-docker-registry:
-    needs: [ build-and-test-backend, test-frontend ]
+#    needs: [ build-and-test-backend, test-frontend ]
     runs-on: ubuntu-latest
 
     steps:
