@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 import logging
 import os
 
+
 class Settings(BaseSettings):
     qdrant_host: str = "qdrant"
     qdrant_port: int = 6333
