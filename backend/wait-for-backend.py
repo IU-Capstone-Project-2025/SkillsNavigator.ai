@@ -1,6 +1,6 @@
 import time, httpx
 
-url = "http://localhost:8000/api/courses/popular"
+url = "http://localhost:80/api/courses/popular"
 
 for _ in range(600):
     try:
