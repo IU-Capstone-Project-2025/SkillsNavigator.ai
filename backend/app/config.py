@@ -9,7 +9,8 @@ class Settings(BaseSettings):
     embedding_model: str = "cointegrated/LaBSE-en-ru"
     deepseek_api_key: str = ""
     deepseek_api_url: str = "https://api.deepseek.com/v1/chat/completions"
-    similarity_threshold: float = 0.4  # Lowered from 0.7 to 0.6 for better course matching
+    similarity_threshold: float = 0  # Lowered from 0.7 to 0.6 for better course matching
+    load_courses: str = "false"
     
     class Config:
         env_file = ".env"

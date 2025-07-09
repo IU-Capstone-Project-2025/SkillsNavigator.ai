@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
         logger.info("Successfully connected to Qdrant")
         
         # Only load courses if explicitly requested via environment variable
-        load_courses = os.getenv("LOAD_COURSES", "false").lower() == "true"
+        load_courses = settings.load_courses.lower() == "true"
         if load_courses:
             logger.info("LOAD_COURSES=true, starting course data loading...")
             app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())

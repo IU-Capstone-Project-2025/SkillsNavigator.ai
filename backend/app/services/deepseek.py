@@ -13,12 +13,13 @@ class DeepseekService:
         self.api_key = settings.deepseek_api_key
         self.api_url = settings.deepseek_api_url
 
-    async def generate_search_queries(self, area: str, current_level: str, desired_skills: str, attempt: int = 0) -> List[str]:
+    async def generate_search_queries(self, area: str, current_level: str, desired_skills: str, attempt: int = 0) -> \
+            List[str]:
         """
         Generate 5 different search queries using Deepseek API based on user input
         """
-        logger.info(f"API Key check: {self.api_key[:10] if self.api_key else 'None'}...")
-        
+        logger.info(f"API Key is {'present' if self.api_key else 'missing'}...")
+
         if not self.api_key or self.api_key == "":
             logger.warning("Deepseek API key not configured, using fallback queries")
             fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
@@ -152,7 +153,7 @@ class DeepseekService:
                 """
 
             logger.info(f"Making API call to Deepseek with prompt: {prompt[:100]}... (attempt {attempt + 1})")
-            
+
             async with httpx.AsyncClient(timeout=30.0) as client:
                 response = await client.post(
                     self.api_url,
@@ -174,43 +175,151 @@ class DeepseekService:
                 )
 
                 logger.info(f"API Response status: {response.status_code}")
-                
+
                 if response.status_code == 200:
                     result = response.json()
                     content = result["choices"][0]["message"]["content"]
                     logger.info(f"API Response content: {content}")
-                    
+
                     # Try to parse JSON from the response
                     try:
                         queries = json.loads(content)
                         if isinstance(queries, list) and len(queries) == 5:
                             logger.info(f"Generated queries (attempt {attempt + 1}): {queries}")
                             # Log the queries to file
-                            query_logger.log_queries(area, current_level, desired_skills, queries, f"deepseek_attempt_{attempt + 1}")
+                            query_logger.log_queries(area, current_level, desired_skills, queries,
+                                                     f"deepseek_attempt_{attempt + 1}")
                             return queries
                         else:
                             logger.warning("Invalid response format from Deepseek API")
-                            fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
-                            query_logger.log_queries(area, current_level, desired_skills, fallback_queries, f"fallback_invalid_format_attempt_{attempt + 1}")
+                            fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills,
+                                                                               attempt)
+                            query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+                                                     f"fallback_invalid_format_attempt_{attempt + 1}")
                             return fallback_queries
                     except json.JSONDecodeError:
                         logger.warning("Failed to parse JSON from Deepseek API response")
                         fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
-                        query_logger.log_queries(area, current_level, desired_skills, fallback_queries, f"fallback_json_error_attempt_{attempt + 1}")
+                        query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+                                                 f"fallback_json_error_attempt_{attempt + 1}")
                         return fallback_queries
                 else:
                     logger.error(f"Deepseek API error: {response.status_code} - {response.text}")
                     fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
-                    query_logger.log_queries(area, current_level, desired_skills, fallback_queries, f"fallback_api_error_attempt_{attempt + 1}")
+                    query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+                                             f"fallback_api_error_attempt_{attempt + 1}")
                     return fallback_queries
 
         except Exception as e:
             logger.exception(f"Error calling Deepseek API: {str(e)}")
             fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
-            query_logger.log_queries(area, current_level, desired_skills, fallback_queries, f"fallback_exception_attempt_{attempt + 1}")
+            query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+                                     f"fallback_exception_attempt_{attempt + 1}")
             return fallback_queries
 
-    def _generate_fallback_queries(self, area: str, current_level: str, desired_skills: str, attempt: int = 0) -> List[str]:
+    async def choose_courses(self, area, current_level, desired_skills, attempt, courses):
+        logger.info(f"API Key is {'present' if self.api_key else 'missing'}...")
+
+        if not self.api_key or self.api_key == "":
+            logger.warning("Deepseek API key not configured")
+            # fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
+            # query_logger.log_queries(area, current_level, desired_skills, fallback_queries, "fallback")
+            return None
+
+        try:
+            prompt = f"""
+            You are a course recommender AI. Choose up to 5 of the most relevant courses from the list of {len(courses)}, based on the user's goals.
+
+            User's goal:
+            - User wants to learn: {area}
+            - Current level: {current_level}
+            - Desired skills: {desired_skills}
+
+            Each course includes:
+            - Title
+            - Summary
+            - Difficulty level
+            - Number of learners who completed it
+
+            Courses:
+            """
+            for idx, course in enumerate(courses):
+                prompt += f"\n{idx}. Title: {course['title']}; Summary: {course['summary']}; Difficulty: {course['difficulty']}; Learners: {course['pupils_num']}"
+            prompt += (
+                "\n\nYour task:"
+                "\n- Choose only the courses that clearly match the user's goals."
+                "\n- Among equally relevant courses, prefer those with more learners (popularity is a sign of usefulness)."
+                "\n- Do NOT include irrelevant or loosely related courses."
+                "\n- If fewer than 5 are relevant, return only those."
+
+                "\n\nReturn a Python list with the indexes of the selected courses."
+                "\nOnly return the list, like this: [4, 11, 23] (no explanations)."
+            )
+
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    self.api_url,
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": "deepseek-chat",
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": prompt
+                            }
+                        ],
+                        "temperature": 0.05,
+                        "max_tokens": 500
+                    }
+                )
+
+                logger.info(f"API Response status: {response.status_code}")
+
+                if response.status_code == 200:
+                    result = response.json()
+                    content = result["choices"][0]["message"]["content"]
+                    logger.info(f"API Response content: {content}")
+
+                    # Try to parse JSON from the response
+                    try:
+                        idxs = json.loads(content)
+                        if isinstance(idxs, list) and len(idxs) > 0:
+                            logger.info(f"Chosen indexes (attempt {attempt + 1}): {idxs}")
+                            # Log the queries to file
+                            # query_logger.log_queries(area, current_level, desired_skills, idxs,
+                            #                          f"deepseek_attempt_{attempt + 1}")
+                            return [courses[i] for i in idxs]
+                        else:
+                            logger.warning("Invalid response format from Deepseek API")
+                            # fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
+                            # query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+                            #                          f"fallback_invalid_format_attempt_{attempt + 1}")
+                            return None
+                    except json.JSONDecodeError:
+                        logger.warning("Failed to parse JSON from Deepseek API response")
+                        # fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
+                        # query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+                        #                          f"fallback_json_error_attempt_{attempt + 1}")
+                        return None
+                else:
+                    logger.error(f"Deepseek API error: {response.status_code} - {response.text}")
+                    # fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
+                    # query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+                    #                          f"fallback_api_error_attempt_{attempt + 1}")
+                    return None
+
+        except Exception as e:
+            logger.exception(f"Error calling Deepseek API: {str(e)}")
+            # fallback_queries = self._generate_fallback_queries(area, current_level, desired_skills, attempt)
+            # query_logger.log_queries(area, current_level, desired_skills, fallback_queries,
+            #                          f"fallback_exception_attempt_{attempt + 1}")
+            return None
+
+    def _generate_fallback_queries(self, area: str, current_level: str, desired_skills: str, attempt: int = 0) -> List[
+        str]:
         """
         Generate fallback queries when Deepseek API is not available
         """
@@ -316,9 +425,9 @@ class DeepseekService:
                     f"{area} training course",
                     f"{area} education tutorial"
                 ]
-        
+
         logger.info(f"Using fallback queries (attempt {attempt + 1}): {base_queries}")
         return base_queries
 
 
-deepseek = DeepseekService() 
+deepseek = DeepseekService()
