@@ -16,8 +16,6 @@ router = APIRouter(prefix="/api")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/token", auto_error=False)
-
 def get_current_user(request: Request):
     try:
         token = request.cookies.get("access_token")
@@ -51,6 +49,7 @@ async def get_login_url():
 async def logout():
     response = RedirectResponse(settings.web_url)
     response.delete_cookie("access_token")
+    return response
 
 @router.get("/callback")
 async def get_access_token(code: str):

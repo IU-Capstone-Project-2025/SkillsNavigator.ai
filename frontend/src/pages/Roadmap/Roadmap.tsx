@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getRoadmaps } from '../../api/api'
 import { LoginModal, Node, Sidebar } from '../../components'
 import Loading from '../../components/Loading/Loading'
 import { useAuth } from '../../lib/AuthProvider'
-import { roadmaps } from '../../lib/data'
 import { getChatRoute } from '../../lib/routes'
 import { RoadmapType } from '../../lib/types'
 import css from './index.module.scss'
@@ -22,7 +22,7 @@ const Roadmap = () => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [lines, setLines] = useState<Line[]>([])
   const [roadmapsState, setRoadmapsState] = useState<RoadmapType[]>([])
-  const [activeRoadmap, setActiveRoadmap] = useState(roadmaps[0].id)
+  const [activeRoadmap, setActiveRoadmap] = useState(-1)
   const roadmap = roadmapsState.find((r) => r.id === activeRoadmap) ?? roadmapsState[0]
   const courses = roadmap?.courses ?? []
   const [loading, setLoading] = useState(false)
@@ -32,9 +32,10 @@ const Roadmap = () => {
   useEffect(() => {
     const fetchRoadmaps = async () => {
       setLoading(true)
-      await new Promise((resolve) => setTimeout(resolve, 300))
+      const roadmaps = await getRoadmaps()
       setRoadmapsState(roadmaps)
       setLoading(false)
+      setActiveRoadmap(roadmaps.length > 0 ? roadmaps[roadmaps.length-1].id : -1)
     }
 
     fetchRoadmaps()
@@ -127,7 +128,7 @@ const Roadmap = () => {
     messages: [],
   }))
 
-  if (loading) {
+  if (loading && authenticated) {
     return (
       <div className={css.root}>
         <Loading />

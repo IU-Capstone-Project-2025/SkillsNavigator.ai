@@ -1,12 +1,16 @@
 services:
   backend:
-    image: registry.skillsnavigator.ru/skills-app-backend:${TAG}
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: skills-app
     container_name: backend
     volumes:
       - models:/models
+
     depends_on:
       - qdrant
-    restart: always
+    restart: unless-stopped
     environment:
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
@@ -20,8 +24,10 @@ services:
       SECRET_KEY: ${SECRET_KEY}
 
   frontend:
-    image: registry.skillsnavigator.ru/skills-app-frontend:${TAG}
-    container_name: frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API: /api
     environment:
       VITE_API: /api
       WEB_URL: ${WEB_URL}
@@ -30,7 +36,7 @@ services:
       - ${NGINX_PORT}:80
     depends_on:
       - backend
-    restart: always
+    restart: unless-stopped
 
   postgres:
     image: postgres:latest

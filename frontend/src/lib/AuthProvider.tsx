@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { getUserInfo, login } from '../api/login'
+import { getUserInfo, login, logout } from '../api/login'
 
 type AuthContextType = {
   authenticated: boolean
@@ -7,6 +7,7 @@ type AuthContextType = {
   avatar: string
   checkAuth: () => Promise<void>
   handleLogin: () => Promise<void>
+  handleLogout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType>({
   avatar: '',
   checkAuth: async () => {},
   handleLogin: async () => {},
+  handleLogout: async () => {},
 })
 
 export const useAuth = () => useContext(AuthContext)
@@ -41,12 +43,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.location.href = await login()
   }
 
+  const handleLogout = async () => {
+    window.location.href = await logout()
+  }
+
   useEffect(() => {
-    checkAuth()
+      checkAuth()
   }, [])
 
   return (
-    <AuthContext.Provider value={{ authenticated, name, avatar, checkAuth, handleLogin }}>
+    <AuthContext.Provider value={{ authenticated, name, avatar, checkAuth, handleLogin, handleLogout }}>
       {children}
     </AuthContext.Provider>
   )
