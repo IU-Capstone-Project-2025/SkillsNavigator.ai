@@ -35,7 +35,7 @@ const Roadmap = () => {
       const roadmaps = await getRoadmaps()
       setRoadmapsState(roadmaps)
       setLoading(false)
-      setActiveRoadmap(roadmaps.length > 0 ? roadmaps[roadmaps.length-1].id : -1)
+      setActiveRoadmap(roadmaps.length > 0 ? roadmaps[roadmaps.length - 1].id : -1)
     }
 
     fetchRoadmaps()
@@ -136,64 +136,80 @@ const Roadmap = () => {
     )
   }
 
-  return (
-    <div ref={containerRef} style={{ position: 'relative' }} className={css.root}>
-      <Sidebar
-        chats={sidebarRoadmaps}
-        activeChat={activeRoadmap}
-        onSelect={setActiveRoadmap}
-        onNewChat={() => navigate(getChatRoute())}
-        isRoadmap
-        roadmaps={roadmapsState}
-        onToggleStatus={(id) => {
-          setRoadmapsState((prev) =>
-            prev.map((r) => (r.id === id ? { ...r, status: r.status === 'current' ? 'notNow' : 'current' } : r))
-          )
-        }}
-      />
-      {!authenticated && (
-        <div className={css.lockOverlay}>
-          <LoginModal opened={openedLogin} onClose={() => {}} withClose={false} />
-        </div>
-      )}
-      <svg className={css.line}>
-        <defs>
-          <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#1a2644" flood-opacity="0.2" />
-          </filter>
-        </defs>
-        {lines.map((line, idx) => (
-          <line
-            key={idx}
-            x1={line.x1}
-            y1={line.y1}
-            x2={line.x2}
-            y2={line.y2}
-            stroke={line.color}
-            strokeWidth={12}
-            strokeLinecap="round"
-            filter="url(#lineShadow)"
-          />
-        ))}
-      </svg>
-
-      <div className={css.roadmap}>
-        {roadmapsState
-          .find((r) => r.id === activeRoadmap)
-          ?.courses.map((course, index) => (
-            <div
-              key={course.id}
-              ref={(el) => {
-                nodeRefs.current[index] = el
-              }}
-              className={index % 2 === 0 ? css.nodeRight : css.nodeLeft}
-            >
-              <Node course={course} position={index % 2 === 0 ? 'right' : 'left'} disabled={disabledStates[index]} />
-            </div>
-          ))}
+  if (!authenticated) {
+    return (
+      <div style={{ position: 'relative' }} className={css.root}>
+        <Sidebar
+          chats={sidebarRoadmaps}
+          activeChat={activeRoadmap}
+          onSelect={setActiveRoadmap}
+          onNewChat={() => navigate(getChatRoute())}
+          isRoadmap
+          roadmaps={roadmapsState}
+          onToggleStatus={(id) => {
+            setRoadmapsState((prev) =>
+              prev.map((r) => (r.id === id ? { ...r, status: r.status === 'current' ? 'notNow' : 'current' } : r))
+            )
+          }}
+        />
+        <LoginModal opened={openedLogin} onClose={() => {}} withClose={false} />
       </div>
-    </div>
-  )
+    )
+  } else {
+    return (
+      <div ref={containerRef} style={{ position: 'relative' }} className={css.root}>
+        <Sidebar
+          chats={sidebarRoadmaps}
+          activeChat={activeRoadmap}
+          onSelect={setActiveRoadmap}
+          onNewChat={() => navigate(getChatRoute())}
+          isRoadmap
+          roadmaps={roadmapsState}
+          onToggleStatus={(id) => {
+            setRoadmapsState((prev) =>
+              prev.map((r) => (r.id === id ? { ...r, status: r.status === 'current' ? 'notNow' : 'current' } : r))
+            )
+          }}
+        />
+        <svg className={css.line}>
+          <defs>
+            <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#1a2644" flood-opacity="0.2" />
+            </filter>
+          </defs>
+          {lines.map((line, idx) => (
+            <line
+              key={idx}
+              x1={line.x1}
+              y1={line.y1}
+              x2={line.x2}
+              y2={line.y2}
+              stroke={line.color}
+              strokeWidth={12}
+              strokeLinecap="round"
+              filter="url(#lineShadow)"
+            />
+          ))}
+        </svg>
+
+        <div className={css.roadmap}>
+          {roadmapsState
+            .find((r) => r.id === activeRoadmap)
+            ?.courses.map((course, index) => (
+              <div
+                key={course.id}
+                ref={(el) => {
+                  nodeRefs.current[index] = el
+                }}
+                className={index % 2 === 0 ? css.nodeRight : css.nodeLeft}
+              >
+                <Node course={course} position={index % 2 === 0 ? 'right' : 'left'} disabled={disabledStates[index]} />
+              </div>
+            ))}
+        </div>
+      </div>
+    )
+  }
 }
 
 export default Roadmap
