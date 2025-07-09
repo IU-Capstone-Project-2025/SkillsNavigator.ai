@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Body, Depends
+from fastapi import APIRouter, HTTPException, Body, Depends, Request
 from typing import List
 
 from app.models import *
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/api/courses", tags=["courses"])
     response_model=List[CourseSummary],
     summary="Поиск курсов по заданным критериям"
 )
-async def generate_roadmap(payload: CourseSearchRequest = Body(...), current_user: str = Depends(get_current_user)):
+async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body(...)):
     """
     Поиск курсов:
     1. **area** — область знаний, которую хочет освоить пользователь
@@ -42,12 +42,15 @@ async def generate_roadmap(payload: CourseSearchRequest = Body(...), current_use
             raise HTTPException(status_code=404, detail="Курсы не найдены")
 
         logger.info(f"Found {len(results)} courses")
-
+        try:
+            current_user = get_current_user(request=request)
+        except:
+            current_user = None
         if (payload.chat_id is not None) and (current_user is not None):
             dialog = session.query(Dialog).filter(Dialog.id == payload.chat_id).first()
             if dialog is None:
                 return
-            roadmap = Roadmap(status=RoadmapStatus.notNow, name=dialog.messages[0].text)
+            roadmap = Roadmap(status=RoadmapStatus.notNow, name=dialog.messages[1].text)
             session.add(roadmap)
             for course in results:
                 db_course = session.query(Course).get(course['id'])
@@ -57,6 +60,10 @@ async def generate_roadmap(payload: CourseSearchRequest = Body(...), current_use
                 roadmap.courses.extend([db_course]) 
             session.add(roadmap)
             session.commit()
+            session.refresh(roadmap)
+            dialog.roadmap_id = roadmap.id
+            session.commit()
+
 
             
                 

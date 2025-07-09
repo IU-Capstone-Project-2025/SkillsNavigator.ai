@@ -16,8 +16,6 @@ router = APIRouter(prefix="/api")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/token", auto_error=False)
-
 def get_current_user(request: Request):
     try:
         token = request.cookies.get("access_token")
