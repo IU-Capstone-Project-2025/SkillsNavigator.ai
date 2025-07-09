@@ -18,7 +18,7 @@ def setup_test_db():
     test_engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(bind=test_engine)
     database.engine = test_engine
-    database.SessionLocal = sessionmaker(bind=test_engine)
+    database.session = sessionmaker(bind=test_engine)
 
 
 @pytest.mark.asyncio
