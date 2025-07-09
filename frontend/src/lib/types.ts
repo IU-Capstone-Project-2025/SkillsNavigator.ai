@@ -28,7 +28,7 @@ export type MessageType = {
 export type ChatType = {
   id: number
   name: string
-  roadmapId: number
+  roadmap_id: number
   messages: MessageType[]
 }
 

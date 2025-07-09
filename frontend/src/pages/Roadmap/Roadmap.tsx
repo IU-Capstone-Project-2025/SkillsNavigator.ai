@@ -41,6 +41,15 @@ const Roadmap = () => {
     fetchRoadmaps()
   }, [])
 
+  useEffect(() => {
+    const roadmapId = localStorage.getItem('roadmapId')
+    if (roadmapId) {
+      const id = parseInt(roadmapId, 10)
+      setActiveRoadmap(id)
+      localStorage.removeItem('roadmapId')
+    }
+  },[roadmapsState])
+
   const getLineColor = (progressA: number, progressB: number) => {
     if (progressA === 1 && progressB === 1) {
       return '#6BE0A4'
@@ -124,7 +133,7 @@ const Roadmap = () => {
   const sidebarRoadmaps = roadmapsState.map((r) => ({
     id: r.id,
     name: r.name,
-    roadmapId: r.id,
+    roadmap_id: r.id,
     messages: [],
   }))
 
@@ -174,7 +183,7 @@ const Roadmap = () => {
         <svg className={css.line}>
           <defs>
             <filter id="lineShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#1a2644" flood-opacity="0.2" />
+              <feDropShadow dx="0" dy="0" stdDeviation="15" floodColor="#1a2644" floodOpacity="0.2" />
             </filter>
           </defs>
           {lines.map((line, idx) => (
