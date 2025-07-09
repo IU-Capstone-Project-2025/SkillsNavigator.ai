@@ -68,6 +68,3 @@ class Message(Base):
     dialog_id = Column(Integer, ForeignKey('dialogs.id'), nullable=False)
     
     dialog = relationship("Dialog", back_populates="messages")
-    
-
-Base.metadata.create_all(database.engine)
