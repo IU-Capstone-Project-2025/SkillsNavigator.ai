@@ -1,13 +1,9 @@
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: skills-app
+    image: registry.skillsnavigator.ru/skills-app-backend:${TAG}
     container_name: backend
     volumes:
       - models:/models
-
     depends_on:
       - qdrant
     restart: unless-stopped
@@ -24,6 +20,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
 
   frontend:
+    image: registry.skillsnavigator.ru/skills-app-frontend:${TAG}
     build:
       context: ./frontend
       args:

@@ -1,0 +1,12 @@
+# docker-compose.override.ci.yml
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: local-backend
+
+  frontend:
+    build:
+      context: ./frontend
+    image: local-frontend

@@ -25,14 +25,22 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Rsync project to server
+      - name: Pull and deploy containers from registry
+        env:
+          TAG: ${{ github.sha }}
         run: |
-          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./ ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }}:/home/${{ secrets.STAGING_USER }}/skillsnavigator/
+          ssh -i ~/.ssh/id_rsa ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} "bash -s" <<EOF
+          set -e
 
-      - name: Restart Docker container on server
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} << 'EOF'
+          docker login registry.skillsnavigator.ru -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }}
+          docker pull registry.skillsnavigator.ru/skills-app-backend:$TAG
+          docker pull registry.skillsnavigator.ru/skills-app-frontend:$TAG
+
           cd /home/${{ secrets.STAGING_USER }}/skillsnavigator
-          docker compose down || true
-          docker compose up --build -d --remove-orphans
+
+          echo "TAG=$TAG" > .env
+
+          docker compose pull
+          docker compose up -d --remove-orphans --force-recreate
           EOF
+      
