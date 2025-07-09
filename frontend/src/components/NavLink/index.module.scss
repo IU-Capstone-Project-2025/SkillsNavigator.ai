@@ -25,3 +25,15 @@
     color: $grey;
   }
 }
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  gap: 10px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}

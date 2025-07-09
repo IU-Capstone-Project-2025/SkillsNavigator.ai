@@ -9,8 +9,8 @@ jest.mock('../../api/env', () => ({
 }))
 
 const chats = [
-  { id: 1, name: 'Чат 1', roadmapId: 0, messages: [] },
-  { id: 2, name: 'Чат 2', roadmapId: 0, messages: [] },
+  { id: 1, name: 'Чат 1', roadmap_id: 0, messages: [] },
+  { id: 2, name: 'Чат 2', roadmap_id: 0, messages: [] },
 ]
 
 describe('Sidebar', () => {
