@@ -2,3 +2,4 @@ venv/
 .env
 backend/app/log.log
 *.idea
+.DS_Store

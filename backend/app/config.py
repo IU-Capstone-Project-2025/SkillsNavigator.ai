@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     qdrant_host: str = "qdrant"
     qdrant_port: int = 6333
     embedding_model: str = "cointegrated/LaBSE-en-ru"
+    web_url: str = os.getenv("WEB_URL", "http://localhost:8080")
+    secret_key: str = os.getenv("", "somerandomkey")
 
 
 settings = Settings()

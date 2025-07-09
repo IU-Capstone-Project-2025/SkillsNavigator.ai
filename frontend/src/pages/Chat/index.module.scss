@@ -5,13 +5,14 @@
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('/assets/chatBgGradient.png');
+  background-image: url('/assets/chatBgGradient.svg');
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
   padding: 120px 300px 30px 300px;
+  overflow: hidden;
 
   @include breakpoint('xlarge') {
     padding: 120px 50px 30px 50px;
@@ -19,6 +20,7 @@
 }
 
 .chat {
+  position: relative;
   padding: 0 50px;
   display: flex;
   flex-direction: column;
@@ -29,6 +31,7 @@
 }
 
 .courses {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 30px;
@@ -39,4 +42,18 @@
 .placeholderCard {
   visibility: hidden;
   height: 100%;
+}
+
+.goToRoadmapButton {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: $darkBlue;
+  color: $white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+
+  &:hover {
+  box-shadow: 0 0px 10px rgba(59, 74, 107, 0.7);
+  }
 }

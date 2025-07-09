@@ -7,13 +7,14 @@
   left: 0;
   bottom: 30px;
   width: fit-content;
+  min-width: 200px;
   max-width: 250px;
   background-color: rgb($white, 0.4);
   padding: 20px 20px 24px 0;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  z-index: 100;
+  gap: 20px;
+  z-index: 90;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
   box-shadow:
@@ -80,8 +81,8 @@
   align-items: center;
   padding-left: 29px;
   overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .newChat {
@@ -96,13 +97,15 @@
   align-items: center;
   gap: 8px;
   font-weight: 500;
-  box-shadow: 3px 3px 10px 0 $white inset;
+  box-shadow: 
+    0px 0px 5px 0 rgb($darkBlue, 0.1),
+    3px 3px 10px 0 $white inset;
   width: fit-content;
 }
 
 .newChat:hover {
   box-shadow:
-    0px 0px 10px 0 rgb($darkBlue, 0.1),
+    0 0 10px 0 rgb($darkBlue, 0.15),
     3px 3px 10px 0 $white inset;
 }
 
@@ -111,6 +114,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: auto;
+  padding-right: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .chatItem {
@@ -118,10 +125,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background-color: rgb($white, 0.2);
-  box-shadow: 3px 3px 10px 0 $white inset;
+  background-color: rgb($white, 0.3);
+  box-shadow:
+    0px 0px 5px 0 rgb($darkBlue, 0.1),
+    3px 3px 10px 0 $white inset;
   padding: 6px 10px 6px 29px;
-  border-radius: 0px 10px 10px 0px;
+  border-radius: 0 10px 10px 0;
   cursor: pointer;
   transition: box-shadow 0.3s ease-out;
 
@@ -134,6 +143,7 @@
       3px 3px 10px 0 $white inset,
       2px 2px 15px 0 #bcdcf7,
       -2px -2px 15px 0 #b9f4c4;
+
     .icon {
       visibility: visible;
     }
@@ -141,12 +151,12 @@
 }
 
 .chatName {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .active {
   background: linear-gradient(90deg, #d6f8e2 0%, #c1ddf1 100%);
@@ -157,6 +167,46 @@
   border-radius: 8px;
 
   &:hover {
-    box-shadow: 0px 0px 4px 0 rgb($darkBlue, 0.6);
+    box-shadow: 0 0 6px 0 rgb($darkBlue, 0.25);
   }
+}
+
+.blockChatHistory {
+  position: relative;
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.lockOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 8px;
+  border-radius: 16px;
+  text-align: center;
+  width: 90%;
+  font-weight: bold;
+}
+
+.lockIcon {
+  width: 26px;
+  height: 28px;
+}
+
+.lockText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hidden {
+  visibility: hidden;
 }

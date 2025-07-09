@@ -1,0 +1,28 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.button {
+  background-color: $darkBlue;
+  color: $white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  padding: 8px 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(59, 74, 107, 0.3);
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 74, 107, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

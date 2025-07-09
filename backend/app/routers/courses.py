@@ -1,8 +1,12 @@
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Body, Depends
 from typing import List
 
 from app.models import *
+from app.models.chat import Roadmap
 from app.services import qdrant, encoder
+from app.routers.users import get_current_user
+from app.services.database import session
+from sqlalchemy.orm import joinedload
 
 import traceback
 import httpx
@@ -13,11 +17,11 @@ router = APIRouter(prefix="/api/courses", tags=["courses"])
 
 
 @router.post(
-    "/search",
+    "/roadmaps",
     response_model=List[CourseSummary],
     summary="Поиск курсов по заданным критериям"
 )
-async def search_courses(payload: CourseSearchRequest = Body(...)):
+async def generate_roadmap(payload: CourseSearchRequest = Body(...), current_user: str = Depends(get_current_user)):
     """
     Поиск курсов:
     1. **area** — область знаний, которую хочет освоить пользователь
@@ -38,12 +42,39 @@ async def search_courses(payload: CourseSearchRequest = Body(...)):
             raise HTTPException(status_code=404, detail="Курсы не найдены")
 
         logger.info(f"Found {len(results)} courses")
+
+        if (payload.chat_id is not None) and (current_user is not None):
+            dialog = session.query(Dialog).filter(Dialog.id == payload.chat_id).first()
+            if dialog is None:
+                return
+            roadmap = Roadmap(status=RoadmapStatus.notNow, name=dialog.messages[0].text)
+            session.add(roadmap)
+            for course in results:
+                db_course = session.query(Course).get(course['id'])
+                if db_course is None:
+                    db_course = course_summary_to_model(CourseSummary(**course))
+                    session.add(db_course)
+                roadmap.courses.extend([db_course]) 
+            session.add(roadmap)
+            session.commit()
+
+            
+                
+
         return results
 
     except Exception as e:
         logger.exception(f"Error course searching: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
+@router.get("/roadmaps")
+async def get_roadmaps(current_user: str = Depends(get_current_user)):
+    dialogs = session.query(Dialog).filter(Dialog.owner == current_user).all()
+    dialog_ids = []
+    for dialog in dialogs:
+        dialog_ids.append(dialog.id)
+    roadmaps = session.query(Roadmap).options(joinedload(Roadmap.courses)).filter(Roadmap.id.in_(dialog_ids)).all()
+    return roadmaps
 
 @router.get(
     "/popular",

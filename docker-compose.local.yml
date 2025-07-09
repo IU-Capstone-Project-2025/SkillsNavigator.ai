@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: skills-app-backend:local
+    container_name: backend
+    volumes:
+      - ./backend/models:/models
+    depends_on:
+      - qdrant
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+    environment:
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: skills-app-frontend:local
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+volumes:
+  qdrant_data:
+  models:
