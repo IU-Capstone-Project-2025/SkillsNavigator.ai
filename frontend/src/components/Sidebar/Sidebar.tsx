@@ -72,7 +72,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 >
                   <h5 className={css.chatName}>
                     {chat.name}
-                    {chat.id}
                   </h5>
                   {!isRoadmap ? (
                     <Tooltip label="Перейти к пути" position="bottom-start" openDelay={800}>
