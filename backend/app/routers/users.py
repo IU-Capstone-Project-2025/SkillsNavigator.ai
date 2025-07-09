@@ -6,30 +6,37 @@ import os
 from app.config import settings
 import jwt
 from datetime import datetime, timedelta
-from app.services.database import session
-from sqlalchemy.orm import Session
-from app.services.user_service import fetch_user_info, get_or_create_user 
+from app.services.user_service import fetch_user_info, get_or_create_user, user_info
+import logging
+from app.models.user import UserInfo
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/callback")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/token", auto_error=False)
+
+def get_current_user(request: Request):
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
+        token = request.cookies.get("access_token")
+        if token is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token is none")
+        payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM], subject=settings.secret_key)
         user_id = payload.get("sub")
-        print("AAAA", flush=True)
         if user_id is None:
-            print("DDD", flush=True)
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
         return user_id
-    except jwt.PyJWTError:
-        print("CCC", flush=True)
+    except jwt.PyJWTError as er:
+        print(er)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
     
+
 @router.get("/users/me")
-async def read_users_me(current_user: str = Depends(get_current_user)):
-    return {"user_id": current_user}
+async def read_users_me(response_model=UserInfo, current_user: str = Depends(get_current_user)):
+    user = await user_info(int(current_user))
+    return UserInfo(**user.__dict__)
 
 @router.get("/login")
 async def get_login_url():
@@ -38,6 +45,12 @@ async def get_login_url():
     # WARNING: It should be equal to value from https://stepik.org/oauth2/applications/
     redirect_url = settings.web_url + "/api/callback"
     return f"https://stepik.org/oauth2/authorize/?response_type=code&client_id={client_id}&redirect_uri={redirect_url}"
+
+
+@router.get("/logout")
+async def logout():
+    response = RedirectResponse(settings.web_url)
+    response.delete_cookie("access_token")
 
 @router.get("/callback")
 async def get_access_token(code: str):
@@ -61,7 +74,7 @@ async def get_access_token(code: str):
             raise HTTPException(status_code=400, detail="Access token not found in response")
 
         stepik_user_info = await fetch_user_info(access_token)
-        user_data = await get_or_create_user(stepik_user_info, session)
+        user_data = await get_or_create_user(stepik_user_info, code=code, access_token=access_token)
 
         jwt_token = create_access_token(data=user_data)
 
@@ -76,10 +89,6 @@ async def get_access_token(code: str):
         
         return response
         
-
-
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
     to_encode = data.copy()
