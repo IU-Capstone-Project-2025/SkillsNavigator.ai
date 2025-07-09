@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
     print("Connecting to qdrant", flush=True)
     qdrant.initialize(settings.qdrant_host, settings.qdrant_port)
     # await qdrant.loadCourses()
-    #app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
+    app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
     yield
     # Clean up the ML models and release the resources
 
@@ -38,6 +38,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

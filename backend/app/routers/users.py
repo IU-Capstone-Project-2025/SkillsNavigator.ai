@@ -51,6 +51,7 @@ async def get_login_url():
 async def logout():
     response = RedirectResponse(settings.web_url)
     response.delete_cookie("access_token")
+    return response
 
 @router.get("/callback")
 async def get_access_token(code: str):

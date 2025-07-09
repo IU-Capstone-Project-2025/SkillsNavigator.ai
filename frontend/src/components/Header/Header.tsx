@@ -9,7 +9,7 @@ import css from './index.module.scss'
 const Header = () => {
   const [openedLogin, setOpenedLogin] = useState(false)
   const [userHovered, setUserHovered] = useState(false)
-  const { authenticated, name, avatar } = useAuth()
+  const { authenticated, name, avatar, handleLogout } = useAuth()
 
   return (
     <div className={css.header}>
@@ -42,7 +42,7 @@ const Header = () => {
             <img src={chevronDown} width={20} className={css.chevronIcon} />
           </div>
           {userHovered && (
-            <button className={css.logoutButton}>
+            <button className={css.logoutButton} onClick={() => handleLogout()}>
               Выйти
             </button>
           )}

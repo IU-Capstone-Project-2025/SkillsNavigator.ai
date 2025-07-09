@@ -62,41 +62,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
         <ul className={authenticated ? `${css.chatList}` : `${css.chatList} ${css.blockChatHistory}`}>
           {chats.length > 0 &&
-            chats.map((chat, index) => (
-              <div
-                key={chat.id}
-                className={`${css.chatItem} ${chat.id === activeChat ? css.active : ''}`}
-                onClick={() => onSelect(chat.id)}
-              >
-                <h5 className={css.chatName}>{chat.name}</h5>
-                {!isRoadmap ? (
-                  <Tooltip label="Перейти к пути" position="bottom-start" openDelay={800}>
-                    <img
-                      src={roadmapIcon}
-                      width={28}
-                      height={28}
-                      className={css.icon}
-                      onClick={() => navigate(getRoadmapRoute())}
-                    />
-                  </Tooltip>
-                ) : roadmaps[index].status !== 'done' ? (
-                  <Tooltip label="Прохожу сейчас" position="bottom-start" openDelay={800}>
-                    <img
-                      src={roadmaps[index].status !== 'current' ? mark : filledMark}
-                      width={28}
-                      height={28}
-                      className={css.icon}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        onToggleStatus?.(chat.id)
-                      }}
-                    />
-                  </Tooltip>
-                ) : (
-                  <img src={doneImage} width={25} height={25} style={{ borderRadius: '99px', opacity: '0.8' }} />
-                )}
-              </div>
-            ))}
+            [...chats]
+              .sort((a, b) => b.id - a.id)
+              .map((chat, index) => (
+                <div
+                  key={chat.id}
+                  className={`${css.chatItem} ${chat.id === activeChat ? css.active : ''}`}
+                  onClick={() => onSelect(chat.id)}
+                >
+                  <h5 className={css.chatName}>
+                    {chat.name}
+                    {chat.id}
+                  </h5>
+                  {!isRoadmap ? (
+                    <Tooltip label="Перейти к пути" position="bottom-start" openDelay={800}>
+                      <img
+                        src={roadmapIcon}
+                        width={28}
+                        height={28}
+                        className={css.icon}
+                        onClick={() => navigate(getRoadmapRoute())}
+                      />
+                    </Tooltip>
+                  ) : roadmaps[index].status !== 'done' ? (
+                    <Tooltip label="Прохожу сейчас" position="bottom-start" openDelay={800}>
+                      <img
+                        src={roadmaps[index].status !== 'current' ? mark : filledMark}
+                        width={28}
+                        height={28}
+                        className={css.icon}
+                        style={{visibility: 'hidden'}}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onToggleStatus?.(chat.id)
+                        }}
+                      />
+                    </Tooltip>
+                  ) : (
+                    <img src={doneImage} width={25} height={25} style={{ borderRadius: '99px', opacity: '0.8', visibility: 'hidden' }} />
+                  )}
+                </div>
+              ))}
         </ul>
         {!authenticated && !isRoadmap && (
           <div className={css.lockOverlay}>
