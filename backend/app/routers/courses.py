@@ -50,7 +50,7 @@ async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body
             dialog = session.query(Dialog).filter(Dialog.id == payload.chat_id).first()
             if dialog is None:
                 return
-            roadmap = Roadmap(status=RoadmapStatus.notNow, name=dialog.messages[0].text)
+            roadmap = Roadmap(status=RoadmapStatus.notNow, name=dialog.messages[1].text)
             session.add(roadmap)
             for course in results:
                 db_course = session.query(Course).get(course['id'])
@@ -60,6 +60,10 @@ async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body
                 roadmap.courses.extend([db_course]) 
             session.add(roadmap)
             session.commit()
+            session.refresh(roadmap)
+            dialog.roadmap_id = roadmap.id
+            session.commit()
+
 
             
                 
