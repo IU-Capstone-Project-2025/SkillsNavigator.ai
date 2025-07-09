@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Enum, Float
 from sqlalchemy.orm import relationship, declarative_base
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from app.services import database
 from app.models.chat import Course 
@@ -11,7 +11,7 @@ class CourseSearchRequest(BaseModel):
     area: str
     current_level: str
     desired_skills: str
-    chat_id: Optional[int]
+    chat_id: Optional[int] = Field(None)
 
 # Модель одного курса в ответе
 class CourseSummary(BaseModel):

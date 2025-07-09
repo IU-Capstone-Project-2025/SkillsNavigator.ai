@@ -18,8 +18,6 @@ class User(Base):
     avatar = Column(String, nullable=True)
 
 
-Base.metadata.create_all(database.engine)
-
 
 class UserInfo(BaseModel):
     id: int
