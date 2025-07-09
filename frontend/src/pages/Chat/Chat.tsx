@@ -84,11 +84,26 @@ const Chat = () => {
       fetchChats()
     }
 
-    const saved = localStorage.getItem('chatInput')
-    if (saved) {
-      setInputValue(saved)
-      setPendingInputFromStorage(true)
-      localStorage.removeItem('chatInput')
+    if (!authenticated) {
+      const saved = localStorage.getItem('chatInput')
+      if (saved) {
+        setGuestMessages([
+          { text: questions[0].text, isUser: false },
+          { text: saved, isUser: true },
+          { text: questions[1].text, isUser: false },
+        ])
+        setGuestAnswers({ [answerKeys[0]]: saved })
+        setGuestStep(1)
+        setInputValue('')
+        localStorage.removeItem('chatInput')
+      }
+    } else {
+      const saved = localStorage.getItem('chatInput')
+      if (saved) {
+        setInputValue(saved)
+        setPendingInputFromStorage(true)
+        localStorage.removeItem('chatInput')
+      }
     }
   }, [authenticated])
 
@@ -231,103 +246,104 @@ const Chat = () => {
     )
   }
 
-  if (authenticated) {return (
-    <div className={css.root}>
-      <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
+  if (authenticated) {
+    return (
+      <div className={css.root}>
+        <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
 
-      <div className={css.chat} ref={chatContainerRef}>
-        {chatMessages.map((msg, idx) => {
-          if (msg.text.startsWith('roadmapCourses000:')) {
-            let coursesArr: CourseType[] = []
-            try {
-              coursesArr = JSON.parse(msg.text.replace('roadmapCourses000: ', ''))
-            } catch {}
-            return (
-              <div className={css.courses} key={`courses-${idx}`}>
-                {coursesArr.slice(0, shownCourses).map((course, i) => (
-                  <Card {...course} key={course.id} index={i} inChat />
-                ))}
-                {coursesLoading && (
-                  <div className={css.courses}>
-                    <Message text="" loading isUser={false} />
-                  </div>
-                )}
-                {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, i) => (
-                  <div className={css.placeholderCard} key={`placeholder-${i}`} />
-                ))}
-              </div>
-            )
-          }
-          const isLast = idx === lastMsgIdx
-          return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
-        })}
-
-        {shownCourses === courses.length && courses.length > 0 && (
-          <button className={css.goToRoadmapButton} onClick={gotoRoadmap}>
-            Перейти к пути
-          </button>
-        )}
-
-        <div ref={chatEndRef} />
-      </div>
-
-      <Input
-        width="100%"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onSend={handleSend}
-        placeholder="Введите ответ..."
-        focus
-      />
-    </div>
-  )
-} else {
-  return (
-    <div className={css.root}>
-      <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
-
-      <div className={css.chat} ref={chatContainerRef}>
-        <>
-          {guestMessages.map((msg, idx) => {
-            const isLast = idx === guestMessages.length - 1
+        <div className={css.chat} ref={chatContainerRef}>
+          {chatMessages.map((msg, idx) => {
+            if (msg.text.startsWith('roadmapCourses000:')) {
+              let coursesArr: CourseType[] = []
+              try {
+                coursesArr = JSON.parse(msg.text.replace('roadmapCourses000: ', ''))
+              } catch {}
+              return (
+                <div className={css.courses} key={`courses-${idx}`}>
+                  {coursesArr.slice(0, shownCourses).map((course, i) => (
+                    <Card {...course} key={course.id} index={i} inChat />
+                  ))}
+                  {coursesLoading && (
+                    <div className={css.courses}>
+                      <Message text="" loading isUser={false} />
+                    </div>
+                  )}
+                  {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, i) => (
+                    <div className={css.placeholderCard} key={`placeholder-${i}`} />
+                  ))}
+                </div>
+              )
+            }
+            const isLast = idx === lastMsgIdx
             return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
           })}
 
-          {guestCourses.length > 0 ? (
-            <div className={css.courses}>
-              {step === questions.length - 1 && guestMessages.length === 6 && (
-                <>
-                  {courses.slice(0, shownCourses).map((course, idx) => (
-                    <Card {...course} key={course.id} index={idx} inChat />
-                  ))}
-                  {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, idx) => (
-                    <div className={css.placeholderCard} key={`placeholder-${idx}`} />
-                  ))}
-                </>
-              )}
-            </div>
-          ) : (
-            guestCoursesLoading && (
-              <div className={css.courses}>
-                <Message text="" loading isUser={false} />
-              </div>
-            )
+          {shownCourses === courses.length && courses.length > 0 && (
+            <button className={css.goToRoadmapButton} onClick={gotoRoadmap}>
+              Перейти к пути
+            </button>
           )}
-        </>
-        <div ref={chatEndRef} />
-      </div>
 
-      <Input
-        width="100%"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onSend={guestSendAnswer}
-        placeholder="Введите ответ..."
-        focus
-      />
-    </div>
-  )
-}
+          <div ref={chatEndRef} />
+        </div>
+
+        <Input
+          width="100%"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onSend={handleSend}
+          placeholder="Введите ответ..."
+          focus
+        />
+      </div>
+    )
+  } else {
+    return (
+      <div className={css.root}>
+        <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
+
+        <div className={css.chat} ref={chatContainerRef}>
+          <>
+            {guestMessages.map((msg, idx) => {
+              const isLast = idx === guestMessages.length - 1
+              return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
+            })}
+
+            {guestCourses.length > 0 ? (
+              <div className={css.courses}>
+                {step === questions.length - 1 && guestMessages.length === 6 && (
+                  <>
+                    {courses.slice(0, shownCourses).map((course, idx) => (
+                      <Card {...course} key={course.id} index={idx} inChat />
+                    ))}
+                    {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, idx) => (
+                      <div className={css.placeholderCard} key={`placeholder-${idx}`} />
+                    ))}
+                  </>
+                )}
+              </div>
+            ) : (
+              guestCoursesLoading && (
+                <div className={css.courses}>
+                  <Message text="" loading isUser={false} />
+                </div>
+              )
+            )}
+          </>
+          <div ref={chatEndRef} />
+        </div>
+
+        <Input
+          width="100%"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onSend={guestSendAnswer}
+          placeholder="Введите ответ..."
+          focus
+        />
+      </div>
+    )
+  }
 }
 
 export default Chat
