@@ -3,16 +3,15 @@ from sqlalchemy.orm import relationship, declarative_base
 from app.services import database
 import enum
 
-Base = declarative_base()
 
 roadmap_courses = Table(
     'roadmap_courses',
-    Base.metadata,
+    database.Base.metadata,
     Column('roadmap_id', Integer, ForeignKey('roadmaps.id'), primary_key=True),
     Column('course_id', Integer, ForeignKey('courses.id'), primary_key=True)
 )
 
-class Course(Base):
+class Course(database.Base):
     __tablename__ = 'courses'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -40,7 +39,7 @@ class RoadmapStatus(enum.Enum):
     notNow = "notNow"
     done = "done"
 
-class Roadmap(Base):
+class Roadmap(database.Base):
     __tablename__ = 'roadmaps'
     
     id = Column(Integer, primary_key=True)
@@ -48,7 +47,7 @@ class Roadmap(Base):
     name = Column(String, nullable=False)
     courses = relationship("Course", secondary=roadmap_courses, back_populates="roadmaps")
 
-class Dialog(Base):
+class Dialog(database.Base):
     __tablename__ = 'dialogs'
     
     id = Column(Integer, primary_key=True)
@@ -59,7 +58,7 @@ class Dialog(Base):
     # Relationship to access messages
     messages = relationship("Message", back_populates="dialog")
 
-class Message(Base):
+class Message(database.Base):
     __tablename__ = 'messages'
     
     id = Column(Integer, primary_key=True)

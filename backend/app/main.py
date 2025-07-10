@@ -3,7 +3,6 @@ import asyncio
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .models import init_db
 from .routers import *
 from app.services import encoder, qdrant
 from app.config import settings
@@ -11,6 +10,7 @@ from app.config import settings
 from contextlib import asynccontextmanager
 from .config import setup_logging
 import logging
+from app.services import database
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -22,6 +22,7 @@ async def lifespan(app: FastAPI):
     await encoder.initialize()
     print("Connecting to qdrant", flush=True)
     qdrant.initialize(settings.qdrant_host, settings.qdrant_port)
+    database.Base.metadata.create_all(database.engine)
     # await qdrant.loadCourses()
     app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
     yield
@@ -47,8 +48,6 @@ app.include_router(users.router)
 app.include_router(chats.router)
 app.include_router(courses.router)
 
-if __name__ == '__main__':
-    init_db()
 
 logger.info("Application started")
 

@@ -4,9 +4,8 @@ from app.services import database
 from typing import List, Optional
 from pydantic import BaseModel
 
-Base = declarative_base()
 
-class User(Base):
+class User(database.Base):
     __tablename__ = 'users'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
