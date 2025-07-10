@@ -47,7 +47,7 @@ const Card: React.FC<Props> = ({
         <div className={css.topSection}>
           <img src={cover_url} alt="" className={css.image} />
           <div className={css.infoSection}>
-            <Rating rating={rating} hovered={hovered} small={inChat} />
+            <Rating rating={Number(rating)} hovered={hovered} small={inChat} />
             {difficulty && <div className={css.difficulty}>{level[difficulty]}</div>}
             <div className={css.durationAndPupils}>
               <div className={css.info}>

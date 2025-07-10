@@ -14,7 +14,7 @@ export let chats: ChatType[] = [
   {
     id: 1,
     name: 'Маркетология',
-    roadmapId: 1,
+    roadmap_id: 1,
     messages: [
       { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Хочу узнать про курсы по маркетингу.', isUser: true },
@@ -24,7 +24,7 @@ export let chats: ChatType[] = [
   {
     id: 2,
     name: 'Программирование',
-    roadmapId: 2,
+    roadmap_id: 2,
     messages: [
       { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Python и JavaScript.', isUser: true },
@@ -34,7 +34,7 @@ export let chats: ChatType[] = [
   {
     id: 3,
     name: 'Дизайн',
-    roadmapId: 3,
+    roadmap_id: 3,
     messages: [
       { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Расскажите про UX/UI.', isUser: true },

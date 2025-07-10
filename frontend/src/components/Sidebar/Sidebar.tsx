@@ -45,6 +45,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     localStorage.setItem('sidebarOpen', String(open))
   }, [open])
 
+  const gotoRoadmap = () => {
+    navigate(getRoadmapRoute())
+    localStorage.setItem('roadmapId', chats.find((c) => c.id === activeChat)?.roadmap_id.toString() || '-1')
+  }
+
   return (
     <>
       <aside className={`${css.sidebar} ${open ? css.open : css.closed}`}>
@@ -80,7 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         width={28}
                         height={28}
                         className={css.icon}
-                        onClick={() => navigate(getRoadmapRoute())}
+                        onClick={gotoRoadmap}
                       />
                     </Tooltip>
                   ) : roadmaps[index].status !== 'done' ? (
