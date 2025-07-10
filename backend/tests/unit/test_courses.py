@@ -8,9 +8,8 @@ from app.main import app
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.models.user import Base
 from app.routers.users import get_current_user
-from app.services import database
+from app.services import database, Base
 
 
 @pytest.fixture(scope="session", autouse=True)
