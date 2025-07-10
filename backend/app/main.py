@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     qdrant.initialize(settings.qdrant_host, settings.qdrant_port)
     database.Base.metadata.create_all(database.engine)
     # await qdrant.loadCourses()
-    # app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
+    app.state.courses_load_task = asyncio.create_task(qdrant.loadCourses())
     yield
     # Clean up the ML models and release the resources
 
