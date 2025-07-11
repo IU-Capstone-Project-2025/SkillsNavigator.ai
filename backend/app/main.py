@@ -47,6 +47,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(chats.router)
 app.include_router(courses.router)
+app.include_router(roadmap.router)
 
 
 logger.info("Application started")
