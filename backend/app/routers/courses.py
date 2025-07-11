@@ -1,23 +1,31 @@
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Body, Depends, Request
 from typing import List
 
 from app.models import *
-from app.services import qdrant, encoder
+from app.models.chat import Roadmap
+from app.routers.users import get_current_user
+from app.services.database import session
+from sqlalchemy.orm import joinedload
+from app.services import qdrant, encoder, deepseek
+from app.config import settings
+from app.utils.query_logger import query_logger
 
 import traceback
 import httpx
 import logging
+
+from app.utils.search import get_courses
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/courses", tags=["courses"])
 
 
 @router.post(
-    "/search",
+    "/roadmaps",
     response_model=List[CourseSummary],
     summary="Поиск курсов по заданным критериям"
 )
-async def search_courses(payload: CourseSearchRequest = Body(...)):
+async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body(...)):
     """
     Поиск курсов:
     1. **area** — область знаний, которую хочет освоить пользователь
@@ -27,23 +35,54 @@ async def search_courses(payload: CourseSearchRequest = Body(...)):
     logger.info(
         f"Search courses: area='{payload.area}', level='{payload.current_level}', slills='{payload.desired_skills}'"
     )
-
     try:
-        query_text = f"{payload.area} {payload.current_level} {payload.desired_skills}"
-        vector = await encoder.vectorize(query_text)
-        results = [course.payload for course in await qdrant.search(vector, "courses")]
+        results = await get_courses(payload)
 
         if not results:
             logger.warning("No search results")
             raise HTTPException(status_code=404, detail="Курсы не найдены")
 
         logger.info(f"Found {len(results)} courses")
+        try:
+            current_user = get_current_user(request=request)
+        except:
+            current_user = None
+        if (payload.chat_id is not None) and (current_user is not None):
+            dialog = session.query(Dialog).filter(Dialog.id == payload.chat_id).first()
+            if dialog is None:
+                return
+            roadmap = Roadmap(status=RoadmapStatus.notNow, name=dialog.messages[1].text)
+            session.add(roadmap)
+            for course in results:
+                db_course = session.query(Course).get(course['id'])
+                if db_course is None:
+                    db_course = course_summary_to_model(CourseSummary(**course))
+                    session.add(db_course)
+                roadmap.courses.extend([db_course])
+            session.add(roadmap)
+            session.commit()
+            session.refresh(roadmap)
+            dialog.roadmap_id = roadmap.id
+            session.commit()
+
+
+
+
+
         return results
 
     except Exception as e:
         logger.exception(f"Error course searching: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
+@router.get("/roadmaps")
+async def get_roadmaps(current_user: str = Depends(get_current_user)):
+    dialogs = session.query(Dialog).filter(Dialog.owner == current_user).all()
+    dialog_ids = []
+    for dialog in dialogs:
+        dialog_ids.append(dialog.id)
+    roadmaps = session.query(Roadmap).options(joinedload(Roadmap.courses)).filter(Roadmap.id.in_(dialog_ids)).all()
+    return roadmaps
 
 @router.get(
     "/popular",
@@ -99,7 +138,8 @@ async def get_popular_courses():
                 }
 
             logger.info("Get rating via review_summary")
-            reviews = (await client.get("https://stepik.org/api/course-review-summaries", params={'ids[]': review_ids})).json()
+            reviews = (
+                await client.get("https://stepik.org/api/course-review-summaries", params={'ids[]': review_ids})).json()
             for review in reviews["course-review-summaries"]:
                 if review["course"] in courses:
                     courses[review["course"]]["rating"] = int(review["average"])

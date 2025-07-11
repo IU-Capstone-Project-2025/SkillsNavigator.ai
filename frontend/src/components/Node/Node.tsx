@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Card } from '..'
 import { CourseType } from '../../lib/types'
 import doneImage from '/assets/doneImage.png'
+import lockIcon from '/assets/lock.png'
 import css from './index.module.scss'
 
 const RING_SIZE = 100
@@ -20,12 +21,11 @@ const Node: React.FC<{ course: CourseType; position: 'left' | 'right'; disabled?
   const strokeDashoffset = circumference - course.progress * circumference
 
   return (
-    <div className={css.node} style={disabled ? { opacity: 0.6, pointerEvents: 'none' } : {}}>
-      <div
-        className={css.ringWrapper}
-        onMouseEnter={disabled ? undefined : () => setIsHovered(true)}
-        onMouseLeave={disabled ? undefined : () => setIsHovered(false)}
-      >
+    <div className={css.node} style={disabled ? { opacity: 0.6 } : {}} onClick={(e) => {
+            e.stopPropagation()
+            window.open(course.url, '_blank', 'noopener,noreferrer')
+          }}>
+      <div className={css.ringWrapper} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <svg className={css.progressRing} width={RING_SIZE} height={RING_SIZE}>
           <circle
             cx={RING_SIZE / 2}
@@ -69,10 +69,15 @@ const Node: React.FC<{ course: CourseType; position: 'left' | 'right'; disabled?
           onMouseLeave={() => setIsHovered(false)}
           alt={course.title}
         />
+        {disabled && (
+          <div className={css.lockIconWrapper}>
+            <img src={lockIcon} className={css.lockIcon} />
+          </div>
+        )}
       </div>
-      {!disabled && isHovered ? (
+      {isHovered ? (
         <div className={`${css.cardWrapper} ${css[`position-${position}`]}`}>
-          <Card {...course} inChat={true} />
+          <Card {...course} inChat={true} link={false} />
         </div>
       ) : (
         <h5 className={`${css.label} ${css[`position-${position}`]}`}>{course.title}</h5>

@@ -3,5 +3,7 @@ __pycache__
 .coverage
 .cache
 .venv
+.env
 
 models
+logs/

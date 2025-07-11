@@ -2,6 +2,8 @@ export type PayloadType = {
   area: string
   current_level: string
   desired_skills: string
+  // hours: number
+  // cost: number
 }
 
 export type CourseType = {
@@ -26,7 +28,7 @@ export type MessageType = {
 export type ChatType = {
   id: number
   name: string
-  roadmapId: number
+  roadmap_id: number
   messages: MessageType[]
 }
 

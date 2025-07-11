@@ -4,13 +4,17 @@ export const questions: MessageType[] = [
   { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
   { text: 'Какой у вас уже уровень?', isUser: false },
   { text: 'Какие конкретные навыки вы хотите освоить?', isUser: false },
+  // { text: 'Сколько часов в день вы готовы обучаться?', isUser: false },
+  // { text: 'Сколько дней в неделю вы будете уделять обучению?', isUser: false },
+  // { text: 'Сколько недель вы хотите проходить обучение по курсам?', isUser: false },
+  // { text: 'Укажите желаемую стоимость за полное обучние', isUser: false },
 ]
 
 export let chats: ChatType[] = [
   {
     id: 1,
     name: 'Маркетология',
-    roadmapId: 1,
+    roadmap_id: 1,
     messages: [
       { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Хочу узнать про курсы по маркетингу.', isUser: true },
@@ -20,7 +24,7 @@ export let chats: ChatType[] = [
   {
     id: 2,
     name: 'Программирование',
-    roadmapId: 2,
+    roadmap_id: 2,
     messages: [
       { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Python и JavaScript.', isUser: true },
@@ -30,7 +34,7 @@ export let chats: ChatType[] = [
   {
     id: 3,
     name: 'Дизайн',
-    roadmapId: 3,
+    roadmap_id: 3,
     messages: [
       { text: 'Доброго времени суток! Что вы хотели бы освоить?', isUser: false },
       { text: 'Расскажите про UX/UI.', isUser: true },

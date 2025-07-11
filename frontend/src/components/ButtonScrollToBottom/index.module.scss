@@ -1,0 +1,21 @@
+@use '../../styles/_vars' as *;
+@use '../../styles/_mixins' as *;
+
+.button {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background-color: rgb($white, 0.7);
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  &:hover {
+    box-shadow: 0 4px 16px 0 rgba(0,0,0,0.12);
+  }
+}

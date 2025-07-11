@@ -5,6 +5,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     image: local-backend
+    ports:
+      - "8000:8000"  # пробрасываем порт
 
   frontend:
     build:

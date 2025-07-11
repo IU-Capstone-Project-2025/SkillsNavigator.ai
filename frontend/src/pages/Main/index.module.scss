@@ -13,19 +13,20 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url('/assets/mainGradientBackground.png');
-  height: 100vh;
+  height: 102vh;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
+  // box-shadow: 0 -55px 80px 0 $defaultBackgroundColor inset;
+  
   &:before,
   &:after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 80px;
   }
 
   &:after {
@@ -109,13 +110,14 @@
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('/assets/gradientBackground.png');
+  background-image: url('/assets/gradientBackground2.png');
   @include page;
   height: 80vh;
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: 10px;
 
   &:before,
   &:after {
@@ -123,7 +125,12 @@
     position: absolute;
     left: 0;
     right: 0;
-    height: 100px;
+    height: 80px;
+  }
+  
+  &:before {
+    top: 0;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, $defaultBackgroundColor 100%);
   }
 
   &:after {
