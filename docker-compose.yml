@@ -18,6 +18,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: ${POSTGRES_HOST}
       SECRET_KEY: ${SECRET_KEY}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
 
   frontend:
     image: registry.skillsnavigator.ru/skills-app-frontend:${TAG}
