@@ -19,7 +19,7 @@ const UpList: React.FC<AnimatedListProps> = ({ children }) => {
             animateOpacity={false}
             scale={1}
             threshold={0.1}
-            delay={80 * index}
+            delay={30 * index}
           >
             {child}
           </Animation>

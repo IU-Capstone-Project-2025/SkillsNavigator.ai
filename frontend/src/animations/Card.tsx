@@ -23,8 +23,6 @@ const springValues: SpringOptions = {
 export default function Card({
   children,
   captionText = '',
-  containerHeight = 'fit-content',
-  containerWidth = '100%',
   scaleOnHover = 1.05,
   rotateAmplitude = 5,
   showMobileWarning = true,
@@ -86,7 +84,6 @@ export default function Card({
     <figure
       ref={ref}
       className="tilted-card-figure"
-      style={{ height: containerHeight, width: containerWidth }}
       onMouseMove={handleMouse}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -98,12 +95,6 @@ export default function Card({
       <motion.div className="tilted-card-inner" style={{ rotateX, rotateY, scale }}>
         {children}
       </motion.div>
-
-      {showTooltip && (
-        <motion.figcaption className="tilted-card-caption" style={{ x, y, opacity, rotate: rotateFigcaption }}>
-          {captionText}
-        </motion.figcaption>
-      )}
     </figure>
   )
 }
