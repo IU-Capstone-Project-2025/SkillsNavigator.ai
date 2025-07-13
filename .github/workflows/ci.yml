@@ -14,7 +14,7 @@ on:
 jobs:
   build-and-test-backend:
     runs-on: self-hosted
-#    runs-on: ubuntu-latest
+    #    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -55,7 +55,7 @@ jobs:
 
   test-frontend:
     runs-on: self-hosted
-#    runs-on: ubuntu-latest
+    #    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -74,7 +74,7 @@ jobs:
   build-and-push-to-docker-registry:
     needs: [ build-and-test-backend, test-frontend ]
     runs-on: self-hosted
-#    runs-on: ubuntu-latest
+    #    runs-on: ubuntu-latest
 
     env:
       REGISTRY: registry.skillsnavigator.ru
