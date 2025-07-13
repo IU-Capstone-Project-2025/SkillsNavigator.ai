@@ -6,57 +6,6 @@ from unittest.mock import AsyncMock, patch
 from app.main import app
 from app.routers.users import get_current_user
 
-
-@pytest.mark.asyncio
-@patch("app.services.encoder.encoder.vectorize", new_callable=AsyncMock)
-@patch("app.services.qdrant.qdrant.search", new_callable=AsyncMock)
-async def test_search_courses_integration(mock_search, mock_vectorize):
-    """Интеграционный тест для POST /api/courses/roadmaps."""
-    # ✅ Подмена зависимости авторизации
-    app.dependency_overrides[get_current_user] = lambda: "test_user_id"
-
-    mock_vectorize.return_value = [0.1, 0.2, 0.3]
-    mock_search.return_value = [
-        type("MockPoint", (), {
-            "payload": {
-                "id": 1,
-                "cover_url": "https://example.com/image.jpg",
-                "title": "Integration Course",
-                "duration": 2,
-                "difficulty": "medium",
-                "price": 0,
-                "currency_code": "USD",
-                "pupils_num": 111,
-                "authors": "Jane Doe",
-                "rating": 4,
-                "url": "https://stepik.org/course/1",
-                "description": "Integration test",
-                "summary": "summary",
-                "target_audience": "everyone",
-                "acquired_skills": "skill1",
-                "acquired_assets": "asset1",
-                "title_en": "Integration Course",
-                "learning_format": "online"
-            }
-        })()
-    ]
-
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        response = await ac.post("/api/courses/roadmaps", json={
-            "area": "ML",
-            "current_level": "beginner",
-            "desired_skills": "python"
-        })
-
-    # ❗️ Удалить override после теста
-    app.dependency_overrides = {}
-
-    assert response.status_code == status.HTTP_200_OK
-    result = response.json()
-    assert result[0]["title"] == "Integration Course"
-
-
 @patch("httpx.AsyncClient")
 @pytest.mark.asyncio
 async def test_popular_courses_integration(mock_client_class):

@@ -16,4 +16,3 @@ async def test_live_search_and_popular():
 
         response = await client.get("/api/courses/popular", timeout=20.0)
         assert response.status_code in (200, 404)
-        print("✅ test_live_search_and_popular")

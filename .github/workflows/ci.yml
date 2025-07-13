@@ -8,17 +8,20 @@ on:
 
 jobs:
   build-and-test-backend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v3
 
+      # Сборка приложения с использованием docker-compose.local.yml
       - name: Build app
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml build
+        run: docker compose -f docker-compose.local.yml build
 
+      # Запуск backend сервисов с использованием docker-compose.local.yml
       - name: Start backend services
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml up -d
+        run: docker compose -f docker-compose.local.yml up -d
 
+      # Сборка контейнера для тестов
       - name: Build test container
         run: |
           docker buildx build \
@@ -26,22 +29,26 @@ jobs:
             -t test-runner backend \
             --load
 
+      # Запуск юнит и интеграционных тестов
       - name: Run unit and integration tests
         run: docker run --network=host test-runner pytest tests/unit tests/integration
 
-#      - name: Wait for backend
-#        run: docker run --network=host test-runner python wait-for-backend.py
-#
-#      - name: Run e2e tests
-#        run: docker run --network=host test-runner pytest tests/e2e
+      # Ожидание запуска backend
+      - name: Wait for backend
+        run: docker run --network=host test-runner python wait-for-backend.py
 
+      # Запуск end-to-end тестов
+      - name: Run e2e tests
+        run: docker run --network=host test-runner pytest tests/e2e
+
+      # Выключение сервисов и удаление томов
       - name: Shutdown
         if: always()
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml down -v
+        run: docker compose -f docker-compose.local.yml down -v
 
 
   test-frontend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v3
@@ -59,7 +66,7 @@ jobs:
 
   build-and-push-to-docker-registry:
     needs: [ build-and-test-backend, test-frontend ]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v3

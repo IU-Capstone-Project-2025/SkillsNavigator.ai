@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     image: local-backend
     ports:
-      - "8000:8000"  # пробрасываем порт
+      - "8000:80"
 
   frontend:
     build:
