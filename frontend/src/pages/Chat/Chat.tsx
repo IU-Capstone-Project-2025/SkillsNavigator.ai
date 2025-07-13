@@ -35,35 +35,54 @@ const Chat = () => {
   const [guestCoursesLoading, setGuestCoursesLoading] = useState(false)
 
   const guestSendAnswer = async () => {
-    const key = answerKeys[guestStep]
-    const newAnswers = { ...guestAnswers, [key]: inputValue }
-    setGuestAnswers(newAnswers)
-    setGuestMessages((prev) => [...prev, { text: inputValue, isUser: true }])
+  const key = answerKeys[guestStep]
+  const newAnswers = { ...guestAnswers, [key]: inputValue }
+  setGuestAnswers(newAnswers)
+  setGuestMessages((prev) => [...prev, { text: inputValue, isUser: true }])
 
-    if (guestStep < answerKeys.length - 1) {
+  if (guestStep < answerKeys.length - 1) {
+    setInputValue('')
+    setTimeout(() => {
       setGuestMessages((prev) => [...prev, { text: questions[guestStep + 1].text, isUser: false }])
       setGuestStep(guestStep + 1)
+    }, 400)
+  } else {
+    setGuestCoursesLoading(true)
+    try {
       setInputValue('')
-    } else {
-      setGuestCoursesLoading(true)
-      try {
-        const data = await searchCourses(newAnswers as PayloadType)
-        setGuestCourses(data)
-        setGuestMessages((prev) => [
-          ...prev,
-          { text: 'Твой план, который приведет к цели:', isUser: false },
-          { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false },
-        ])
-      } catch {
-        setGuestMessages((prev) => [
-          ...prev,
-          { text: 'Упс, что-то пошло не так... Повторите попытку позже', isUser: false },
-        ])
-      } finally {
-        setGuestCoursesLoading(false)
-      }
+      const data = await searchCourses(newAnswers as PayloadType)
+      setGuestCourses(data)
+      setGuestMessages((prev) => [
+        ...prev,
+        { text: 'Твой план, который приведет к цели:', isUser: false },
+        { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false },
+      ])
+    } catch {
+      setInputValue('')
+      setGuestMessages((prev) => [
+        ...prev,
+        { text: 'Упс, что-то пошло не так... Повторите попытку позже', isUser: false },
+      ])
+    } finally {
+      setGuestCoursesLoading(false)
     }
   }
+}
+
+useEffect(() => {
+  if (guestCourses.length > 0 && shownCourses < guestCourses.length) {
+    setShownCourses(0)
+    let i = 0
+    const interval = setInterval(() => {
+      i++
+      setShownCourses(i)
+      if (i >= guestCourses.length) {
+        clearInterval(interval)
+      }
+    }, 500)
+    return () => clearInterval(interval)
+  }
+}, [guestCourses])
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -263,11 +282,7 @@ const Chat = () => {
                   {coursesArr.slice(0, shownCourses).map((course, i) => (
                     <Card {...course} key={course.id} index={i} inChat />
                   ))}
-                  {coursesLoading && (
-                    <div className={css.courses}>
-                      <Message text="" loading isUser={false} />
-                    </div>
-                  )}
+
                   {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, i) => (
                     <div className={css.placeholderCard} key={`placeholder-${i}`} />
                   ))}
@@ -278,6 +293,12 @@ const Chat = () => {
             return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
           })}
 
+          {coursesLoading && (
+            <div className={css.courses}>
+              <Message text="" loading isUser={false} />
+            </div>
+          )}
+
           {shownCourses === courses.length && courses.length > 0 && (
             <button className={css.goToRoadmapButton} onClick={gotoRoadmap}>
               Перейти к пути
@@ -287,14 +308,16 @@ const Chat = () => {
           <div ref={chatEndRef} />
         </div>
 
-        <Input
-          width="100%"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onSend={handleSend}
-          placeholder="Введите ответ..."
-          focus
-        />
+        {!(courses.length > 0) && (
+          <Input
+            width="100%"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onSend={handleSend}
+            placeholder="Введите ответ..."
+            focus
+          />
+        )}
       </div>
     )
   } else {
@@ -303,44 +326,61 @@ const Chat = () => {
         <Sidebar chats={localChats} activeChat={activeChat} onSelect={(id) => onSelect(id)} onNewChat={handleNewChat} />
 
         <div className={css.chat} ref={chatContainerRef}>
-          <>
-            {guestMessages.map((msg, idx) => {
-              const isLast = idx === guestMessages.length - 1
-              return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
-            })}
-
-            {guestCourses.length > 0 ? (
-              <div className={css.courses}>
-                {step === questions.length - 1 && guestMessages.length === 6 && (
-                  <>
-                    {courses.slice(0, shownCourses).map((course, idx) => (
-                      <Card {...course} key={course.id} index={idx} inChat />
-                    ))}
-                    {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, idx) => (
-                      <div className={css.placeholderCard} key={`placeholder-${idx}`} />
-                    ))}
-                  </>
-                )}
-              </div>
-            ) : (
-              guestCoursesLoading && (
-                <div className={css.courses}>
-                  <Message text="" loading isUser={false} />
+          {guestMessages.map((msg, idx) => {
+            if (msg.text.startsWith('roadmapCourses000:')) {
+              let coursesArr: CourseType[] = []
+              try {
+                coursesArr = JSON.parse(msg.text.replace('roadmapCourses000: ', ''))
+              } catch {}
+              return (
+                <div className={css.courses} key={`courses-${idx}`}>
+                  {coursesArr.slice(0, shownCourses).map((course, i) => (
+                    <Card {...course} key={course.id} index={i} inChat />
+                  ))}
+                  {Array.from({ length: Math.max(0, PLACEHOLDER_COUNT - shownCourses) }).map((_, i) => (
+                    <div className={css.placeholderCard} key={`placeholder-${i}`} />
+                  ))}
                 </div>
               )
-            )}
-          </>
+            }
+            const lastMsgIdx = (() => {
+              let last = -1
+              guestMessages.forEach((m, i) => {
+                if (!m.text.startsWith('roadmapCourses000:')) {
+                  last = i
+                }
+              })
+              return last
+            })()
+            const isLast = idx === lastMsgIdx
+            return <Message key={idx} text={msg.text} isUser={msg.isUser} animate={isLast} />
+          })}
+
+          {guestCoursesLoading && (
+            <div className={css.courses}>
+              <Message text="" loading isUser={false} />
+            </div>
+          )}
+
+          {shownCourses === guestCourses.length && guestCourses.length > 0 && (
+            <button className={css.goToRoadmapButton} onClick={gotoRoadmap}>
+              Перейти к пути
+            </button>
+          )}
+
           <div ref={chatEndRef} />
         </div>
 
-        <Input
-          width="100%"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onSend={guestSendAnswer}
-          placeholder="Введите ответ..."
-          focus
-        />
+        {!(guestCourses.length > 0) && (
+          <Input
+            width="100%"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onSend={guestSendAnswer}
+            placeholder="Введите ответ..."
+            focus
+          />
+        )}
       </div>
     )
   }
