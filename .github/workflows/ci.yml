@@ -11,6 +11,9 @@ on:
   pull_request:
     branches: [ master, develop ]  # Запуск на pull request в main
 
+env:
+  COMPOSE_PROJECT_NAME: dev
+
 jobs:
   build-and-test-backend:
     runs-on: self-hosted
@@ -19,13 +22,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Сборка приложения с использованием docker-compose.local.yml
+      # Сборка приложения с использованием docker-compose.dev.yml
       - name: Build app
-        run: docker compose -p local -f docker-compose.local.yml build
+        run: docker compose -f docker-compose.dev.yml build
 
-      # Запуск backend сервисов с использованием docker-compose.local.yml
+      # Запуск backend сервисов с использованием docker-compose.dev.yml
       - name: Start backend services
-        run: docker compose -p local -f docker-compose.local.yml up -d
+        run: docker compose -f docker-compose.dev.yml up -d
 
       # Сборка контейнера для тестов
       - name: Build test container
@@ -50,7 +53,7 @@ jobs:
       # Выключение сервисов и удаление томов
       - name: Shutdown
         if: always()
-        run: docker compose -f docker-compose.local.yml down -v
+        run: docker compose -f docker-compose.dev.yml down -v
 
 
   test-frontend:
