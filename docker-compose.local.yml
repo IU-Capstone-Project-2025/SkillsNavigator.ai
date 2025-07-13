@@ -53,7 +53,7 @@ services:
 
   qdrant:
     image: qdrant/qdrant
-    container_name: qdrant
+    container_name: local_qdrant
     volumes:
       - qdrant_data:/qdrant/storage
     restart: unless-stopped
