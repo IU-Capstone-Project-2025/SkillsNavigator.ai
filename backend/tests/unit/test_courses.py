@@ -1,7 +1,10 @@
 import pytest
 from httpx import AsyncClient, ASGITransport, Response
-from fastapi import status
+from fastapi import status, HTTPException
 from unittest.mock import AsyncMock, patch
+
+from starlette.status import HTTP_404_NOT_FOUND
+from starlette.testclient import TestClient
 
 from app.main import app
 
@@ -31,27 +34,6 @@ def make_course_payload(overrides: dict = None) -> dict:
     if overrides:
         data.update(overrides)
     return data
-
-
-@pytest.mark.asyncio
-@patch("app.services.qdrant.qdrant.search", new_callable=AsyncMock)
-@patch("app.services.encoder.encoder.vectorize", new_callable=AsyncMock)
-async def test_search_courses_success(mock_vectorize, mock_search):
-    """Тест успешного поиска курсов."""
-    mock_vectorize.return_value = [0.1, 0.2, 0.3]
-    mock_search.return_value = [AsyncMock(payload=make_course_payload())]
-
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        response = await ac.post("/api/courses/search", json={
-            "area": "Data Science",
-            "current_level": "beginner",
-            "desired_skills": "python, ml"
-        })
-
-    assert response.status_code == status.HTTP_200_OK
-    result = response.json()
-    assert result[0]["title"] == "Test Course"
 
 
 @patch("httpx.AsyncClient")

@@ -38,7 +38,7 @@ jobs:
 
           cd /home/${{ secrets.STAGING_USER }}/skillsnavigator
 
-          echo "TAG=$TAG" > .env
+          echo "TAG=$TAG" >> .env
 
           docker compose pull
           docker compose up -d --remove-orphans --force-recreate

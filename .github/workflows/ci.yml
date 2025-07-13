@@ -1,6 +1,11 @@
 name: CI
 
 on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag'
+        required: true
   push:
     branches: [ master, develop ]  # Запуск на пуш в ветки main
   pull_request:
@@ -8,17 +13,21 @@ on:
 
 jobs:
   build-and-test-backend:
+#    runs-on: self-hosted
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
+      # Сборка приложения с использованием docker-compose.local.yml
       - name: Build app
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml build
+        run: docker compose -f docker-compose.local.yml build
 
+      # Запуск backend сервисов с использованием docker-compose.local.yml
       - name: Start backend services
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml up -d
+        run: docker compose -f docker-compose.local.yml up -d
 
+      # Сборка контейнера для тестов
       - name: Build test container
         run: |
           docker buildx build \
@@ -26,21 +35,26 @@ jobs:
             -t test-runner backend \
             --load
 
+      # Запуск юнит и интеграционных тестов
       - name: Run unit and integration tests
         run: docker run --network=host test-runner pytest tests/unit tests/integration
 
+      # Ожидание запуска backend
       - name: Wait for backend
         run: docker run --network=host test-runner python wait-for-backend.py
 
+      # Запуск end-to-end тестов
       - name: Run e2e tests
         run: docker run --network=host test-runner pytest tests/e2e
 
+      # Выключение сервисов и удаление томов
       - name: Shutdown
         if: always()
-        run: docker compose -f docker-compose.yml -f docker-compose.override.ci.yml down -v
+        run: docker compose -f docker-compose.local.yml down -v
 
 
   test-frontend:
+#    runs-on: self-hosted
     runs-on: ubuntu-latest
 
     steps:
@@ -59,7 +73,12 @@ jobs:
 
   build-and-push-to-docker-registry:
     needs: [ build-and-test-backend, test-frontend ]
+#    runs-on: self-hosted
     runs-on: ubuntu-latest
+
+    env:
+      REGISTRY: registry.skillsnavigator.ru
+      TAG: ${{ github.event.inputs.image_tag }}
 
     steps:
       - uses: actions/checkout@v3
@@ -73,10 +92,10 @@ jobs:
 
       - name: Build and push backend image
         run: |
-          docker build -t registry.skillsnavigator.ru/skills-app-backend:${{ github.sha }} ./backend
-          docker push registry.skillsnavigator.ru/skills-app-backend:${{ github.sha }}
+          docker build -t registry.skillsnavigator.ru/skills-app-backend:${{ github.event.inputs.image_tag }} ./backend
+          docker push registry.skillsnavigator.ru/skills-app-backend:${{ github.event.inputs.image_tag }}
 
       - name: Build and push frontend image
         run: |
-          docker build -t registry.skillsnavigator.ru/skills-app-frontend:${{ github.sha }} ./frontend
-          docker push registry.skillsnavigator.ru/skills-app-frontend:${{ github.sha }}
+          docker build -t registry.skillsnavigator.ru/skills-app-frontend:${{ github.event.inputs.image_tag }} ./frontend
+          docker push registry.skillsnavigator.ru/skills-app-frontend:${{ github.event.inputs.image_tag }}

@@ -19,8 +19,8 @@ const Login: React.FC<LoginModalProps> = ({ opened, onClose, withClose = true })
       zIndex={95}
       withCloseButton={false}
       overlayProps={{
-        backgroundOpacity: 0.3,
-        blur: 3,
+        backgroundOpacity: 0.1,
+        blur: 4,
       }}
       transitionProps={{ transition: 'fade', duration: 200, timingFunction: 'ease-out' }}
       radius="lg"
