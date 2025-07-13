@@ -22,11 +22,9 @@ const springValues: SpringOptions = {
 
 export default function Card({
   children,
-  captionText = '',
   scaleOnHover = 1.05,
   rotateAmplitude = 5,
   showMobileWarning = true,
-  showTooltip = false,
 }: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null)
 
