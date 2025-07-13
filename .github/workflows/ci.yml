@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       image_tag:
-        description: 'Docker image tag (по умолчанию — короткий SHA коммита)'
+        description: 'Docker image tag'
         required: true
   push:
     branches: [ master, develop ]  # Запуск на пуш в ветки main
@@ -13,7 +13,8 @@ on:
 
 jobs:
   build-and-test-backend:
-    runs-on: self-hosted
+#    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -53,7 +54,8 @@ jobs:
 
 
   test-frontend:
-    runs-on: self-hosted
+#    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -71,7 +73,9 @@ jobs:
 
   build-and-push-to-docker-registry:
     needs: [ build-and-test-backend, test-frontend ]
-    runs-on: self-hosted
+#    runs-on: self-hosted
+    runs-on: ubuntu-latest
+
     env:
       REGISTRY: registry.skillsnavigator.ru
       TAG: ${{ github.event.inputs.image_tag }}
