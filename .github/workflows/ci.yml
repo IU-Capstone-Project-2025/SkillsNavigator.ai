@@ -21,11 +21,11 @@ jobs:
 
       # Сборка приложения с использованием docker-compose.local.yml
       - name: Build app
-        run: docker compose -f docker-compose.local.yml build
+        run: docker compose -p local -f docker-compose.local.yml build
 
       # Запуск backend сервисов с использованием docker-compose.local.yml
       - name: Start backend services
-        run: docker compose -f docker-compose.local.yml up -d
+        run: docker compose -p local -f docker-compose.local.yml up -d
 
       # Сборка контейнера для тестов
       - name: Build test container
