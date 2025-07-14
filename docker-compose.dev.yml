@@ -50,7 +50,7 @@ services:
       - postgres_runner_data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
-      -
+
   qdrant:
     image: qdrant/qdrant
     volumes:
