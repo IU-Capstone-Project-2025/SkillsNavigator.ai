@@ -14,7 +14,7 @@ jobs:
       startsWith(github.event.workflow_run.head_ref, 'v')
 
     name: Deploy to Staging Server
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
