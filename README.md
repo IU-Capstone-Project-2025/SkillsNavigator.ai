@@ -5,12 +5,12 @@ SkillsNavigator.ai helps you create a customized learning journey tailored to yo
 ## How to run locally
 
 ```bash
-docker-compose up -f docker-compose.local.yml --build
+docker-compose -f docker-compose.local.yml up --build
 ```
 
 or (for Mac)
 ```bash
-docker compose up -f docker-compose.local.yml --build
+docker compose -f docker-compose.local.yml up --build
 ```
 ---
 * To configure use .env file 

@@ -4,7 +4,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     image: skills-app
-    container_name: backend
     volumes:
       - models:/models
     ports:
@@ -34,7 +33,6 @@ services:
     environment:
       VITE_API: /api
       WEB_URL: ${WEB_URL}
-    container_name: frontend
     ports:
       - ${NGINX_PORT}:80
     depends_on:
@@ -53,7 +51,6 @@ services:
 
   qdrant:
     image: qdrant/qdrant
-    container_name: qdrant
     volumes:
       - qdrant_data:/qdrant/storage
     restart: unless-stopped

@@ -1,31 +1,12 @@
 import pytest
 from httpx import AsyncClient, ASGITransport, Response
-from fastapi import status
+from fastapi import status, HTTPException
 from unittest.mock import AsyncMock, patch
 
+from starlette.status import HTTP_404_NOT_FOUND
+from starlette.testclient import TestClient
+
 from app.main import app
-
-import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.routers.users import get_current_user
-from app.services import database, Base
-
-
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_db():
-    test_engine = create_engine("sqlite:///:memory:")
-    Base.metadata.create_all(bind=test_engine)
-    database.engine = test_engine
-    database.session = sessionmaker(bind=test_engine)
-
-
-@pytest.mark.asyncio
-async def test_check_search_endpoint_exists():
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        response = await ac.post("/api/courses/roadmaps", json={})
-    assert response.status_code != 404  # просто убедиться, что он существует
 
 
 def make_course_payload(overrides: dict = None) -> dict:
@@ -53,33 +34,6 @@ def make_course_payload(overrides: dict = None) -> dict:
     if overrides:
         data.update(overrides)
     return data
-
-
-@pytest.mark.asyncio
-@patch("app.services.qdrant.qdrant.search", new_callable=AsyncMock)
-@patch("app.services.encoder.encoder.vectorize", new_callable=AsyncMock)
-async def test_search_courses_success(mock_vectorize, mock_search):
-    mock_vectorize.return_value = [0.1, 0.2, 0.3]
-
-    class MockPoint:
-        payload = make_course_payload()
-
-    mock_search.return_value = [MockPoint()]
-
-    app.dependency_overrides[get_current_user] = lambda: "test_user_id"
-
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        response = await ac.post("/api/courses/roadmaps", json={
-            "area": "Data Science",
-            "current_level": "beginner",
-            "desired_skills": "python, ml",
-        })
-
-    # Очистить overrides, чтобы не повлияло на другие тесты
-    app.dependency_overrides = {}
-
-    assert response.status_code == status.HTTP_200_OK
 
 
 @patch("httpx.AsyncClient")

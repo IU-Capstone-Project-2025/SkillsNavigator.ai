@@ -60,7 +60,7 @@
 }
 
 .roadmapMockup {
-  width: 40%;
+  width: 80%;
 }
 
 .aboutText {
@@ -110,6 +110,7 @@
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: transparent;
   background-image: url('/assets/gradientBackground2.png');
   @include page;
   height: 80vh;
@@ -150,7 +151,11 @@
 }
 
 .thoughtsImage {
-  width: 50%;
+  width: 100%;
+}
+
+.thoughtsText {
+  width: 100%;
 }
 
 .ctaButton {
