@@ -1,19 +1,22 @@
-import { render, screen } from '@testing-library/react'
-import '@testing-library/jest-dom'
 import { MantineProvider } from '@mantine/core'
+import { render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import '@testing-library/jest-dom'
 import Chat from './Chat'
 
 jest.mock('../../api/env', () => ({
-  API_URL: 'http://mocked-api'
-}));
+  API_URL: 'http://mocked-api',
+}))
 
-describe('Chat page', () => {
-  it('renders first question', () => {
-    render(
+test('Chat page', async () => {
+  render(
+    <MemoryRouter>
       <MantineProvider>
         <Chat />
       </MantineProvider>
-    )
+    </MemoryRouter>
+  )
+  await waitFor(() =>
     expect(screen.getByText(/Доброго времени суток! Что вы хотели бы освоить\?/i)).toBeInTheDocument()
-  })
+  )
 })

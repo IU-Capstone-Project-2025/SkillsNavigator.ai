@@ -1,55 +1,64 @@
 name: CI
 
 on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag'
+        required: true
   push:
-    branches: [master, develop]  # Запуск на пуш в ветки main
+    branches: [ master, develop, devops ]  # Запуск на пуш в ветки main
   pull_request:
-    branches: [master, develop]  # Запуск на pull request в main
+    branches: [ master, develop, devops ]  # Запуск на pull request в main
+
+env:
+  COMPOSE_PROJECT_NAME: dev
 
 jobs:
   build-and-test-backend:
-    runs-on: ubuntu-latest  # Используется Ubuntu в качестве среды выполнения
+    runs-on: self-hosted
+    #    runs-on: ubuntu-latest
 
     steps:
-      # Клонирование репозитория
       - uses: actions/checkout@v3
 
+      # Сборка приложения с использованием docker-compose.dev.yml
       - name: Build app
-        # Сборка сервисов из docker-compose.yml, включая backend
-        run: docker compose build
+        run: docker compose -f docker-compose.dev.yml build
 
+      # Запуск backend сервисов с использованием docker-compose.dev.yml
       - name: Start backend services
-        # Запуск backend и зависимостей в фоне
-        run: docker compose up -d
+        run: docker compose -f docker-compose.dev.yml up -d
 
+      # Сборка контейнера для тестов
       - name: Build test container
-        # Сборка тестового контейнера из backend/Dockerfile.test
         run: |
           docker build \
           --file backend/Dockerfile.test \
           --tag test-runner \
           backend
 
+      # Запуск юнит и интеграционных тестов
       - name: Run unit and integration tests
-        # Запуск unit и integration тестов внутри test-runner
         run: docker run --network=host test-runner pytest tests/unit tests/integration
 
+      # Ожидание запуска backend
       - name: Wait for backend
-        # Ожидание готовности backend (например, по /health endpoint)
-        run: |
-          docker run --network=host test-runner python wait-for-backend.py
+        run: docker run --network=host test-runner python wait-for-backend.py
 
+      # Запуск end-to-end тестов
       - name: Run e2e tests
-        # Запуск end-to-end тестов, которые взаимодействуют с backend по HTTP
         run: docker run --network=host test-runner pytest tests/e2e
 
+      # Выключение сервисов и удаление томов
       - name: Shutdown
-        # Остановка всех запущенных контейнеров и удаление томов
         if: always()
-        run: docker compose down -v
+        run: docker compose -f docker-compose.dev.yml down -v
+
 
   test-frontend:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    #    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -64,3 +73,32 @@ jobs:
         run: |
           pnpm install
           pnpm test
+
+  build-and-push-to-docker-registry:
+    needs: [ build-and-test-backend, test-frontend ]
+    runs-on: self-hosted
+    #    runs-on: ubuntu-latest
+
+    env:
+      REGISTRY: registry.skillsnavigator.ru
+      TAG: ${{ github.event.inputs.image_tag }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to private Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.skillsnavigator.ru
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASS }}
+
+      - name: Build and push backend image
+        run: |
+          docker build -t registry.skillsnavigator.ru/skills-app-backend:${{ github.event.inputs.image_tag }} ./backend
+          docker push registry.skillsnavigator.ru/skills-app-backend:${{ github.event.inputs.image_tag }}
+
+      - name: Build and push frontend image
+        run: |
+          docker build -t registry.skillsnavigator.ru/skills-app-frontend:${{ github.event.inputs.image_tag }} ./frontend
+          docker push registry.skillsnavigator.ru/skills-app-frontend:${{ github.event.inputs.image_tag }}

@@ -1,13 +1,13 @@
 import roadmapMockup from '/assets/roadmap_mockup.png'
 import { useEffect, useRef, useState } from 'react'
-import css from './index.module.scss'
+import { useNavigate } from 'react-router-dom'
+import { getPopularCourses } from '../../api/api'
 import { Card, Input, MoreButton } from '../../components'
 import thoughts from '/assets/thoughts.png'
 import arrowRight from '/assets/arrowRight.png'
-import { useNavigate } from 'react-router-dom'
 import { getChatRoute } from '../../lib/routes'
 import { CourseType } from '../../lib/types'
-import { getPopularCourses } from '../../api/api'
+import css from './index.module.scss'
 
 const Main = () => {
   const navigate = useNavigate()

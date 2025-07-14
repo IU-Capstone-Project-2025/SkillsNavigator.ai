@@ -39,12 +39,13 @@
 .links {
   display: flex;
   align-items: center;
-  gap: 90px;
+  gap: 120px;
   width: fit-content;
 }
 
-.loginButton {
-  padding: 10px 45px;
+.loginButton,
+.logoutButton {
+  padding: 10px 40px;
   display: flex;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.4);
@@ -53,7 +54,6 @@
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
   box-shadow:
     2px 2px 5px 0 rgb($darkBlue, 0.2),
     3px 3px 5px 0 rgb($darkBlue, 0.1) inset;
@@ -70,5 +70,71 @@
   &:active {
     color: $darkBlue;
     @include shadow($dropBlur: 4px, $innerColor: $darkBlue);
+  }
+}
+
+.userWrapper {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+
+  &:hover {
+    .chevronIcon {
+      transform: rotate(-180deg);
+      margin-top: -1px;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: 16px;
+    pointer-events: auto;
+  }
+}
+
+.user {
+  width: fit-content;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: $darkBlue;
+  font-size: 1.7rem;
+  border: none;
+  border-radius: 12px;
+  box-shadow:
+    2px 2px 5px 0 rgb($darkBlue, 0.2),
+    3px 3px 5px 0 rgb($darkBlue, 0.1) inset;
+}
+
+.chevronIcon {
+  margin-left: 2px;
+  transition: all 0.3s ease-out;
+}
+
+.logoutButton {
+  position: absolute;
+  padding: 10px 16px;
+  left: 0;
+  background-color: rgba($white, 0.8);
+  color: #f12e1d;
+  top: 100%;
+  margin-top: 8px;
+  width: 100%;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    background-color: rgb(#fff0ef, 0.7);
+    color: #f12e1d;
+    box-shadow:
+      2px 2px 5px 0 rgb($darkBlue, 0.2),
+      3px 3px 5px 0 rgb($darkBlue, 0.1) inset;
   }
 }

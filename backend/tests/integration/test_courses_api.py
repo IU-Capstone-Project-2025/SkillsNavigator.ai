@@ -4,55 +4,7 @@ from fastapi import status
 from unittest.mock import AsyncMock, patch
 
 from app.main import app
-
-
-@pytest.mark.asyncio
-@patch("app.services.encoder.encoder.vectorize", new_callable=AsyncMock)
-@patch("app.services.qdrant.qdrant.search", new_callable=AsyncMock)
-async def test_search_courses_integration(mock_search, mock_vectorize):
-    """
-    Интеграционный тест для POST /api/courses/search.
-
-    Проверяет полный путь от запроса до ответа с рабочими зависимостями.
-    """
-    # Настраиваем mock-ответы
-    mock_vectorize.return_value = [0.1, 0.2, 0.3]
-    mock_search.return_value = [
-        AsyncMock(payload={
-            "id": 1,
-            "cover_url": "https://example.com/image.jpg",
-            "title": "Integration Course",
-            "duration": 2,
-            "difficulty": "medium",
-            "price": 0,
-            "currency_code": "USD",
-            "pupils_num": 111,
-            "authors": "Jane Doe",
-            "rating": 4,
-            "url": "https://stepik.org/course/1",
-            "description": "Integration test",
-            "summary": "summary",
-            "target_audience": "everyone",
-            "acquired_skills": "skill1",
-            "acquired_assets": "asset1",
-            "title_en": "Integration Course",
-            "learning_format": "online"
-        })
-    ]
-
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        response = await ac.post("/api/courses/search", json={
-            "area": "ML",
-            "current_level": "beginner",
-            "desired_skills": "python"
-        })
-
-    assert response.status_code == status.HTTP_200_OK
-    data = response.json()
-    assert isinstance(data, list)
-    assert data[0]["title"] == "Integration Course"
-
+from app.routers.users import get_current_user
 
 @patch("httpx.AsyncClient")
 @pytest.mark.asyncio

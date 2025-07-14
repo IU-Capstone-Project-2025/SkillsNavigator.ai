@@ -1,7 +1,9 @@
 @use '../../styles/_vars' as *;
 @use '../../styles/_mixins' as *;
 
-.link, .activeLink, .disabled {
+.link,
+.activeLink,
+.disabled {
   font-size: 1.75rem;
 }
 
@@ -22,4 +24,16 @@
   &:hover {
     color: $grey;
   }
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  gap: 10px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
 }

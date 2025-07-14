@@ -16,6 +16,7 @@ const level = {
 type Props = CourseType & {
   index?: number
   inChat?: boolean
+  link?: boolean
 }
 
 const Card: React.FC<Props> = ({
@@ -28,8 +29,9 @@ const Card: React.FC<Props> = ({
   pupils_num,
   rating,
   url,
-  index,
+  index = '',
   inChat = false,
+  link = true,
 }) => {
   const [hovered, setHovered] = useState(false)
 
@@ -45,7 +47,7 @@ const Card: React.FC<Props> = ({
         <div className={css.topSection}>
           <img src={cover_url} alt="" className={css.image} />
           <div className={css.infoSection}>
-            <Rating rating={rating} hovered={hovered} small={inChat} />
+            <Rating rating={Number(rating)} hovered={hovered} small={inChat} />
             {difficulty && <div className={css.difficulty}>{level[difficulty]}</div>}
             <div className={css.durationAndPupils}>
               <div className={css.info}>
@@ -75,14 +77,15 @@ const Card: React.FC<Props> = ({
             window.open(url, '_blank', 'noopener,noreferrer')
           }}
         >
-          {inChat ? (
-            <img src={gotoIconBlue} alt="" className={css.gotoIcon} />
-          ) : (
-            <>
-              Перейти
-              <img src={gotoIcon} alt="" className={css.gotoIcon} />
-            </>
-          )}
+          {link &&
+            (inChat ? (
+              <img src={gotoIconBlue} alt="" className={css.gotoIcon} />
+            ) : (
+              <>
+                Перейти
+                <img src={gotoIcon} alt="" className={css.gotoIcon} />
+              </>
+            ))}
         </button>
       </div>
     </div>
