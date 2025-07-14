@@ -39,15 +39,18 @@ services:
       - backend
     restart: unless-stopped
 
-  postgres:
+  postgres_runner:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: runner
+      POSTGRES_PASSWORD: runner_pass
+      POSTGRES_DB: runner_db
+    ports:
+      - "5433:5432"         # коннект изнаружи на порт 5433
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_runner_data:/var/lib/postgresql/data
+
 
   qdrant:
     image: qdrant/qdrant
