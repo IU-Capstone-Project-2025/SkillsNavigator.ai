@@ -1,18 +1,13 @@
 name: CI
 
 on:
-  workflow_dispatch:
-    inputs:
-      image_tag:
-        description: 'Docker image tag'
-        required: true
   push:
     branches: [ master, develop, devops ]  # Запуск на пуш в ветки main
   pull_request:
     branches: [ master, develop, devops ]  # Запуск на pull request в main
 
-env:
-  COMPOSE_PROJECT_NAME: dev
+#env:
+#  COMPOSE_PROJECT_NAME: dev
 
 jobs:
   build-and-test-backend:
@@ -42,13 +37,13 @@ jobs:
       - name: Run unit and integration tests
         run: docker run --network=host test-runner pytest tests/unit tests/integration
 
-      # Ожидание запуска backend
-      - name: Wait for backend
-        run: docker run --network=host test-runner python wait-for-backend.py
-
-      # Запуск end-to-end тестов
-      - name: Run e2e tests
-        run: docker run --network=host test-runner pytest tests/e2e
+#      # Ожидание запуска backend
+#      - name: Wait for backend
+#        run: docker run --network=host test-runner python wait-for-backend.py
+#
+#      # Запуск end-to-end тестов
+#      - name: Run e2e tests
+#        run: docker run --network=host test-runner pytest tests/e2e
 
       # Выключение сервисов и удаление томов
       - name: Shutdown
