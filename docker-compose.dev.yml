@@ -1,14 +1,17 @@
 services:
   backend:
-    image: registry.skillsnavigator.ru/skills-app-backend:${TAG}
-    container_name: backend
     build:
       context: ./backend
+      dockerfile: Dockerfile
+    image: skills-app
     volumes:
       - models:/models
+    ports:
+      - "8000:80"
+
     depends_on:
       - qdrant
-    restart: always
+    restart: unless-stopped
     environment:
       QDRANT_HOST: qdrant
       QDRANT_PORT: 6333
@@ -23,10 +26,10 @@ services:
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
 
   frontend:
-    image: registry.skillsnavigator.ru/skills-app-frontend:${TAG}
-    container_name: frontend
     build:
       context: ./frontend
+      args:
+        VITE_API: /api
     environment:
       VITE_API: /api
       WEB_URL: ${WEB_URL}
@@ -34,7 +37,7 @@ services:
       - ${NGINX_PORT}:80
     depends_on:
       - backend
-    restart: always
+    restart: unless-stopped
 
   postgres:
     image: postgres:latest
@@ -44,11 +47,10 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_runner:/var/lib/postgresql/data
 
   qdrant:
     image: qdrant/qdrant
-    container_name: qdrant
     volumes:
       - qdrant_data:/qdrant/storage
     restart: unless-stopped
@@ -56,4 +58,4 @@ services:
 volumes:
   qdrant_data:
   models:
-  postgres:
+  postgres_runner:

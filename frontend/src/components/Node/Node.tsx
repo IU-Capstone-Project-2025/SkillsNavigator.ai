@@ -31,7 +31,7 @@ const Node: React.FC<{ course: CourseType; position: 'left' | 'right'; disabled?
             cx={RING_SIZE / 2}
             cy={RING_SIZE / 2}
             r={radius}
-            fill="transparent"
+            fill="rgb(255, 255, 255)"
             stroke="rgb(255, 255, 255, 0.7)"
             strokeWidth={course.progress === 1 ? 0 : RING_STROKE}
           />
