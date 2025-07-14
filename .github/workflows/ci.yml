@@ -89,7 +89,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASS }}
 
       - name: Build all services
-        run: docker compose -f docker-compose.build.yml build
+        run: docker compose -f docker-compose.yml build
 
       - name: Push all images
-        run: docker compose -f docker-compose.build.yml push
+        run: docker compose -f docker-compose.yml push
