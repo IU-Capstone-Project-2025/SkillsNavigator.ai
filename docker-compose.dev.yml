@@ -46,12 +46,11 @@ services:
       POSTGRES_USER: runner
       POSTGRES_PASSWORD: runner_pass
       POSTGRES_DB: runner_db
-    ports:
-      - "5433:5432"         # коннект изнаружи на порт 5433
     volumes:
       - postgres_runner_data:/var/lib/postgresql/data
-
-
+    ports:
+      - "5433:5432"
+      -
   qdrant:
     image: qdrant/qdrant
     volumes:
@@ -61,4 +60,4 @@ services:
 volumes:
   qdrant_data:
   models:
-  postgres:
+  postgres_runner_data:
