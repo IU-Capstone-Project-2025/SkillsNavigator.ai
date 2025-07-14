@@ -8,8 +8,8 @@ on:
   pull_request:
     branches: [ master, develop, devops ] # Запуск на pull request в main
 
-#env:
-#  COMPOSE_PROJECT_NAME: dev
+env:
+  COMPOSE_PROJECT_NAME: dev
 
 jobs:
   build-and-test-backend:
