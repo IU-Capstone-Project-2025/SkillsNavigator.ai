@@ -25,10 +25,10 @@ jobs:
       - name: Build test container
         # Сборка тестового контейнера из backend/Dockerfile.test
         run: |
-          docker buildx build \
-            -f backend/Dockerfile.test \
-            -t test-runner backend \
-            --load
+          docker build \
+          --file backend/Dockerfile.test \
+          --tag test-runner \
+          backend
 
       - name: Run unit and integration tests
         # Запуск unit и integration тестов внутри test-runner
