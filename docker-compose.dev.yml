@@ -47,9 +47,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - postgres_runner_data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
+      - postgres_runner:/var/lib/postgresql/data
 
   qdrant:
     image: qdrant/qdrant
@@ -60,4 +58,4 @@ services:
 volumes:
   qdrant_data:
   models:
-  postgres_runner_data:
+  postgres_runner:
