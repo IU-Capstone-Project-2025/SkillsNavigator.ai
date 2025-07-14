@@ -2,9 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [ master, develop, devops ]  # Запуск на пуш в ветки main
+    branches: [ master, develop, devops ]
+    tags:
+      - 'v*.*.*'
   pull_request:
-    branches: [ master, develop, devops ]  # Запуск на pull request в main
+    branches: [ master, develop, devops ] # Запуск на pull request в main
 
 #env:
 #  COMPOSE_PROJECT_NAME: dev
@@ -37,13 +39,13 @@ jobs:
       - name: Run unit and integration tests
         run: docker run --network=host test-runner pytest tests/unit tests/integration
 
-#      # Ожидание запуска backend
-#      - name: Wait for backend
-#        run: docker run --network=host test-runner python wait-for-backend.py
-#
-#      # Запуск end-to-end тестов
-#      - name: Run e2e tests
-#        run: docker run --network=host test-runner pytest tests/e2e
+      #      # Ожидание запуска backend
+      #      - name: Wait for backend
+      #        run: docker run --network=host test-runner python wait-for-backend.py
+      #
+      #      # Запуск end-to-end тестов
+      #      - name: Run e2e tests
+      #        run: docker run --network=host test-runner pytest tests/e2e
 
       # Выключение сервисов и удаление томов
       - name: Shutdown
@@ -52,7 +54,7 @@ jobs:
 
 
   test-frontend:
-#    runs-on: self-hosted
+    #    runs-on: self-hosted
     runs-on: ubuntu-latest
 
     steps:
@@ -71,12 +73,12 @@ jobs:
 
   build-and-push-to-docker-registry:
     needs: [ build-and-test-backend, test-frontend ]
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: self-hosted
-#    runs-on: ubuntu-latest
 
     env:
       REGISTRY: registry.skillsnavigator.ru
-      TAG: ${{ github.event.inputs.image_tag }}
+      TAG: ${{ github.ref_name }}    # имя тега без префикса refs/tags/
 
     steps:
       - uses: actions/checkout@v3
@@ -84,16 +86,12 @@ jobs:
       - name: Log in to private Docker Registry
         uses: docker/login-action@v3
         with:
-          registry: registry.skillsnavigator.ru
+          registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASS }}
 
-      - name: Build and push backend image
-        run: |
-          docker build -t registry.skillsnavigator.ru/skills-app-backend:${{ github.event.inputs.image_tag }} ./backend
-          docker push registry.skillsnavigator.ru/skills-app-backend:${{ github.event.inputs.image_tag }}
+      - name: Build all services
+        run: docker compose -f docker-compose.build.yml build
 
-      - name: Build and push frontend image
-        run: |
-          docker build -t registry.skillsnavigator.ru/skills-app-frontend:${{ github.event.inputs.image_tag }} ./frontend
-          docker push registry.skillsnavigator.ru/skills-app-frontend:${{ github.event.inputs.image_tag }}
+      - name: Push all images
+        run: docker compose -f docker-compose.build.yml push
