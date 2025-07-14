@@ -39,7 +39,7 @@ services:
       - backend
     restart: unless-stopped
 
-  postgres_runner:
+  postgres:
     image: postgres:latest
     restart: always
     environment:
