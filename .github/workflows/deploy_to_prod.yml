@@ -34,8 +34,10 @@ jobs:
 
             cd /home/${{ secrets.PRODUCTION_USER }}/skillsnavigator
 
-            echo "TAG=$TAG" > .env
-
+            cd /home/${{ secrets.STAGING_USER }}/skillsnavigator
+            sed -i '/^TAG=/d' .env || true
+            echo "TAG=$TAG" >> .env
+  
             docker compose pull
             docker compose up -d --remove-orphans --force-recreate
           EOF
