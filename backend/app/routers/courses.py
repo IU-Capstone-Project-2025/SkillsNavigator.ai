@@ -14,7 +14,7 @@ import traceback
 import httpx
 import logging
 
-from app.utils.search import get_courses
+from app.utils.search import get_courses, get_courses_v2
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/courses", tags=["courses"])
@@ -36,11 +36,12 @@ async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body
         f"Search courses: area='{payload.area}', level='{payload.current_level}', slills='{payload.desired_skills}'"
     )
     try:
-        results = await get_courses(payload)
+        results = await get_courses_v2(payload)
 
         if not results:
             logger.warning("No search results")
-            raise HTTPException(status_code=404, detail="Курсы не найдены")
+            return []
+            # raise HTTPException(status_code=404, detail="Курсы не найдены")
 
         logger.info(f"Found {len(results)} courses")
         try:
@@ -64,11 +65,6 @@ async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body
             session.refresh(roadmap)
             dialog.roadmap_id = roadmap.id
             session.commit()
-
-
-
-
-
         return results
 
     except Exception as e:

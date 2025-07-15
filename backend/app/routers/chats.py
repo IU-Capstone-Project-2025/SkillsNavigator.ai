@@ -46,12 +46,17 @@ async def save_message(
     current_user: int = Depends(get_current_user),  # Assuming current_user returns user ID
 ):
     # Check if the dialog exists
-    dialog = session.query(Dialog).filter(Dialog.id == id).first()
+    dialog = session.query(Dialog).options(joinedload(Dialog.messages)).filter(Dialog.id == id).first()
     if not dialog:
         raise HTTPException(status_code=404, detail="Dialog not found")
 
     # Create a new message instance
     new_message = Message(text=request.message, is_user=True, dialog_id=id)
+    
+    if len(dialog.messages) < 2:
+        dialog.name = request.message
+    else:
+        dialog.name = dialog.messages[1].text
 
     # Add the new message to the session and commit
     session.add(new_message)
