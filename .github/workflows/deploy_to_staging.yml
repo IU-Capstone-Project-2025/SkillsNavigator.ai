@@ -28,7 +28,7 @@ jobs:
       - name: Pull and deploy containers from registry
         env:
           REGISTRY: registry.skillsnavigator.ru
-          TAG: ${{ github.event.workflow_run.head_branch }}  # <-- здесь будет v2.0.2
+          TAG: ${{ github.event.workflow_run.head_branch }}
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} "bash -s" <<EOF
             set -e
