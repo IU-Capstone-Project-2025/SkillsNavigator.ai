@@ -65,11 +65,6 @@ async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body
             session.refresh(roadmap)
             dialog.roadmap_id = roadmap.id
             session.commit()
-
-
-
-
-
         return results
 
     except Exception as e:
