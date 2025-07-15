@@ -228,32 +228,35 @@ class DeepseekService:
 
         try:
             prompt = f"""
-            You are a course recommender AI. Choose up to 5 of the most relevant courses from the list of {len(courses)}, based on the user's goals.
+            You are a course recommender AI. Your job is to select up to 5 courses from the list of {len(courses)} that together form a coherent learning roadmap for the user.
 
-            User's goal:
-            - User wants to learn: {area}
+            User's learning profile:
+            - Goal: {area}
             - Current level: {current_level}
-            - Desired skills: {desired_skills}
+            - Desired skills to acquire: {desired_skills}
 
             Each course includes:
             - Title
             - Summary
-            - Difficulty level
+            - Difficulty level (e.g., Beginner, Intermediate, Advanced)
             - Number of learners who completed it
 
             Courses:
             """
             for idx, course in enumerate(courses):
                 prompt += f"\n{idx}. Title: {course['title']}; Summary: {course['summary']}; Difficulty: {course['difficulty']}; Learners: {course['pupils_num']}"
+
             prompt += (
                 "\n\nYour task:"
-                "\n- Choose only the courses that clearly match the user's goals."
-                "\n- Among equally relevant courses, prefer those with more learners (popularity is a sign of usefulness)."
-                "\n- Do NOT include irrelevant or loosely related courses."
-                "\n- If fewer than 5 are relevant, return only those."
+                "\n- Select up to 5 courses that form a logical learning roadmap for the user's goal and desired skills."
+                "\n- The roadmap should make sense in order — start with foundational topics and build toward more advanced ones."
+                "\n- Avoid overlapping or redundant content."
+                "\n- Only include courses that are clearly relevant to the user's goals."
+                "\n- Among equally suitable options, prefer those with more learners (as a proxy for quality)."
+                "\n- If fewer than 5 courses are needed to build a roadmap, return only those."
 
-                "\n\nReturn a Python list with the indexes of the selected courses."
-                "\nOnly return the list, like this: [4, 11, 23] (no explanations)."
+                "\n\nReturn a Python list of the selected course indexes in the recommended order of completion."
+                "\nOnly return the list, like this: [2, 7, 10] (no explanations)."
             )
 
             async with httpx.AsyncClient(timeout=30.0) as client:
