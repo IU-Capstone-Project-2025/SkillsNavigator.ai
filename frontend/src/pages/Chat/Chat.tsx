@@ -35,54 +35,61 @@ const Chat = () => {
   const [guestCoursesLoading, setGuestCoursesLoading] = useState(false)
 
   const guestSendAnswer = async () => {
-  const key = answerKeys[guestStep]
-  const newAnswers = { ...guestAnswers, [key]: inputValue }
-  setGuestAnswers(newAnswers)
-  setGuestMessages((prev) => [...prev, { text: inputValue, isUser: true }])
+    const key = answerKeys[guestStep]
+    const newAnswers = { ...guestAnswers, [key]: inputValue }
+    setGuestAnswers(newAnswers)
+    setGuestMessages((prev) => [...prev, { text: inputValue, isUser: true }])
 
-  if (guestStep < answerKeys.length - 1) {
-    setInputValue('')
-    setTimeout(() => {
-      setGuestMessages((prev) => [...prev, { text: questions[guestStep + 1].text, isUser: false }])
-      setGuestStep(guestStep + 1)
-    }, 400)
-  } else {
-    setGuestCoursesLoading(true)
-    try {
+    if (guestStep < answerKeys.length - 1) {
       setInputValue('')
-      const data = await searchCourses(newAnswers as PayloadType)
-      setGuestCourses(data)
-      setGuestMessages((prev) => [
-        ...prev,
-        { text: 'Твой план, который приведет к цели:', isUser: false },
-        { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false },
-      ])
-    } catch {
-      setInputValue('')
-      setGuestMessages((prev) => [
-        ...prev,
-        { text: 'Упс, что-то пошло не так... Повторите попытку позже', isUser: false },
-      ])
-    } finally {
-      setGuestCoursesLoading(false)
+      setTimeout(() => {
+        setGuestMessages((prev) => [...prev, { text: questions[guestStep + 1].text, isUser: false }])
+        setGuestStep(guestStep + 1)
+      }, 400)
+    } else {
+      setGuestCoursesLoading(true)
+      try {
+        setInputValue('')
+        const data = await searchCourses(newAnswers as PayloadType)
+        setGuestCourses(data)
+        if (data.length === 0) {
+          setGuestMessages((prev) => [
+            ...prev,
+            { text: 'Ничего не получилось найти по твоему запросу((', isUser: false },
+          ])
+        } else {
+          setGuestMessages((prev) => [
+            ...prev,
+            { text: 'Твой план, который приведет к цели:', isUser: false },
+            { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false },
+          ])
+        }
+      } catch {
+        setInputValue('')
+        setGuestMessages((prev) => [
+          ...prev,
+          { text: 'Упс, что-то пошло не так... Повторите попытку позже', isUser: false },
+        ])
+      } finally {
+        setGuestCoursesLoading(false)
+      }
     }
   }
-}
 
-useEffect(() => {
-  if (guestCourses.length > 0 && shownCourses < guestCourses.length) {
-    setShownCourses(0)
-    let i = 0
-    const interval = setInterval(() => {
-      i++
-      setShownCourses(i)
-      if (i >= guestCourses.length) {
-        clearInterval(interval)
-      }
-    }, 500)
-    return () => clearInterval(interval)
-  }
-}, [guestCourses])
+  useEffect(() => {
+    if (guestCourses.length > 0 && shownCourses < guestCourses.length) {
+      setShownCourses(0)
+      let i = 0
+      const interval = setInterval(() => {
+        i++
+        setShownCourses(i)
+        if (i >= guestCourses.length) {
+          clearInterval(interval)
+        }
+      }, 500)
+      return () => clearInterval(interval)
+    }
+  }, [guestCourses])
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -173,8 +180,12 @@ useEffect(() => {
     setCoursesLoading(true)
     try {
       const data = await searchCourses(payload, activeChat)
-      await addMessageToChat(activeChat, { text: 'Твой план, который приведет к цели:', isUser: false })
-      await addMessageToChat(activeChat, { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false })
+      if (data.length === 0) {
+        await addMessageToChat(activeChat, { text: 'Ничего не получилось найти по твоему запросу((', isUser: false })
+      } else {
+        await addMessageToChat(activeChat, { text: 'Твой план, который приведет к цели:', isUser: false })
+        await addMessageToChat(activeChat, { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false })
+      }
       setCourses(data)
     } catch {
       await addMessageToChat(activeChat, { text: 'Упс, что-то пошло не так... Повторите попытку позже', isUser: false })
@@ -308,7 +319,7 @@ useEffect(() => {
           <div ref={chatEndRef} />
         </div>
 
-        {!(courses.length > 0) && (
+        {!(chatMessages[chatMessages.length-1].text.startsWith('roadmapCourses000:') || chatMessages[chatMessages.length-1].text.startsWith('Ничего')) && (
           <Input
             width="100%"
             value={inputValue}
@@ -371,7 +382,7 @@ useEffect(() => {
           <div ref={chatEndRef} />
         </div>
 
-        {!(guestCourses.length > 0) && (
+        {!(guestMessages[guestMessages.length-1].text.startsWith('roadmapCourses000:') || guestMessages[guestMessages.length-1].text.startsWith('Ничего')) && (
           <Input
             width="100%"
             value={inputValue}
