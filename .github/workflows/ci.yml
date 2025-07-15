@@ -65,6 +65,7 @@ jobs:
 
     env:
       REGISTRY: registry.skillsnavigator.ru
+      TAG: ${{ steps.extract_tag.outputs.tag }}
 
     steps:
       - uses: actions/checkout@v3
