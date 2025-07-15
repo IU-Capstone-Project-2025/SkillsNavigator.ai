@@ -2,8 +2,8 @@ export type PayloadType = {
   area: string
   current_level: string
   desired_skills: string
-  // hours: number
-  // cost: number
+  hours: number
+  cost: number
 }
 
 export type CourseType = {
