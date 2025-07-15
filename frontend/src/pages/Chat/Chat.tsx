@@ -27,25 +27,31 @@ const Chat = () => {
   const currentChat = localChats.find((c) => c.id === activeChat)
   const chatMessages = currentChat?.messages ?? [{ text: questions[0].text, isUser: false }]
 
-  const answerKeys: (keyof PayloadType)[] = ['area', 'current_level', 'desired_skills']
+  const answerKeys: (keyof PayloadType)[] = ['area', 'current_level', 'desired_skills', 'hours', 'cost']
   const [guestStep, setGuestStep] = useState(0)
-  const [guestAnswers, setGuestAnswers] = useState<Partial<PayloadType>>({})
   const [guestMessages, setGuestMessages] = useState([{ text: questions[0].text, isUser: false }])
   const [guestCourses, setGuestCourses] = useState<CourseType[]>([])
   const [guestCoursesLoading, setGuestCoursesLoading] = useState(false)
 
   const guestSendAnswer = async () => {
-    const key = answerKeys[guestStep]
-    const newAnswers = { ...guestAnswers, [key]: inputValue }
-    setGuestAnswers(newAnswers)
+    const newAnswers = {
+      area: guestMessages[1]?.text,
+      current_level: guestMessages[3]?.text,
+      desired_skills: guestMessages[5]?.text,
+      hours:
+        parseInt(guestMessages[7]?.text) * parseInt(guestMessages[9]?.text) * parseInt(guestMessages[11]?.text) || 1,
+      cost: parseInt(inputValue) || 0,
+    }
     setGuestMessages((prev) => [...prev, { text: inputValue, isUser: true }])
+    scrollToBottom()
 
-    if (guestStep < answerKeys.length - 1) {
+    if (guestStep < answerKeys.length + 1) {
       setInputValue('')
       setTimeout(() => {
         setGuestMessages((prev) => [...prev, { text: questions[guestStep + 1].text, isUser: false }])
         setGuestStep(guestStep + 1)
       }, 400)
+      scrollToBottom()
     } else {
       setGuestCoursesLoading(true)
       try {
@@ -118,7 +124,6 @@ const Chat = () => {
           { text: saved, isUser: true },
           { text: questions[1].text, isUser: false },
         ])
-        setGuestAnswers({ [answerKeys[0]]: saved })
         setGuestStep(1)
         setInputValue('')
         localStorage.removeItem('chatInput')
@@ -168,7 +173,10 @@ const Chat = () => {
       handleSearch({
         area: chatMessages[1]?.text,
         current_level: chatMessages[3]?.text,
-        desired_skills: inputValue,
+        desired_skills: chatMessages[5]?.text,
+        hours:
+          parseInt(chatMessages[7]?.text) * parseInt(chatMessages[9]?.text) * parseInt(chatMessages[11]?.text) || 1,
+        cost: parseInt(inputValue) || 0,
       })
       if (coursesInsertIndex === null) {
         setCoursesInsertIndex(chatMessages.length)
@@ -319,7 +327,10 @@ const Chat = () => {
           <div ref={chatEndRef} />
         </div>
 
-        {!(chatMessages[chatMessages.length-1].text.startsWith('roadmapCourses000:') || chatMessages[chatMessages.length-1].text.startsWith('Ничего')) && (
+        {!(
+          chatMessages[chatMessages.length - 1].text.startsWith('roadmapCourses000:') ||
+          chatMessages[chatMessages.length - 1].text.startsWith('Ничего')
+        ) && (
           <Input
             width="100%"
             value={inputValue}
@@ -382,7 +393,10 @@ const Chat = () => {
           <div ref={chatEndRef} />
         </div>
 
-        {!(guestMessages[guestMessages.length-1].text.startsWith('roadmapCourses000:') || guestMessages[guestMessages.length-1].text.startsWith('Ничего')) && (
+        {!(
+          guestMessages[guestMessages.length - 1].text.startsWith('roadmapCourses000:') ||
+          guestMessages[guestMessages.length - 1].text.startsWith('Ничего')
+        ) && (
           <Input
             width="100%"
             value={inputValue}
