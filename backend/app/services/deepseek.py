@@ -286,7 +286,7 @@ class DeepseekService:
                     # Try to parse JSON from the response
                     try:
                         idxs = json.loads(content)
-                        if isinstance(idxs, list) and len(idxs) > 0:
+                        if isinstance(idxs, list):
                             logger.info(f"Chosen indexes (attempt {attempt + 1}): {idxs}")
                             # Log the queries to file
                             # query_logger.log_queries(area, current_level, desired_skills, idxs,
