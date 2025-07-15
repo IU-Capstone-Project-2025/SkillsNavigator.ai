@@ -2,6 +2,8 @@ services:
   backend:
     image: registry.skillsnavigator.ru/skills-app-backend:${TAG}
     container_name: backend
+    build:
+      context: ./backend
     volumes:
       - models:/models
     depends_on:
@@ -23,6 +25,8 @@ services:
   frontend:
     image: registry.skillsnavigator.ru/skills-app-frontend:${TAG}
     container_name: frontend
+    build:
+      context: ./frontend
     environment:
       VITE_API: /api
       WEB_URL: ${WEB_URL}

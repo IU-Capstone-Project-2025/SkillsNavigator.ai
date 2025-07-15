@@ -3,16 +3,16 @@ name: CD-Staging
 on:
   workflow_run:
     workflows: [ "CI" ]
-    branches: [ develop ]
     types:
       - completed
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      startsWith(github.event.workflow_run.head_branch, 'v')
     name: Deploy to Staging Server
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
@@ -27,20 +27,20 @@ jobs:
 
       - name: Pull and deploy containers from registry
         env:
-          TAG: ${{ github.sha }}
+          REGISTRY: registry.skillsnavigator.ru
+          TAG: ${{ github.event.workflow_run.head_branch }}  # <-- здесь будет v2.0.2
         run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.STAGING_USER }}@${{ secrets.STAGING_HOST }} "bash -s" <<EOF
-          set -e
+            set -e
 
-          docker login registry.skillsnavigator.ru -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }}
-          docker pull registry.skillsnavigator.ru/skills-app-backend:$TAG
-          docker pull registry.skillsnavigator.ru/skills-app-frontend:$TAG
+            docker login $REGISTRY -u ${{ secrets.REGISTRY_USER }} -p ${{ secrets.REGISTRY_PASS }}
+            docker pull $REGISTRY/skills-app-backend:$TAG
+            docker pull $REGISTRY/skills-app-frontend:$TAG
 
-          cd /home/${{ secrets.STAGING_USER }}/skillsnavigator
+            cd /home/${{ secrets.STAGING_USER }}/skillsnavigator
+            sed -i '/^TAG=/d' .env || true
+            echo "TAG=$TAG" >> .env
 
-          echo "TAG=$TAG" >> .env
-
-          docker compose pull
-          docker compose up -d --remove-orphans --force-recreate
+            docker compose pull
+            docker compose up -d --remove-orphans --force-recreate
           EOF
-      
