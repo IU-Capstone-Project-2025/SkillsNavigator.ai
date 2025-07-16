@@ -6,7 +6,7 @@ from app.models.chat import Roadmap
 from app.routers.users import get_current_user
 from app.services.database import session
 from sqlalchemy.orm import joinedload
-from app.services import qdrant, encoder, deepseek
+from app.services import qdrant, encoder, deepseek, roadmap_service, user_service
 from app.config import settings
 from app.utils.query_logger import query_logger
 
@@ -71,14 +71,68 @@ async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body
         logger.exception(f"Error course searching: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
+async def fetch_progresses(current_user, courses_ids_set):
+    async with httpx.AsyncClient() as client:
+        params = {'ids[]': list(courses_ids_set)}
+        logger.info("Request detailed course info")
+        user = await user_service.user_info(current_user)
+        progresses_req = await client.get("https://stepik.org/api/progresses", params=params, headers={'Authorization': f'Bearer {user.access_token}'})
+        return progresses_req.json().get("progresses", [])
+
 @router.get("/roadmaps")
 async def get_roadmaps(current_user: str = Depends(get_current_user)):
     dialogs = session.query(Dialog).filter(Dialog.owner == current_user).all()
-    dialog_ids = []
-    for dialog in dialogs:
-        dialog_ids.append(dialog.id)
+    dialog_ids = [dialog.id for dialog in dialogs]
+    
     roadmaps = session.query(Roadmap).options(joinedload(Roadmap.courses)).filter(Roadmap.id.in_(dialog_ids)).all()
-    return roadmaps
+    
+    courses_ids_set = set()
+    for roadmap in roadmaps:
+        for course in roadmap.courses:
+            courses_ids_set.add("78-"+str(course.id))
+    # Fetch progress data
+    progresses = await fetch_progresses(current_user, courses_ids_set)
+    # Create a mapping of course ID to progress
+    progress_map = {progress["id"]: progress for progress in progresses}
+    response = []
+    for roadmap in roadmaps:
+        courses_with_progress = []
+        for course in roadmap.courses:
+            # Get the progress for the current course
+            course_progress = progress_map.get('78-'+str(course.id), {})
+            progress = course_progress.get("n_steps_passed", 0)/course_progress.get("n_steps", 1)
+            
+            course_progress_model = CourseProgress(
+                id=course.id,
+                cover_url=course.cover_url,
+                title=course.title,
+                duration=course.duration,
+                difficulty=course.difficulty,
+                price=course.price,
+                currency_code=course.currency_code,
+                pupils_num=course.pupils_num,
+                authors=course.authors,
+                rating=course.rating,
+                url=course.url,
+                description=course.description,
+                summary=course.summary,
+                target_audience=course.target_audience,
+                acquired_skills=course.acquired_skills,
+                acquired_assets=course.acquired_assets,
+                title_en=course.title_en,
+                learning_format=course.learning_format,
+                progress=progress  # Include the progress data here
+            )
+            courses_with_progress.append(course_progress_model)
+        
+        roadmap_response = RoadmapResponse(
+            id=roadmap.id,
+            status=roadmap.status.value,
+            name=roadmap.name,
+            courses=courses_with_progress
+        )
+        response.append(roadmap_response)
+    return response
 
 @router.get(
     "/popular",

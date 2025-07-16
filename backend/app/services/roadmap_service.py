@@ -1,9 +1,10 @@
 import json
 import logging
+import httpx
 from typing import List, Dict, Any
 from app.utils import call_deepseek
 from app.services import encoder, qdrant
-from app.models.roadmap import RoadmapResponse, LearningStep, SkillNode
+from app.models.roadmap import LearningStep, SkillNode
 
 logger = logging.getLogger(__name__)
 
@@ -433,43 +434,6 @@ Always respond in JSON format for structured data."""
         except Exception as e:
             logger.error(f"Error searching courses for skills: {e}")
             return []
-
-    async def generate_roadmap(self, area: str, current_level: str, desired_skills: str, include_courses: bool = True) -> RoadmapResponse:
-        """Generate a complete learning roadmap"""
-        try:
-            # Analyze input to extract skills
-            input_text = f"{area} {desired_skills}"
-            skills = await self.analyze_input(input_text)
-            
-            # Generate sub-skills
-            skills_with_subskills = await self.generate_subskills(skills)
-            
-            # Create learning steps
-            steps = await self.create_learning_steps(skills_with_subskills, current_level)
-            
-            # Search for relevant courses if requested
-            courses = None
-            if include_courses:
-                all_skills = [skill for sublist in skills_with_subskills.values() for skill in sublist]
-                courses = await self.search_courses_for_skills(all_skills)
-            
-            # Calculate total estimated time
-            total_weeks = sum(len(step.skills) * 3 for step in steps)  # Rough estimate
-            
-            roadmap = RoadmapResponse(
-                title=f"Learning Path: {area}",
-                description=f"Complete roadmap to master {area} from {current_level} level",
-                total_estimated_time=f"{total_weeks} weeks",
-                difficulty_progression=f"{current_level} → Advanced",
-                steps=steps,
-                courses=courses
-            )
-            
-            return roadmap
-            
-        except Exception as e:
-            logger.error(f"Error generating roadmap: {e}")
-            raise
 
 # Global instance
 roadmap_service = RoadmapService() 

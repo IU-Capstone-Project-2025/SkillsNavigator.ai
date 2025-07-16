@@ -26,21 +26,7 @@ class LearningStep(BaseModel):
     difficulty: str
 
 
-class RoadmapResponse(BaseModel):
-    title: str
-    description: str
-    total_estimated_time: str
-    difficulty_progression: str
-    steps: List[LearningStep]
-    courses: Optional[List[dict]] = None  # Will contain course recommendations
-
-
 class ChatMessage(BaseModel):
     message: str
     user_id: Optional[str] = None
 
-
-class ChatResponse(BaseModel):
-    response: str
-    roadmap: Optional[RoadmapResponse] = None
-    courses: Optional[List[dict]] = None
