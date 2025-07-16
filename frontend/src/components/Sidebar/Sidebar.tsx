@@ -60,10 +60,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <img src={arrowsLeft} width={24} />
             </button>
           </div>
-          <button className={css.newChat} onClick={onNewChat}>
-            <img src={squarePen} width={18} />
-            {!isRoadmap ? 'Новый чат' : 'Новый путь'}
-          </button>
+          {authenticated && (
+            <button className={css.newChat} onClick={onNewChat}>
+              <img src={squarePen} width={18} />
+              {!isRoadmap ? 'Новый чат' : 'Новый путь'}
+            </button>
+          )}
         </div>
         <ul className={authenticated ? `${css.chatList}` : `${css.chatList} ${css.blockChatHistory}`}>
           {chats.length > 0 &&
@@ -75,18 +77,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`${css.chatItem} ${chat.id === activeChat ? css.active : ''}`}
                   onClick={() => onSelect(chat.id)}
                 >
-                  <h5 className={css.chatName}>
-                    {chat.name}
-                  </h5>
+                  <h5 className={css.chatName}>{chat.name}</h5>
                   {!isRoadmap ? (
                     <Tooltip label="Перейти к пути" position="bottom-start" openDelay={800}>
-                      <img
-                        src={roadmapIcon}
-                        width={28}
-                        height={28}
-                        className={css.icon}
-                        onClick={gotoRoadmap}
-                      />
+                      <img src={roadmapIcon} width={28} height={28} className={css.icon} onClick={gotoRoadmap} />
                     </Tooltip>
                   ) : roadmaps[index].status !== 'done' ? (
                     <Tooltip label="Прохожу сейчас" position="bottom-start" openDelay={800}>
@@ -95,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         width={28}
                         height={28}
                         className={css.icon}
-                        style={{visibility: 'hidden'}}
+                        style={{ visibility: 'hidden' }}
                         onClick={(e) => {
                           e.stopPropagation()
                           onToggleStatus?.(chat.id)
@@ -103,7 +97,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       />
                     </Tooltip>
                   ) : (
-                    <img src={doneImage} width={25} height={25} style={{ borderRadius: '99px', opacity: '0.8', visibility: 'hidden' }} />
+                    <img
+                      src={doneImage}
+                      width={25}
+                      height={25}
+                      style={{ borderRadius: '99px', opacity: '0.8', visibility: 'hidden' }}
+                    />
                   )}
                 </div>
               ))}

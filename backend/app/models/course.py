@@ -12,6 +12,8 @@ class CourseSearchRequest(BaseModel):
     current_level: str
     desired_skills: str
     chat_id: Optional[int] = Field(None)
+    hours: int
+    cost: int
 
 # Модель одного курса в ответе
 class CourseSummary(BaseModel):
@@ -36,6 +38,9 @@ class CourseSummary(BaseModel):
     # section_desc: str # описание секции курса
 
 
+class CourseProgress(CourseSummary):
+    progress: float
+
 def course_summary_to_model(course_summary: CourseSummary) -> Course:
     return Course(
         id=course_summary.id,
@@ -57,3 +62,9 @@ def course_summary_to_model(course_summary: CourseSummary) -> Course:
         title_en=course_summary.title_en,
         learning_format=course_summary.learning_format,
     )
+
+class RoadmapResponse(BaseModel):
+    id: int
+    status: str
+    name: str
+    courses: List[CourseProgress]

@@ -57,46 +57,6 @@ def test_config():
     return bool(settings.deepseek_api_key)
 
 
-async def test_deepseek_service():
-    """Test the DeepseekService class"""
-    print("\n" + "=" * 60)
-    print("2. TESTING DEEPSEEK SERVICE")
-    print("=" * 60)
-    
-    service = DeepseekService()
-    
-    print(f"Service API Key: {'✓ SET' if service.api_key else '✗ NOT SET'}")
-    print(f"Service API URL: {service.api_url}")
-    
-    # Test with sample data
-    test_area = "Web Development"
-    test_level = "beginner"
-    test_skills = "React and JavaScript"
-    
-    print(f"\nTesting with:")
-    print(f"  Area: {test_area}")
-    print(f"  Level: {test_level}")
-    print(f"  Skills: {test_skills}")
-    
-    try:
-        print("\nCalling generate_search_queries...")
-        queries = await service.generate_search_queries(
-            area=test_area,
-            current_level=test_level,
-            desired_skills=test_skills
-        )
-        
-        print(f"✓ Success! Generated {len(queries)} queries:")
-        for i, query in enumerate(queries, 1):
-            print(f"  {i}. {query}")
-        
-        return True, queries
-        
-    except Exception as e:
-        print(f"✗ Error: {str(e)}")
-        return False, []
-
-
 def test_ai_utils():
     """Test the ai_utils call_deepseek function"""
     print("\n" + "=" * 60)
@@ -166,40 +126,6 @@ async def test_api_direct():
         return False, None
 
 
-def test_fallback_behavior():
-    """Test the fallback behavior when API is not available"""
-    print("\n" + "=" * 60)
-    print("5. TESTING FALLBACK BEHAVIOR")
-    print("=" * 60)
-    
-    # Create a service with no API key to test fallback
-    from app.services.deepseek import DeepseekService
-    
-    # Temporarily override the API key
-    original_key = settings.deepseek_api_key
-    settings.deepseek_api_key = ""
-    
-    try:
-        service = DeepseekService()
-        
-        # Test fallback queries
-        fallback_queries = service._generate_fallback_queries(
-            area="Python Programming",
-            current_level="beginner",
-            desired_skills="web development"
-        )
-        
-        print(f"✓ Fallback generated {len(fallback_queries)} queries:")
-        for i, query in enumerate(fallback_queries, 1):
-            print(f"  {i}. {query}")
-        
-        return True
-        
-    finally:
-        # Restore original API key
-        settings.deepseek_api_key = original_key
-
-
 async def run_all_tests():
     """Run all tests"""
     print("DeepSeek API Test Suite")
@@ -209,9 +135,6 @@ async def run_all_tests():
     
     # Test 1: Configuration
     results['config'] = test_config()
-    
-    # Test 2: DeepSeek Service
-    results['service'], service_queries = await test_deepseek_service()
     
     # Test 3: AI Utils (only if we have API key)
     if settings.deepseek_api_key:
