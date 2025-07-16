@@ -6,7 +6,7 @@ from app.models.chat import Roadmap
 from app.routers.users import get_current_user
 from app.services.database import session
 from sqlalchemy.orm import joinedload
-from app.services import qdrant, encoder, deepseek, roadmap_service, user_service
+from app.services import user_service
 from app.config import settings
 from app.utils.query_logger import query_logger
 
@@ -14,7 +14,7 @@ import traceback
 import httpx
 import logging
 
-from app.utils.search import get_courses, get_courses_v2
+from app.utils.search import get_courses_v2
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/courses", tags=["courses"])
