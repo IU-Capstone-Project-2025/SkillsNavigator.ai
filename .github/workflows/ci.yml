@@ -21,8 +21,11 @@ jobs:
       - name: Build app
         run: docker compose -f docker-compose.dev.yml build
 
-      - name: Start backend services
-        run: docker compose -f docker-compose.dev.yml up -d
+      - name: Force stop and remove old containers
+        run: docker compose -f docker-compose.dev.yml down --volumes
+
+      - name: Start backend services (clean start)
+        run: docker compose -f docker-compose.dev.yml up -d --force-recreate --remove-orphans
 
       - name: Build test container
         run: |
@@ -33,6 +36,12 @@ jobs:
 
       - name: Run unit and integration tests
         run: docker run --network=host test-runner pytest tests/unit tests/integration
+
+      - name: Wait for backend
+        run: docker run --network=host test-runner python wait-for-backend.py
+
+      - name: Run e2e tests
+        run: docker run --network=host test-runner pytest tests/e2e
 
       - name: Shutdown
         if: always()
