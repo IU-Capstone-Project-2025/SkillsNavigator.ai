@@ -217,7 +217,7 @@ class DeepseekService:
                                      f"fallback_exception_attempt_{attempt + 1}")
             return fallback_queries
 
-    async def choose_courses(self, area, current_level, desired_skills, attempt, courses):
+    async def choose_courses(self, area, current_level, desired_skills, hours, cost, attempt, courses):
         logger.info(f"API Key is {'present' if self.api_key else 'missing'}...")
 
         if not self.api_key or self.api_key == "":
@@ -234,17 +234,22 @@ class DeepseekService:
             - Goal: {area}
             - Current level: {current_level}
             - Desired skills to acquire: {desired_skills}
+            - Maximum total time to complete all courses in hours: {hours}
+            - Maximum total cost of all courses in RUB: {cost}
 
             Each course includes:
             - Title
             - Summary
             - Difficulty level (e.g., Beginner, Intermediate, Advanced)
             - Number of learners who completed it
+            - Time to complete in hours
+            - Price
+            - Currency code
 
             Courses:
             """
             for idx, course in enumerate(courses):
-                prompt += f"\n{idx}. Title: {course['title']}; Summary: {course['summary']}; Difficulty: {course['difficulty']}; Learners: {course['pupils_num']}"
+                prompt += f"\n{idx}. Title: {course['title']}; Summary: {course['summary']}; Difficulty: {course['difficulty']}; Learners: {course['pupils_num']}; Duration: {course['duration']}; Price: {course['price']}; Currency code: {course['currency_code']}"
 
             prompt += (
                 "\n\nYour task:"
@@ -252,6 +257,8 @@ class DeepseekService:
                 "\n- The roadmap should make sense in order — start with foundational topics and build toward more advanced ones."
                 "\n- Avoid overlapping or redundant content."
                 "\n- Only include courses that are clearly relevant to the user's goals."
+                "\n- The **total time** of all selected courses must not exceed the user's limit."
+                "\n- The **total price** of all selected courses must not exceed the user's budget."
                 "\n- Among equally suitable options, prefer those with more learners (as a proxy for quality)."
                 "\n- If fewer than 5 courses are needed to build a roadmap, return only those."
 

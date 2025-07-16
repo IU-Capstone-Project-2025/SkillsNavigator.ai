@@ -164,7 +164,7 @@ async def get_courses_v2(payload: CourseSearchRequest):
             # Sort all results by their similarity scores (we'll need to track this)
             # For now, just take the first 5
             for attempt2 in range(3):
-                res = await deepseek.choose_courses(payload.area, payload.current_level, payload.desired_skills, attempt2,
+                res = await deepseek.choose_courses(payload.area, payload.current_level, payload.desired_skills, payload.hours, payload.cost, attempt2,
                                               all_results)
                 if res is not None:
                     all_results = res
