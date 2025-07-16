@@ -48,9 +48,12 @@ const Roadmap = () => {
       setActiveRoadmap(id)
       localStorage.removeItem('roadmapId')
     }
-  },[roadmapsState])
+  }, [roadmapsState])
 
-  const getLineColor = (progressA: number, progressB: number) => {
+  const getLineColor = (progressA: number, progressB: number, disabledA?: boolean, disabledB?: boolean) => {
+    if (disabledA || disabledB) {
+      return 'rgb(255, 255, 255, 0.3)'
+    }
     if (progressA === 1 && progressB === 1) {
       return '#6BE0A4'
     }
@@ -75,13 +78,15 @@ const Roadmap = () => {
       const to = nodeRefs.current[i + 1]?.getBoundingClientRect()
       const progressA = courses[i]?.progress ?? 0
       const progressB = courses[i + 1]?.progress ?? 0
+      const disabledA = disabledStates[i]
+      const disabledB = disabledStates[i + 1]
       if (from && to) {
         newLines.push({
           x1: from.left + from.width / 2 - containerRect.left,
           y1: from.top + from.height / 2 - containerRect.top,
           x2: to.left + to.width / 2 - containerRect.left,
           y2: to.top + to.height / 2 - containerRect.top,
-          color: getLineColor(progressA, progressB),
+          color: getLineColor(progressA, progressB, disabledA, disabledB),
         })
       }
     }

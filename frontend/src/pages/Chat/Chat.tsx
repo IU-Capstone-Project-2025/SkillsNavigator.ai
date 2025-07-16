@@ -66,7 +66,7 @@ const Chat = () => {
         } else {
           setGuestMessages((prev) => [
             ...prev,
-            { text: 'Твой план, который приведет к цели:', isUser: false },
+            { text: 'Твой план, который приведет к цели готов. Не забудь сохранить его!', isUser: false },
             { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false },
           ])
         }
@@ -191,7 +191,7 @@ const Chat = () => {
       if (data.length === 0) {
         await addMessageToChat(activeChat, { text: 'Ничего не получилось найти по твоему запросу((', isUser: false })
       } else {
-        await addMessageToChat(activeChat, { text: 'Твой план, который приведет к цели:', isUser: false })
+        await addMessageToChat(activeChat, { text: 'Твой план, который приведет к цели готов!', isUser: false })
         await addMessageToChat(activeChat, { text: 'roadmapCourses000: ' + JSON.stringify(data), isUser: false })
       }
       setCourses(data)
@@ -318,7 +318,7 @@ const Chat = () => {
             </div>
           )}
 
-          {shownCourses === courses.length && courses.length > 0 && (
+          {authenticated && shownCourses === courses.length && courses.length > 0 && (
             <button className={css.goToRoadmapButton} onClick={gotoRoadmap}>
               Перейти к пути
             </button>
@@ -384,7 +384,7 @@ const Chat = () => {
             </div>
           )}
 
-          {shownCourses === guestCourses.length && guestCourses.length > 0 && (
+          {authenticated && shownCourses === guestCourses.length && guestCourses.length > 0 && (
             <button className={css.goToRoadmapButton} onClick={gotoRoadmap}>
               Перейти к пути
             </button>
