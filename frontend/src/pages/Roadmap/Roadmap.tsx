@@ -169,6 +169,22 @@ const Roadmap = () => {
         <LoginModal opened={openedLogin} onClose={() => {}} withClose={false} />
       </div>
     )
+  } else if (!loading && authenticated && roadmapsState.length === 0) {
+    return (
+      <div className={css.root}>
+        <Sidebar
+          chats={[]}
+          activeChat={-1}
+          onSelect={() => {}}
+          onNewChat={() => navigate(getChatRoute())}
+          isRoadmap
+          roadmaps={[]}
+        />
+        <div className={css.roadmap}>
+          <h4 className={css.emptyText}>У вас пока нет созданных путей!</h4>
+        </div>
+      </div>
+    )
   } else {
     return (
       <div ref={containerRef} style={{ position: 'relative' }} className={css.root}>
