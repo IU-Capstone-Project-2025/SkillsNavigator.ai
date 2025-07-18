@@ -22,13 +22,13 @@ jobs:
         run: cp ~/actions-runner/.env .env
 
       - name: Build app
-        run: docker compose -f docker-compose.dev.yml build
+        run: docker compose --env-file .env -f docker-compose.dev.yml build
 
       - name: Force stop and remove old containers
         run: docker compose -f docker-compose.dev.yml down --volumes
 
       - name: Start backend services (clean start)
-        run: docker compose -f docker-compose.dev.yml up -d --force-recreate --remove-orphans
+        run: docker compose --env-file .env -f docker-compose.dev.yml up -d --force-recreate --remove-orphans
 
       - name: Build test container
         run: |
