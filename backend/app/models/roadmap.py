@@ -58,7 +58,6 @@ class Dialog(database.Base):
     # Relationship to access messages
     messages = relationship("Message", back_populates="dialog")
 
-<<<<<<< HEAD
 class Message(database.Base):
     __tablename__ = 'messages'
     
@@ -68,19 +67,4 @@ class Message(database.Base):
     dialog_id = Column(Integer, ForeignKey('dialogs.id'), nullable=False)
     
     dialog = relationship("Dialog", back_populates="messages")
-=======
 
-class LearningStep(BaseModel):
-    step_number: int
-    title: str
-    description: str
-    skills: List[SkillNode]
-    estimated_duration: str
-    difficulty: str
-
-
-class ChatMessage(BaseModel):
-    message: str
-    user_id: Optional[str] = None
-
->>>>>>> 7cdb21f3b7e187029eca0165286aabcd8232ed36
