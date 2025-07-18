@@ -18,26 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Copy env into workspace
-        run: cp ~/actions-runner/.env .env
+      - name: Force stop and remove old containers
+        run: docker compose -f docker-compose.dev.yml down --volumes --remove-orphans
 
-      - name: Sanitize .env (remove quotes)
-        run: |
-          cp ~/actions-runner/.env .env
-          sed -i 's/^"\(.*\)"$/\1/' .env     # удалит внешние кавычки (если есть)
-          sed -i 's/=\(.*\)/=\1/' .env       # убедится, что нет обрамлений
-          sed -i 's/"//g' .env               # уберёт все кавычки вообще
-          echo "✅ Final .env:"
-          cat .env
+      - name: Debug docker-compose with env
+        run: docker compose -f docker-compose.dev.yml config
 
       - name: Build app
-        run: docker compose --env-file .env -f docker-compose.dev.yml build
+        run: docker compose -f docker-compose.dev.yml build
 
-      - name: Force stop and remove old containers
-        run: docker compose -f docker-compose.dev.yml down --volumes
-
-      - name: Start backend services (clean start)
-        run: docker compose --env-file .env -f docker-compose.dev.yml up -d --force-recreate --remove-orphans
+      - name: Start app
+        run: docker compose -f docker-compose.dev.yml up -d --force-recreate --remove-orphans
 
       - name: Build test container
         run: |
