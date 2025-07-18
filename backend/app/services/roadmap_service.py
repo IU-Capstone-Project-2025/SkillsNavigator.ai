@@ -3,7 +3,7 @@ import logging
 from typing import List, Dict, Any
 from app.utils import call_deepseek
 from app.services import encoder, qdrant
-from app.models.roadmap import RoadmapResponse, LearningStep, SkillNode
+from app.schemas.roadmap import RoadmapResponse, LearningStep, SkillNode
 
 logger = logging.getLogger(__name__)
 

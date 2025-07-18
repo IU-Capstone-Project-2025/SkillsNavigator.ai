@@ -1,31 +1,21 @@
-from fastapi import APIRouter, HTTPException, Request, Depends, status
-from fastapi.responses import RedirectResponse
-import httpx
-import requests
-import json
-import os
-from app.config import settings
+from fastapi import APIRouter, HTTPException, Request, Depends
 from app.routers.users import get_current_user
-from app.models.chat import Dialog, Message
+from app.models.roadmap import Dialog, Message
+from app.schemas.roadmap import DialogSchema
 from app.services.database import session
 from pydantic import BaseModel
 from sqlalchemy.orm import joinedload
+from typing import List
+
 
 router = APIRouter(prefix="/api")
 
-# POST /api/chats //создать чат
-# body {} //can be useful
-# Return: {id: number}
-
-# PUT /api/chats/{id} //сохранить сообщение
-# body {message: string, messageNumber: int} //rename?
-# Return: 200/404
-@router.get("/chats", tags=["chats"])
+@router.get("/chats", tags=["chats"], response_model=List[DialogSchema], summary="Get user's chats")
 async def get_user_dialogs(current_user: str = Depends(get_current_user)):
     dialogs = session.query(Dialog).options(joinedload(Dialog.messages)).filter(Dialog.owner == current_user).all()
     return dialogs
 
-@router.post("/chats", tags=["chats"])
+@router.post("/chats", tags=["chats"], response_model=dict, summary="Create chat")
 async def create_dialog(request: Request, current_user: str = Depends(get_current_user)):
     new_dialog = Dialog(name="My way", owner=current_user)
 
@@ -39,7 +29,7 @@ class SaveMessageRequest(BaseModel):
     message: str
     messageNumber: int  # You can rename this field if needed
 
-@router.put("/chats/{id}", response_model=dict, tags=["chats"])
+@router.put("/chats/{id}", response_model=dict, tags=["chats"], summary="Save message in some chat")
 async def save_message(
     id: int,
     request: SaveMessageRequest,
