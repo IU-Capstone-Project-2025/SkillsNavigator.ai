@@ -72,7 +72,7 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
   })
 
   return (
-    <animated.div ref={ref} style={springProps} {...({ children } as any)}>
+    <animated.div ref={ref} style={{ ...springProps, height: '100%' }} {...({ children } as any)}>
       {children}
     </animated.div>
   )

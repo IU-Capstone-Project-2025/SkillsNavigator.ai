@@ -12,10 +12,7 @@ export const getUserInfo = async () => {
     throw new Error('Not authenticated')
   }
   const user = await res.json()
-  if (!user.first_name || !user.last_name) {
-    throw new Error('No user')
-  }
-  return { name: user.first_name + ' ' + user.last_name, avatar: user.avatar }
+  return { name:[user.first_name, user.last_name].filter(Boolean).join(' '), avatar: user.avatar }
 }
 
 export const logout = async () => {
