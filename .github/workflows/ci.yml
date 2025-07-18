@@ -21,8 +21,8 @@ jobs:
       - name: Force stop and remove old containers
         run: docker compose -f docker-compose.dev.yml down --volumes --remove-orphans
 
-      - name: Debug docker-compose with env
-        run: docker compose -f docker-compose.dev.yml config
+      - name: Debug docker-compose config (NO ENV influence)
+        run: env -i docker compose -f docker-compose.dev.yml config
 
       - name: Debug current env file
         run: |
