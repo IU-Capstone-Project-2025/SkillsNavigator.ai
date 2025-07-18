@@ -21,6 +21,15 @@ jobs:
       - name: Copy env into workspace
         run: cp ~/actions-runner/.env .env
 
+      - name: Sanitize .env (remove quotes)
+        run: |
+          cp ~/actions-runner/.env .env
+          sed -i 's/^"\(.*\)"$/\1/' .env     # удалит внешние кавычки (если есть)
+          sed -i 's/=\(.*\)/=\1/' .env       # убедится, что нет обрамлений
+          sed -i 's/"//g' .env               # уберёт все кавычки вообще
+          echo "✅ Final .env:"
+          cat .env
+
       - name: Build app
         run: docker compose --env-file .env -f docker-compose.dev.yml build
 
