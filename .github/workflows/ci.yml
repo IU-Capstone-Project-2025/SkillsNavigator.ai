@@ -24,6 +24,13 @@ jobs:
       - name: Debug docker-compose with env
         run: docker compose -f docker-compose.dev.yml config
 
+      - name: Debug current env file
+        run: |
+          echo "📂 Current directory: $PWD"
+          echo "📄 Contents of .env (if exists):"
+          cat .env || echo "❌ .env not found"
+
+
       - name: Build app
         run: docker compose -f docker-compose.dev.yml build
 
