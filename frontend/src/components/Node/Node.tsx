@@ -21,7 +21,7 @@ const Node: React.FC<{ course: CourseType; position: 'left' | 'right'; disabled?
   const strokeDashoffset = circumference - course.progress * circumference
 
   return (
-    <div className={css.node} style={disabled ? { opacity: 0.6 } : {}} onClick={(e) => {
+    <div className={css.node} style={disabled ? { opacity: 0.4 } : {}} onClick={(e) => {
             e.stopPropagation()
             window.open(course.url, '_blank', 'noopener,noreferrer')
           }}>

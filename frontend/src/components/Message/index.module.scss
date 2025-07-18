@@ -15,6 +15,7 @@
 .friendWrapper {
   @extend %wrapper;
   justify-content: flex-start;
+  max-width: 600px;
 }
 
 %bubble {
@@ -23,6 +24,7 @@
   border-radius: 12px;
   position: relative;
   font-size: 1.6rem;
+  line-height: 1.2;
 }
 
 .userBubble {
