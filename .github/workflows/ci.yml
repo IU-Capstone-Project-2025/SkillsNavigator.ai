@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Copy env into workspace
+        run: cp /home/runner/actions-runner/.env .env
+
       - name: Build app
         run: docker compose -f docker-compose.dev.yml build
 
@@ -41,7 +44,7 @@ jobs:
         run: docker run --network=host test-runner python wait-for-backend.py
 
       - name: Run e2e tests
-        run: docker run --network=host test-runner pytest tests/e2e
+        run: docker run --network=host --env-file .env test-runner pytest tests/e2e
 
       - name: Shutdown
         if: always()
