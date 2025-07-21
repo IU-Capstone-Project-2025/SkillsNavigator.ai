@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship, declarative_base
 from pydantic import BaseModel, Field
 from datetime import datetime
 from app.services import database
-from app.models.chat import Course 
+from app.models.roadmap import Course 
 
 # Модель запроса от фронта
 class CourseSearchRequest(BaseModel):

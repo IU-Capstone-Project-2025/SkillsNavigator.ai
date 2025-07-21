@@ -8,7 +8,7 @@ import jwt
 from datetime import datetime, timedelta
 from app.services.user_service import fetch_user_info, get_or_create_user, user_info
 import logging
-from app.models.user import UserInfo
+from app.schemas.user import UserInfo
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api")
@@ -31,12 +31,12 @@ def get_current_user(request: Request):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
     
 
-@router.get("/users/me")
-async def read_users_me(response_model=UserInfo, current_user: str = Depends(get_current_user)):
+@router.get("/users/me", response_model=UserInfo)
+async def read_users_me( current_user: str = Depends(get_current_user)):
     user = await user_info(int(current_user))
     return UserInfo(**user.__dict__)
 
-@router.get("/login")
+@router.get("/login", response_description="URL to stepik website authorization")
 async def get_login_url():
     client_id = os.getenv("CLIENT_ID", "")
     # TODO: get url of app from env
@@ -51,7 +51,7 @@ async def logout():
     response.delete_cookie("access_token")
     return response
 
-@router.get("/callback")
+@router.get("/callback", response_class=RedirectResponse)
 async def get_access_token(code: str):
     client_id = os.getenv("CLIENT_ID", "")
     client_secret = os.getenv("CLIENT_SECRET", "")

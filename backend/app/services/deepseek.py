@@ -23,6 +23,7 @@ class DeepseekService:
             return None
 
         try:
+            courses = [x for x in courses if (float(x['price']) == 0 or x['currency_code'] == 'RUB' and float(x['price']) <= cost) and float(x['duration']) <= hours]
             prompt = f"""
             You are a course recommender AI. Your job is to select up to 5 courses from the list of {len(courses)} that together form a coherent learning roadmap for the user.
 
@@ -33,13 +34,19 @@ class DeepseekService:
             - Maximum total time to complete all courses in hours: {hours}
             - Maximum total cost of all courses in RUB: {cost}
 
+            !!! IMPORTANT CONSTRAINTS (must follow strictly) !!!
+            - DO NOT INCLUDE ANY COURSE if:
+                • Its price is greater than 0 AND the user's budget is 0.
+            - Total duration of selected courses must NOT exceed {hours} hours.
+            - Total price in RUB of selected courses must NOT exceed {cost} RUB.
+
             Each course includes:
             - Title
             - Summary
             - Difficulty level (e.g., Beginner, Intermediate, Advanced)
             - Number of learners who completed it
             - Time to complete in hours
-            - Price
+            - Price (in the given currency)
             - Currency code
 
             Courses:

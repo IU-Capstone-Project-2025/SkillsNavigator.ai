@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Body, Depends, Request
 from typing import List
 
-from app.models import *
-from app.models.chat import Roadmap
+from app.models.roadmap import Roadmap, RoadmapStatus, Dialog, Course
+from app.schemas.roadmap import RoadmapSchema
+from app.schemas.course import CourseSummary, CourseSearchRequest, course_summary_to_model, CourseProgress, RoadmapResponse
 from app.routers.users import get_current_user
 from app.services.database import session
 from sqlalchemy.orm import joinedload
@@ -23,7 +24,7 @@ router = APIRouter(prefix="/api/courses", tags=["courses"])
 @router.post(
     "/roadmaps",
     response_model=List[CourseSummary],
-    summary="Поиск курсов по заданным критериям"
+    summary="Generate roadmap according to user requirements"
 )
 async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body(...)):
     """
@@ -71,6 +72,7 @@ async def generate_roadmap(request: Request, payload: CourseSearchRequest = Body
         logger.exception(f"Error course searching: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
+
 async def fetch_progresses(current_user, courses_ids_set):
     async with httpx.AsyncClient() as client:
         params = {'ids[]': list(courses_ids_set)}
@@ -79,7 +81,7 @@ async def fetch_progresses(current_user, courses_ids_set):
         progresses_req = await client.get("https://stepik.org/api/progresses", params=params, headers={'Authorization': f'Bearer {user.access_token}'})
         return progresses_req.json().get("progresses", [])
 
-@router.get("/roadmaps")
+@router.get("/roadmaps", response_model=List[RoadmapResponse], summary="Get user's roadmaps")
 async def get_roadmaps(current_user: str = Depends(get_current_user)):
     dialogs = session.query(Dialog).filter(Dialog.owner == current_user).all()
     dialog_ids = [dialog.id for dialog in dialogs]

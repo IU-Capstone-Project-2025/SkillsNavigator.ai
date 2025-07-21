@@ -2,7 +2,7 @@ import logging
 
 from fastapi import HTTPException
 
-from app.models import CourseSearchRequest
+from app.schemas.course import CourseSearchRequest
 from app.services import deepseek, encoder, qdrant
 from app.utils import query_logger
 
