@@ -3,7 +3,7 @@ from typing import List
 
 from app.models.roadmap import Roadmap, RoadmapStatus, Dialog, Course
 from app.schemas.roadmap import RoadmapSchema
-from app.schemas.course import CourseSummary, CourseSearchRequest, course_summary_to_model
+from app.schemas.course import CourseSummary, CourseSearchRequest, course_summary_to_model, CourseProgress, RoadmapResponse
 from app.routers.users import get_current_user
 from app.services.database import session
 from sqlalchemy.orm import joinedload
