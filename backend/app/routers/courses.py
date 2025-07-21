@@ -81,7 +81,7 @@ async def fetch_progresses(current_user, courses_ids_set):
         progresses_req = await client.get("https://stepik.org/api/progresses", params=params, headers={'Authorization': f'Bearer {user.access_token}'})
         return progresses_req.json().get("progresses", [])
 
-@router.get("/roadmaps", response_model=List[RoadmapSchema], summary="Get user's roadmaps")
+@router.get("/roadmaps", response_model=List[RoadmapResponse], summary="Get user's roadmaps")
 async def get_roadmaps(current_user: str = Depends(get_current_user)):
     dialogs = session.query(Dialog).filter(Dialog.owner == current_user).all()
     dialog_ids = [dialog.id for dialog in dialogs]
