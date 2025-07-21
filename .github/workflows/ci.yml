@@ -24,12 +24,21 @@ jobs:
       - name: Debug docker-compose config (NO ENV influence)
         run: env -i docker compose -f docker-compose.dev.yml config
 
-      - name: Debug current env file
-        run: |
-          echo "📂 Current directory: $PWD"
-          echo "📄 Contents of .env (if exists):"
-          cat .env || echo "❌ .env not found"
 
+
+      - name: 🔐 Generate .env from secrets
+        run: |
+          cat <<EOF > .env
+          WEB_URL=${{ secrets.WEB_URL }}
+          CLIENT_ID=${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+          SECRET_KEY=${{ secrets.SECRET_KEY }}
+          DEEPSEEK_API_KEY=${{ secrets.DEEPSEEK_API_KEY }}
+          EOF  
 
       - name: Build app
         run: docker compose -f docker-compose.dev.yml build
